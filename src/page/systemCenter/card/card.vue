@@ -10,12 +10,11 @@
   import  ysSearch from '@/components/search'
   import  ysCard from "../active/components/coupon"
     export default {
-        name: "card",
+      name: "card",
       components:{
           ysSearch,
-        ysCard
+          ysCard
       },
-
     }
 </script>
 

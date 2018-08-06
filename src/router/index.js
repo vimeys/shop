@@ -5,6 +5,11 @@ import steps from '@/components/steps'
 import ysIndex from '@/page/systemCenter/index/index'
 import ysActive from '@/page/systemCenter/active/index'
 import  ysCard from '@/page/systemCenter/card/card'
+import ysAddBg from '@/page/systemCenter/index/components/bg'
+import ysLogo from '@/page/systemCenter/index/components/logo'
+import diyImage from '@/page/systemCenter/index/components/diyImage'
+import activity from '@/page/systemCenter/index/components/activity'
+
 Vue.use(Router)
 
 export default new Router({
@@ -16,7 +21,25 @@ export default new Router({
     },{
       path:'/index',
       name:'index',
-      component:ysIndex
+      component:ysIndex,
+      children:[
+        {
+          path:'/bg',
+          component:ysAddBg
+        },
+        {
+          path:'/logo',
+          component:ysLogo
+        },
+        {
+          path:'/diyImage',
+          component:diyImage
+        },
+        {
+          path:'/activity',
+          component:activity
+        }
+      ]
     },
     {
       path:'/active',

@@ -1,26 +1,24 @@
 <template>
-    <div class="popup" v-show="selfShow">
-        <div class="popup-content">
+  <div class="popup" v-show="selfShow">
+    <div class="popup-content">
             <span class="el-icon-close popup-close"
                   @click="close"
-                  ></span>
-          <div class="popup-slide-left">
-            <el-select v-model="value" @change="change" placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </div>
-          <div class="popup-slide-right">
-            <el-button type="text" @click="open5">点击打开 Message Box</el-button>
-          </div>
-
-        </div>
-
+            ></span>
+      <!--<div class="popup-slide-left">-->
+        <!--<el-select v-model="value" @change="change" placeholder="请选择">-->
+          <!--<el-option-->
+            <!--v-for="item in options"-->
+            <!--:key="item.value"-->
+            <!--:label="item.label"-->
+            <!--:value="item.value">-->
+          <!--</el-option>-->
+        <!--</el-select>-->
+      <!--</div>-->
+      <!--<div class="popup-slide-right">-->
+        <!--<el-button type="text" @click="open5">点击打开 Message Box</el-button>-->
+      <!--</div>-->
     </div>
+  </div>
 </template>
 
 <script>
@@ -30,7 +28,7 @@
       show: {
         type: Boolean,
         default() {
-          return true
+          return false
         }
       }
     },
