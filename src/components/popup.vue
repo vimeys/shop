@@ -1,22 +1,12 @@
 <template>
-  <div class="popup" v-show="selfShow">
+  <div class="popup">
     <div class="popup-content">
             <span class="el-icon-close popup-close"
                   @click="close"
             ></span>
-      <!--<div class="popup-slide-left">-->
-        <!--<el-select v-model="value" @change="change" placeholder="请选择">-->
-          <!--<el-option-->
-            <!--v-for="item in options"-->
-            <!--:key="item.value"-->
-            <!--:label="item.label"-->
-            <!--:value="item.value">-->
-          <!--</el-option>-->
-        <!--</el-select>-->
-      <!--</div>-->
-      <!--<div class="popup-slide-right">-->
-        <!--<el-button type="text" @click="open5">点击打开 Message Box</el-button>-->
-      <!--</div>-->
+      <slot>
+
+      </slot>
     </div>
   </div>
 </template>
@@ -25,7 +15,7 @@
   export default {
     name: "popup",
     props: {
-      show: {
+      showModal: {
         type: Boolean,
         default() {
           return false
@@ -51,12 +41,14 @@
           label: '北京烤鸭'
         }],
         value: '',
-        selfShow:this.show
+        selfShow:this.showModal
       }
     },
     methods: {
       close() {
-        this.selfShow = false
+        console.log(123);
+
+        this.$emit("close",false)
       },
       open5() {
         this.$alert('<strong>这是 <i>HTML</i> 片段</strong>', 'HTML 片段', {

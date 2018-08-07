@@ -2,4 +2,15 @@
   font-size: 16px;
   color: #D0021B;
 }
+.base-btn-111 {
+  width: 111px;
+  height: 38px;
+  border-radius: 4px;
+  line-height: 38px;
+  font-size: 14px;
+  color: #1a1a1a;
+  background: #FFD736;
+  text-align: center;
+  display: inline-block;
+}
 /*# sourceMappingURL=mixin.css.map */

@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <!--<el-button type="text" @click="open5">点击打开 Message Box</el-button>-->
-    <ys-popup>
+    <!--<ys-popup>-->
       <!--<div class="popup-slide-left">-->
         <!--<el-select v-model="value" @change="change" placeholder="请选择">-->
           <!--<el-option-->
@@ -16,30 +16,33 @@
         <!--<el-button type="text" @click="open5">点击打开 Message Box</el-button>-->
       <!--</div>-->
       <!--<el-button type="text" @click="open5">点击打开 Message Box</el-button>-->
-    </ys-popup>
+    <!--</ys-popup>-->
     <ys-steps></ys-steps>
-    <div class="right">
-      <el-tabs v-model="activeName" @tab-click="handleClick" value="first">
-        <el-tab-pane label="背景图" name="first">
-          <router-view></router-view>
-        </el-tab-pane>
-        <el-tab-pane label="Logo" name="second">
-          <router-view></router-view>
-        </el-tab-pane>
-        <el-tab-pane label="自定义图片" name="third">
-          <router-view></router-view>
-        </el-tab-pane>
-        <el-tab-pane label="促销活动" name="fourth">
-          <router-view></router-view>
-        </el-tab-pane>
-        <el-tab-pane label="精选商品" name="fifth">
-          <router-view></router-view>
-        </el-tab-pane>
-      </el-tabs>
-      <div>
-        <!--<router-view/>-->
+    <keep-alive>
+      <div class="right">
+        <el-tabs v-model="activeName" @tab-click="handleClick" value="first">
+          <el-tab-pane label="背景图" name="first">
+            <router-view></router-view>
+          </el-tab-pane>
+          <el-tab-pane label="Logo" name="second">
+            <router-view></router-view>
+          </el-tab-pane>
+          <el-tab-pane label="自定义图片" name="third">
+            <router-view></router-view>
+          </el-tab-pane>
+          <el-tab-pane label="促销活动" name="fourth">
+            <router-view></router-view>
+          </el-tab-pane>
+          <el-tab-pane label="精选商品" name="fifth">
+            <router-view></router-view>
+          </el-tab-pane>
+        </el-tabs>
+        <div>
+          <!--<router-view/>-->
+        </div>
       </div>
-    </div>
+    </keep-alive>
+
   </div>
 </template>
 
@@ -48,7 +51,7 @@
   import { Swipe, SwipeItem } from 'vant';
   import  ysPopup from '@/components/popup'
   import RouterLink from "vant/es/mixins/router-link";
-  import  ysCoupon from "@/page/systemCenter/active/components/coupon"
+  import  ysCoupon from "@/components/coupon"
   // Vue.use(Swipe).use(SwipeItem);
     export default {
         name: "index",
@@ -85,8 +88,6 @@
       },
       methods:{
           handleClick(tab, event){
-            console.log(tab);
-            console.log(event);
             switch (this.activeName) {
               case 'second':
                 this.$router.replace({
@@ -99,10 +100,14 @@
                 });
                 break;
               case 'fourth':
-                this.$router.replace({
+                this.$router.push({
                   path: '/activity'
                 });
                 break;
+              case 'fifth':
+                this.$router.replace({
+                  path:'/cardList'
+                })
             }
           },
         open5() {

@@ -1,3 +1,4 @@
+  <!--添加背景-->
 <template>
   <div class="box">
     <div class="left">
