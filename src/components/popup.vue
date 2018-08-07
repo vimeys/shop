@@ -84,14 +84,6 @@
       border-radius: 20px;
       display: flex;
       flex-direction: row;
-      .popup-slide-left{
-        width: 350px;
-        height: 100%;
-        border-right: 1px solid #d8d8d8;
-        display: flex;
-        justify-content: center;
-
-      }
       .popup-close{
         position: absolute;
         top:40px;

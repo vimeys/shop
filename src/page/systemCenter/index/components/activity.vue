@@ -5,7 +5,7 @@
         <el-header>
           <div class="active-header">
             <div class="disabled"><span class="el-icon-circle-plus"></span>&nbsp;&nbsp;新建活动</div>
-            <div>管理</div>
+            <div @click="addCard">管理</div>
             <div class="del">删除</div>
           </div>
         </el-header>
@@ -38,6 +38,78 @@
         </div>
       </div>
     </div>
+    <ys-popup :showModal="showModal"
+              v-show="showModal"
+              @close="close"
+    >
+      <div class="popup-slide-left">
+        <div class="list-title">新建优惠券</div>
+        <div class="list-btns">
+          <ul>
+            <li><i class="el-icon-document"></i>活动详情<i class="el-icon-arrow-right"></i> </li>
+          </ul>
+        </div>
+
+      </div>
+      <div class="popup-slide-right">
+        <div class="content">
+          <div class="card-select">
+            <div>优惠券分类</div>
+            <div>
+              <el-select v-model="value" @change="change" placeholder="满减券" class="select">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </div>
+          </div>
+          <div class="form">
+              <div class="modal">
+                <div class="modal-btn">填写模板Banner信息</div>
+                <div class="diy-btn">上传自定义Banner</div>
+              </div>
+              <div>
+                <div v-if="showBtn1">
+                  <img src="https://img.yzcdn.cn/2.jpg" alt="">
+                </div>
+                <div>
+                  <el-upload
+                    action="https://jsonplaceholder.typicode.com/posts/"
+                    list-type="picture-card"
+                    :on-preview="handlePictureCardPreview"
+                    :on-remove="handleRemove">
+                    <i class="el-icon-plus"></i>
+                  </el-upload>
+                  <el-dialog :visible.sync="dialogVisible">
+                    <img width="100%" :src="dialogImageUrl" alt="">
+                  </el-dialog>
+                </div>
+              </div>
+            <div>
+              <div>活动时间</div>
+              <div><el-date-picker
+                v-model="Timevalue"
+                type="daterange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期">
+              </el-date-picker></div>
+            </div>
+            <div>
+              <div>文案</div>
+              <div><input type="text"></div>
+            </div>
+          </div>
+          <div>
+            <div class="btn">确认</div>
+          </div>
+        </div>
+        <!--<el-button type="text" @click="open5">点击打开 Message Box</el-button>-->
+      </div>
+    </ys-popup>
     <router-view></router-view>
   </div>
 
@@ -45,16 +117,25 @@
 
 <script>
   import  ysCoupon from "@/components/coupon"
+  import ysPopup from '@/components/popup'
     export default {
         name: "activity",
       components:{
-        ysCoupon
+        ysCoupon,
+        ysPopup
       },
       data(){
         return {
+          showModal:false,
           chosed:false,
           isChecke:false,
-          show:true
+          show:true,
+          // 上传组件的按钮
+          dialogImageUrl: '',
+          dialogVisible: false,
+          // 显示第一个按钮还是第二个
+          showBtn1:true,
+          Timevalue:''//时间选择的值
         }
       },
       methods:{
@@ -70,12 +151,29 @@
           this.$router.push({
               path:'/abc'
             })
+        },
+        //关闭模态框
+        close(e){
+          console.log(e);
+          this.showModal=e
+        },
+        //添加文档
+        addCard(){
+          this.showModal=true
+        },
+        // 上传组件的事件
+        handleRemove(file, fileList) {
+          console.log(file, fileList);
+        },
+        handlePictureCardPreview(file) {
+          this.dialogImageUrl = file.url;
+          this.dialogVisible = true;
         }
       }
     }
 </script>
 
-<style lang="less" scoped>
+<style lang="less" >
   @import "~@/assets/style/mixin";
 
   .active-header{
@@ -226,4 +324,73 @@
       left: 210px;
     }
   }
+  /*弹窗*/
+  .popup-slide-left{
+    width: 350px;
+    height: 100%;
+    border-right: 1px solid #d8d8d8;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    .list-title{
+      height:28px;
+      font-size:20px;
+      color:rgba(40,40,40,1);
+      line-height:28px;
+      text-align: left;
+      margin-top: 41px;
+      margin-left: 33px;
+    }
+    .list-btns{
+      margin-top: 68px;
+      text-align: center;
+      margin-left: 30px;
+      li{
+        text-align: left;
+        display: flex;
+        justify-content: space-between;
+        width: 276px;
+        height: 48px;
+        border-radius: 4px;
+        background: @bs-color;
+        align-items: center;
+        font-size: 16px;
+        i{
+          font-weight: bold;
+          display: inline-block;
+          margin: 0 20px;
+        }
+      }
+    }
+  }
+  .popup-slide-right{
+    .card-select{
+      width: 500px;
+      margin-top: 137px;
+      margin-left: 100px;
+      display: flex;
+      div:first-child{
+        width: 80px;
+        height: 40px;
+        font-size: 16px;
+        line-height: 40px;
+      }
+      /*.select{*/
+        /*width: 383px!important;*/
+        /*margin-left: 30px;*/
+        /*!*text-align: center;*!*/
+        /*input.el-input__inner{*/
+          /*width: 100%;*/
+          /*text-align: center!important;*/
+        /*}*/
+      /*}*/
+    }
+  }
+
+  .btn{
+    .base-btn-111;
+    margin-top: 30px;
+  }
+
+
 </style>

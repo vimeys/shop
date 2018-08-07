@@ -19,30 +19,22 @@
     <ys-popup :showModal="showModal"
               v-show="showModal"
               @close="close"
-              :isChecke="true"
     >
       <div class="popup-slide-left">
         <div class="list-title">新建优惠券</div>
         <div class="list-btns">
           <ul>
-            <li><i class="el-icon-document"></i>123 <i class="el-icon-arrow-right"></i> </li>
+            <li><i class="el-icon-document"></i>活动详情<i class="el-icon-arrow-right"></i> </li>
           </ul>
         </div>
-      <!--<el-select v-model="value" @change="change" placeholder="请选择">-->
-      <!--<el-option-->
-      <!--v-for="item in options"-->
-      <!--:key="item.value"-->
-      <!--:label="item.label"-->
-      <!--:value="item.value">-->
-      <!--</el-option>-->
-      <!--</el-select>-->
+
       </div>
       <div class="popup-slide-right">
         <div class="content">
             <div class="card-select">
               <div>优惠券分类</div>
               <div>
-                <el-select v-model="value" @change="change" placeholder="请选择">
+                <el-select v-model="value" @change="change" placeholder="满减券" class="select">
                 <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -55,16 +47,31 @@
           <div class="cards">
 
             <div>
-              <el-scrollbar class="scroll" style="height: 400px;width:500px;" >
+              <el-scrollbar class="scroll">
                 <div class="card-border">
-                  <ys-card :isChecke="false"></ys-card>
-                  <div class="coupon-radio" @click="choose" v-show="isChecke">
-                    <div class="coupon-radio-point" v-show="chosed"></div>
+                  <ys-card ></ys-card>
+                  <div class="coupon-radio"  >
+                    <div class="coupon-radio-point" ></div>
                   </div>
                 </div>
-                <!--<ys-card :isChecke="false"></ys-card>-->
-                <!--<ys-card :isChecke="false"></ys-card>-->
-                <!--<ys-card :isChecke="false"></ys-card>-->
+                <div class="card-border">
+                  <ys-card ></ys-card>
+                  <div class="coupon-radio"  >
+                    <div class="coupon-radio-point" ></div>
+                  </div>
+                </div>
+                <div class="card-border">
+                  <ys-card ></ys-card>
+                  <div class="coupon-radio"  >
+                    <div class="coupon-radio-point" ></div>
+                  </div>
+                </div>
+                <div class="card-border">
+                  <ys-card ></ys-card>
+                  <div class="coupon-radio"  >
+                    <div class="coupon-radio-point" ></div>
+                  </div>
+                </div>
               </el-scrollbar>
             </div>
           </div>
@@ -249,13 +256,71 @@
     }
   }
   .popup-slide-right{
-
+    .card-select{
+        width: 500px;
+      margin-top: 137px;
+      margin-left: 100px;
+      display: flex;
+      div:first-child{
+        width: 80px;
+        height: 40px;
+        font-size: 16px;
+        line-height: 40px;
+      }
+      .select{
+          width: 383px!important;
+        margin-left: 30px;
+        /*text-align: center;*/
+        input.el-input__inner{
+          text-align: center!important;
+        }
+      }
+    }
+  }
+  .scroll{
+    width: 590px !important;
+    margin-left: 100px;
+    margin-top: 30px;
+    height: 490px;
   }
   .scroll el-scrollbar_warp{
     overflow: hidden;
   }
+  .card-border{
+    width:489px;
+    height:144px;
+    background:rgba(255,255,255,1);
+    margin-bottom: 30px;
+    border-radius:8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border:2px solid rgba(225,225,225,1);
+    position: relative;
+    .coupon-radio{
+      width: 34px;
+      height: 34px;
+      position: absolute;
+      top:55px;
+      right: -17px;
+      border-radius: 50%;
+      border: 2px solid #ffd73a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #fff;
+      .coupon-radio-point{
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #ffd73a;
+      }
+  }
 
-
-
+  }
+  .btn{
+    .base-btn-111;
+    margin-top: 30px;
+  }
 
 </style>
