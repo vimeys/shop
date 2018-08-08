@@ -49,7 +49,6 @@
             <li><i class="el-icon-document"></i>活动详情<i class="el-icon-arrow-right"></i> </li>
           </ul>
         </div>
-
       </div>
       <div class="popup-slide-right">
         <div class="content">
@@ -72,10 +71,16 @@
                 <div class="diy-btn">上传自定义Banner</div>
               </div>
               <div>
-                <div v-if="showBtn1">
-                  <img src="https://img.yzcdn.cn/2.jpg" alt="">
+                <div class="content" v-if="showBtn1">
+                  <div class="active-items-one" @click="hrefCard(1)" :data="1">
+                    <img src="../../../../assets/images/active.png" alt="">
+                    <div class="active-text"> 测试文字sfasdfasdfsfas</div>
+                    <div class="active-radio" @click="choose" v-show="isChecke">
+                      <div class="active-radio-point" v-show="chosed"></div>
+                    </div>
+                  </div>
                 </div>
-                <div>
+                <div v-else>
                   <el-upload
                     action="https://jsonplaceholder.typicode.com/posts/"
                     list-type="picture-card"
@@ -88,9 +93,9 @@
                   </el-dialog>
                 </div>
               </div>
-            <div>
-              <div>活动时间</div>
-              <div><el-date-picker
+            <div class="time">
+              <div class="name">活动时间</div>
+              <div class="select"><el-date-picker
                 v-model="Timevalue"
                 type="daterange"
                 range-separator="至"
@@ -98,7 +103,7 @@
                 end-placeholder="结束日期">
               </el-date-picker></div>
             </div>
-            <div>
+            <div class="word">
               <div>文案</div>
               <div><input type="text"></div>
             </div>
@@ -375,15 +380,52 @@
         font-size: 16px;
         line-height: 40px;
       }
-      /*.select{*/
-        /*width: 383px!important;*/
-        /*margin-left: 30px;*/
-        /*!*text-align: center;*!*/
-        /*input.el-input__inner{*/
-          /*width: 100%;*/
-          /*text-align: center!important;*/
-        /*}*/
-      /*}*/
+      .select{
+        width: 383px!important;
+        margin-left: 30px;
+        /deep/ input{
+          width: 383px;
+        }
+      }
+    }
+    .form{
+      .modal{
+        display: flex;
+        margin: 30px 0;
+        div{
+          width: 226px;
+          height: 37px;
+          border-radius: 4px;
+          font-size: 14px;
+          text-align: center;
+          line-height: 37px;
+        }
+        .modal-btn{
+
+          background: @bs-color;
+          margin-left: 74px;
+        }
+        .diy-btn{
+          background: #E5E5E5;
+          margin-left: 30px;
+        }
+
+      }
+      .content{
+        margin-left: 136px;
+        margin-bottom: 30px;
+      }
+      .time{
+        display: flex;
+        .name{
+          width: 136px;
+          height: 36px;
+          line-height: 36px;
+        }
+        .select{
+          width: 375px;
+        }
+      }
     }
   }
 

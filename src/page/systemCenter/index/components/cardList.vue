@@ -268,6 +268,11 @@
         line-height: 40px;
       }
       .select{
+          /deep/ input{
+            /*width: 373px;*/
+            /*height: 36px;*/
+            text-align: center;
+          }
           width: 383px!important;
         margin-left: 30px;
         /*text-align: center;*/

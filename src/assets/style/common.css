@@ -52,4 +52,12 @@ input {
 [v-cloak] {
   display: none;
 }
+.before::before {
+  content: '*';
+  color: red;
+}
+.after::after {
+  content: '*';
+  color: red;
+}
 /*# sourceMappingURL=common.css.map */

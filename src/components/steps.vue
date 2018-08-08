@@ -71,7 +71,7 @@
 
 <style lang="less">
   .cb-box{
-    width: 360px;
+    min-width: 360px;
     height: 100%;
     display: flex;
     flex-direction: row;

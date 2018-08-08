@@ -18,6 +18,12 @@ import activity from '@/page/systemCenter/index/components/activity'
 // 促销活动里面的卡券
 import  cardList from '@/page/systemCenter/index/components/cardList'
 
+//后台中心卡券管理
+import  cardManage from "@/page/systemCenter/cardManage/cardManage"
+//后台中心卡券管理优惠券
+import  vipCard  from '@/page/systemCenter/cardManage/vipCard'
+//中心卡券会员卡
+import  priceCard from '@/page/systemCenter/cardManage/priceCard'
 Vue.use(Router)
 
 export default new Router({
@@ -58,8 +64,24 @@ export default new Router({
         {
           path:'/cardList',
           component:cardList
-        }
+        },
+
       ]
+    },
+    {
+      path:'/cardManage',
+      name:'cardManage',
+      component:cardManage,
+      children:[
+        {
+          path:'/priceCard',
+          component:priceCard
+        },{
+        path:'/cardManage/vipCard',
+          component:vipCard
+        }
+      ],
+
     }
   ]
 })

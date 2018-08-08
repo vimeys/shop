@@ -17,7 +17,7 @@
       <!--</div>-->
       <!--<el-button type="text" @click="open5">点击打开 Message Box</el-button>-->
     <!--</ys-popup>-->
-    <ys-steps></ys-steps>
+    <!--<ys-steps></ys-steps>-->
     <keep-alive>
       <div class="right">
         <el-tabs v-model="activeName" @tab-click="handleClick" value="first">
@@ -63,7 +63,7 @@
       },
       data(){
           return {
-            activeName:'activeName',
+            activeName:'first',
             images: [
               'https://img.yzcdn.cn/2.jpg',
               'https://img.yzcdn.cn/2.jpg'

@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <!--<img src="./assets/logo.png">-->
-    <!--<steps></steps>-->
+    <steps></steps>
     <router-view/>
-    <router-link to="active">123</router-link>
+    <!--<router-link to="active">123</router-link>-->
   </div>
 </template>
 
@@ -26,5 +26,6 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
   background: #F9F9F9;
+  display: flex;
 }
 </style>
