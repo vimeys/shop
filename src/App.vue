@@ -1,19 +1,28 @@
 <template>
   <div id="app">
-    <!--<img src="./assets/logo.png">-->
-    <steps></steps>
-    <router-view/>
-    <!--<router-link to="active">123</router-link>-->
+
+
+      <ys-nav></ys-nav>
+
+    <div class="main">
+      <steps></steps>
+      <router-view/>
+    </div>
+
   </div>
 </template>
 
 <script>
   import steps from "./components/steps";
+  import  ysNav from './components/header'
 export default {
   name: 'App',
   components: {
-    steps
+    steps,
+    ysNav
   },
+
+
 }
 </script>
 
@@ -24,8 +33,14 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  /*margin-top: 60px;*/
   background: #F9F9F9;
   display: flex;
+  flex-direction: column;
 }
+  .main{
+    display: flex;
+  }
 </style>
+
+

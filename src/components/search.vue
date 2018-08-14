@@ -1,7 +1,7 @@
 <template>
   <div class="bs-search">
     <input class="input" type="text" :placeholder="placeholder" v-model="searchVal">
-    <i class="el-icon-search search-icon" @click="$emit('search',searchVal)"></i>
+    <i class="el-icon-search search-icon-right" :class="{'search-icon-left':isLeft} " @click="$emit('search',searchVal)"></i>
   </div>
 </template>
 
@@ -14,14 +14,27 @@
           default(){
             return '输入服务名称、价格'
           }
+        },
+        isLeft:{//搜索框是否在左边
+          type:Boolean,
+          default(){
+            return false
+          }
         }
       },
       data(){
         return {
+          // left:this.isLeft
           searchVal:''
         }
       },
+      computed:{
+
+      },
       methods:{
+
+      },
+      created(){
 
       }
     }
@@ -48,7 +61,7 @@
       box-sizing: border-box;
       padding-right: 35px;
     }
-    .search-icon{
+    .search-icon-right{
       width: 44px;
      height: 35px;
       display: inline-block;
@@ -57,6 +70,17 @@
       position: absolute;
       top:0;
       right: 0;
+      line-height: 35px;
+    }
+    .search-icon-left{
+      width: 44px;
+     height: 35px;
+      display: inline-block;
+      background: #FDD731;
+      border-radius: 4px;
+      position: absolute;
+      top:0;
+      left: -43px;
       line-height: 35px;
     }
   }

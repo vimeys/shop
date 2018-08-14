@@ -13,4 +13,8 @@
   text-align: center;
   display: inline-block;
 }
+.none {
+  color: #fff;
+  font-size: 1px;
+}
 /*# sourceMappingURL=mixin.css.map */

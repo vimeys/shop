@@ -18,7 +18,6 @@
       <!--<el-button type="text" @click="open5">点击打开 Message Box</el-button>-->
     <!--</ys-popup>-->
     <!--<ys-steps></ys-steps>-->
-    <keep-alive>
       <div class="right">
         <el-tabs v-model="activeName" @tab-click="handleClick" value="first">
           <el-tab-pane label="背景图" name="first">
@@ -38,11 +37,8 @@
           </el-tab-pane>
         </el-tabs>
         <div>
-          <!--<router-view/>-->
         </div>
       </div>
-    </keep-alive>
-
   </div>
 </template>
 
@@ -106,7 +102,7 @@
                 break;
               case 'fifth':
                 this.$router.replace({
-                  path:'/cardList'
+                  path:'/orderManage'
                 })
             }
           },

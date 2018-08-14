@@ -12,10 +12,12 @@
         <ys-card
           :detail="item"
           @reMake="reMake"
+          :marginBottom="60"
         >
         </ys-card>
       </template>
     </div>
+    <ys-goods-card></ys-goods-card>
     <ys-popup :showModal="showModal"
               v-show="showModal"
               @close="close"
@@ -84,18 +86,21 @@
       </div>
     </ys-popup>
   </div>
+
 </template>
 
 <script>
   import  ysSearch from '@/components/search'
   import  ysCard from "@/components/coupon"
   import  ysPopup from '@/components/popup'
+  import ysGoodsCard from "@/components/goodsCard"
   export default {
     name: "cardList",
     components: {
       ysSearch,
       ysCard,
-      ysPopup
+      ysPopup,
+      ysGoodsCard
     },
     data(){
         return {
@@ -132,6 +137,17 @@
             },
             {
               id:2,
+              price:1020,
+              mPrice:103,
+              cardName:'满减劵',
+              shopName:'ATH眼镜店铺',
+              useName:'一元买券',
+              storeName:200,
+              start_time:'2018.06.18',
+              end_time:'2018.06.20'
+            },
+            {
+              id:3,
               price:1020,
               mPrice:103,
               cardName:'满减劵',
@@ -213,6 +229,7 @@
   }
   .card{
     display: flex;
+    flex-wrap: wrap;
   }
 
 

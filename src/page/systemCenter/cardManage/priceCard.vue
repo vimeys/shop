@@ -2,7 +2,7 @@
 *   Created By  YS  on 2018/8/8
 */
 <template>
-        <div>
+        <div class="box">
             <el-container>
               <el-header>
                 <div class="active-header">
@@ -11,17 +11,31 @@
                   <div class="del">删除</div>
                 </div>
               </el-header>
-              <el-main>
+              <el-main >
+                <div class="cards">
+                  <ys-coupon></ys-coupon>
+                  <ys-coupon></ys-coupon>
+                  <ys-coupon></ys-coupon>
+                  <ys-coupon></ys-coupon>
+                  <ys-coupon></ys-coupon>
+                  <ys-coupon></ys-coupon>
+                </div>
 
               </el-main>
             </el-container>
+          <ys-goods-card></ys-goods-card>
         </div>
 </template>
 
 <script>
   import ysCoupon from '@/components/coupon'
+  import ysGoodsCard from "@/components/goodsCard"
     export default {
         name: "priceCard",
+      components:{
+          ysCoupon,
+        ysGoodsCard
+      },
       data(){
           return{
 
@@ -32,13 +46,16 @@
 
 <style lang='less' scoped>
   @import "~@/assets/style/mixin";
-  .active-header{
+  .box{
+    width: 1200px;
+  }
+  .active-header {
     display: flex;
     width: 1200px;
     height: 100px;
     justify-content: flex-start;
     align-items: center;
-    div{
+    div {
       width: 111px;
       height: 37px;
       background: #FFD736;
@@ -47,12 +64,17 @@
       text-align: center;
       margin-right: 30px;
     }
-    .disabled{
+    .disabled {
       background: #E5E5E5;
     }
-    .del{
+    .del {
       /*float: right;*/
       margin-left: 750px;
     }
+  }
+  .cards{
+    display: flex;
+    width: 1200px;
+    flex-wrap: wrap;
   }
 </style>

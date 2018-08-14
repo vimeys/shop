@@ -24,6 +24,17 @@ import  cardManage from "@/page/systemCenter/cardManage/cardManage"
 import  vipCard  from '@/page/systemCenter/cardManage/vipCard'
 //中心卡券会员卡
 import  priceCard from '@/page/systemCenter/cardManage/priceCard'
+
+//客户管理
+//订单管理
+import   orderManage from '@/page/clientManage/orderManage'
+//销售人员管
+import  salesmanList from '@/page/clientManage/salesmanList'
+//预约单列表
+import appointmentList from "@/page/clientManage/appointmentList"
+//客户列表
+import clientList from '@/page/clientManage/clientList'
+
 Vue.use(Router)
 
 export default new Router({
@@ -55,7 +66,7 @@ export default new Router({
           component:activity,
           children: [
             {
-              path:'/abc',
+              path:'/:id',
               component:cardList
             }
           ]
@@ -69,19 +80,33 @@ export default new Router({
       ]
     },
     {
-      path:'/cardManage',
+      path:'/123/cardManage',
       name:'cardManage',
       component:cardManage,
-      children:[
-        {
-          path:'/priceCard',
-          component:priceCard
-        },{
-        path:'/cardManage/vipCard',
-          component:vipCard
-        }
-      ],
-
+    },
+    //订单管理
+    {
+      path:'/client/orderManage',
+      name:'orderManage',
+      component:orderManage
+    },
+    //销售人员管
+    {
+      path:'/client/salesmanList',
+      name:'salesmanList',
+      component:salesmanList
+    },
+    //预约单列表
+    {
+      path:'/client/appointmentList',
+      name:'appointmentList',
+      component:appointmentList
+    },
+    //客户列表
+    {
+      path:'/client/clientList',
+      name:'clientList',
+      component:clientList
     }
   ]
 })

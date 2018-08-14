@@ -30,16 +30,16 @@
         },
         push(){
            this.$router.push({
-             path:'/cardManage/vipCard'
+             path:'/cardManage/priceCard'
            })
         }
       },
-      mounted(){
-          this.$router.push({
-            path:'/cardManage/vipCard'
-          })
-
-      }
+      // mounted(){
+      //     this.$router.push({
+      //       path:'/cardManage/vipCard'
+      //     })
+      //
+      // }
     }
 </script>
 

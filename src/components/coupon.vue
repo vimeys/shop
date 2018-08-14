@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card" :style="{marginBottom: marginBottom+'px'}">
     <div class="coupon-item-left">
       <img src="@/assets/images/Coupons-bgimg.png" alt="">
       <div class="coupon-item-left-text">
@@ -64,6 +64,12 @@
         default(){
             return false
         }
+      },
+      marginBottom:{
+        type:Number,
+        default(){
+          return 0
+        }
       }
     },
     data(){
@@ -92,6 +98,7 @@
     position: relative;
     width: 360px;
     height: 108px;
+    margin-bottom: 60px;
     display: flex;
     flex-direction: row;
     .coupon-item-left{
@@ -121,7 +128,6 @@
           text-align: center;
         }
       }
-
     }
     .coupons-item-right{
       display: flex;
@@ -204,7 +210,6 @@
     .coupon-radio{
       width: 34px;
       height: 34px;
-
       position: absolute;
       top:-17px;
       right: -17px;

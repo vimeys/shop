@@ -1,6 +1,6 @@
 <template>
-  <div class="popup">
-    <div class="popup-content">
+  <div class="popup" :style="{'z-index':zIndex}">
+    <div class="popup-content" :style="{width:width+'px',height:height+'px'}">
             <span class="el-icon-close popup-close"
                   @click="close"
             ></span>
@@ -19,6 +19,24 @@
         type: Boolean,
         default() {
           return false
+        }
+      },
+      width:{
+        type:Number,
+        default(){
+          return 1024
+        }
+      },
+      height:{
+        type:Number,
+        default(){
+          return 800
+        }
+      },
+      zIndex:{
+        type:Number,
+        default(){
+          return 100
         }
       }
     },
@@ -41,13 +59,12 @@
           label: '北京烤鸭'
         }],
         value: '',
-        selfShow:this.showModal
+        selfShow:this.showModal,
       }
     },
     methods: {
       close() {
         console.log(123);
-
         this.$emit("close",false)
       },
       open5() {
