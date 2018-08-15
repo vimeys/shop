@@ -4,7 +4,7 @@
 */
 <template>
     <div class="box">
-        <div class="box-image"><img src="@/assets/images/goods.jpg" alt="">
+        <div class="box-image"><img :src="src" alt="">
           <div class="coupon-radio" @click="choose" >
             <div class="coupon-radio-point"></div>
           </div>
@@ -25,7 +25,12 @@
 
 <script>
     export default {
-        name: "goodsCard"
+        name: "goodsCard",
+      data(){
+          return{
+            src:require('../assets/images/goods.jpg')
+          }
+      }
     }
 </script>
 

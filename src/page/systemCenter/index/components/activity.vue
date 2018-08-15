@@ -1,43 +1,43 @@
 <template>
   <div>
-    <div v-show="show" @back="back">
-      <el-container>
-        <el-header>
-          <div class="active-header">
-            <div class="disabled"><span class="el-icon-circle-plus"></span>&nbsp;&nbsp;新建活动</div>
-            <div @click="addCard">管理</div>
-            <div class="del">删除</div>
-          </div>
-        </el-header>
-        <el-main class="main">
-          <div class="active-items-one" @click="hrefCard(1)" :data="1">
-            <img src="../../../../assets/images/active.png" alt="">
-            <div class="active-text"> 测试文字sfasdfasdfsfas</div>
-            <div class="active-radio" @click="choose" v-show="isChecke">
-              <div class="active-radio-point" v-show="chosed"></div>
-            </div>
-          </div>
-          <div class="active-items-s" @click="hrefCard(2)" :data="2">
-            <img src="../../../../assets/images/active.png" alt="">
-            <div class="active-text"> 测试文字爱的范fas</div>
-            <div class="active-radio" @click="choose" v-show="isChecke">
-              <div class="active-radio-point" v-show="chosed"></div>
-            </div>
-          </div>
-          <div class="active-items-l" @click="hrefCard(3)" :data="3">
-            <img src="../../../../assets/images/active.png" alt="">
-            <div class="active-text"> 测试文字sfas</div>
-            <div class="active-radio" @click="choose" v-show="isChecke">
-              <div class="active-radio-point" v-show="chosed"></div>
-            </div>
-          </div>
-        </el-main>
-      </el-container>
-      <div class="coupons-items">
-        <div class="coupons-item">
-        </div>
-      </div>
-    </div>
+    <!--<div v-show="show" @back="back">-->
+      <!--<el-container>-->
+        <!--<el-header>-->
+          <!--<div class="active-header">-->
+            <!--<div class="disabled"><span class="el-icon-circle-plus"></span>&nbsp;&nbsp;新建活动</div>-->
+            <!--<div @click="addCard">管理</div>-->
+            <!--<div class="del">删除</div>-->
+          <!--</div>-->
+        <!--</el-header>-->
+        <!--<el-main class="main">-->
+          <!--<div class="active-items-one" @click="hrefCard(1)" :data="1">-->
+            <!--<img src="../../../../assets/images/active.png" alt="">-->
+            <!--<div class="active-text"> 测试文字sfasdfasdfsfas</div>-->
+            <!--<div class="active-radio" @click="choose" v-show="isChecke">-->
+              <!--<div class="active-radio-point" v-show="chosed"></div>-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--<div class="active-items-s" @click="hrefCard(2)" :data="2">-->
+            <!--<img src="../../../../assets/images/active.png" alt="">-->
+            <!--<div class="active-text"> 测试文字爱的范fas</div>-->
+            <!--<div class="active-radio" @click="choose" v-show="isChecke">-->
+              <!--<div class="active-radio-point" v-show="chosed"></div>-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--<div class="active-items-l" @click="hrefCard(3)" :data="3">-->
+            <!--<img src="../../../../assets/images/active.png" alt="">-->
+            <!--<div class="active-text"> 测试文字sfas</div>-->
+            <!--<div class="active-radio" @click="choose" v-show="isChecke">-->
+              <!--<div class="active-radio-point" v-show="chosed"></div>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</el-main>-->
+      <!--</el-container>-->
+      <!--<div class="coupons-items">-->
+        <!--<div class="coupons-item">-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
     <ys-popup :showModal="showModal"
               v-show="showModal"
               @close="close"
@@ -115,6 +115,7 @@
         <!--<el-button type="text" @click="open5">点击打开 Message Box</el-button>-->
       </div>
     </ys-popup>
+    <ys-vip-card></ys-vip-card>
     <router-view></router-view>
   </div>
 
@@ -123,14 +124,17 @@
 <script>
   import  ysCoupon from "@/components/coupon"
   import ysPopup from '@/components/popup'
+  import  ysVipCard from '@/components/vipCard'
     export default {
         name: "activity",
       components:{
         ysCoupon,
-        ysPopup
+        ysPopup,
+        ysVipCard
       },
       data(){
         return {
+          cardNum:2,
           showModal:false,
           chosed:false,
           isChecke:false,
@@ -178,7 +182,7 @@
     }
 </script>
 
-<style lang="less" >
+<style lang="less"  scoped>
   @import "~@/assets/style/mixin";
 
   .active-header{

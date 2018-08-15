@@ -25,7 +25,7 @@ import  vipCard  from '@/page/systemCenter/cardManage/vipCard'
 //中心卡券会员卡
 import  priceCard from '@/page/systemCenter/cardManage/priceCard'
 
-//客户管理
+//*******客户管理********
 //订单管理
 import   orderManage from '@/page/clientManage/orderManage'
 //销售人员管
@@ -34,6 +34,10 @@ import  salesmanList from '@/page/clientManage/salesmanList'
 import appointmentList from "@/page/clientManage/appointmentList"
 //客户列表
 import clientList from '@/page/clientManage/clientList'
+
+//***********门店员工管理*******************
+import
+
 
 Vue.use(Router)
 

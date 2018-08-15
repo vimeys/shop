@@ -103,15 +103,7 @@
                 <el-button
                   size="mini"
                   class="base-btn"
-                  @click="handleEdit(scope.$index, scope.row)">查询</el-button>
-              </template>
-            </el-table-column>
-            <el-table-column label="修改密码">
-              <template slot-scope="scope">
-                <el-button
-                  size="mini"
-                  class="base-btn"
-                  @click="handleEdit(scope.$index, scope.row)">修改</el-button>
+                  @click="handleHistory(scope.$index, scope.row)">查询</el-button>
               </template>
             </el-table-column>
             <el-table-column label="会员卡查询">
@@ -124,34 +116,184 @@
             </el-table-column>
           </el-table>
           <div class="table-btns">
-            <div class="btn">添加会员</div>
-            <div class="btn">删除会员</div>
+            <div class="btn" @click="openCard">开卡</div>
           </div>
         </div>
         <ys-popup
-          :showModal="psw.showModal"
-          v-show="psw.showModal"
+          :showModal="code.showModal"
+          v-show="code.showModal"
           @close="close"
-          :width='psw.pWidth'
-          :height="psw.pHeight"
+          :width='code.pWidth'
+          :height="code.pHeight"
         >
           <div class="changePsw">
             <el-row class="title">
               <el-col :span="6" :offset="4">修改密码</el-col>
             </el-row>
-            <el-row class="row">
-              <el-col>账号归属</el-col>
-              <el-col>Mact</el-col>
-            </el-row>
-            <el-row class="row">
-              <el-col>修改密码</el-col>
-              <el-col>
-                <input type="password" placeholder="请输入密码">
-              </el-col>
+            <el-row>
+              <el-col><img src="@/assets/images/testCode.png" alt=""></el-col>
             </el-row>
             <el-row class="row">
               <el-col>
                 <div class="psw-btn">确定</div>
+              </el-col>
+            </el-row>
+          </div>
+        </ys-popup>
+        <ys-popup
+          ::showModal="opc.showModal"
+          v-show="opc.showModal"
+          @close="close"
+          :width='opc.pWidth'
+          :height="opc.pHeight"
+        >
+          <div class="table-box">
+            <el-row class="row">
+              <el-col :span="24">开卡</el-col>
+            </el-row>
+            <el-scrollbar class="scroll">
+             <el-row class="row">
+               <el-col :span="6">
+                 <input type="text" placeholder="请输入会员姓名" class="input">
+               </el-col>
+               <el-col :span="8" :offset="2">
+                 <input type="text" placeholder="请输入会员手机号" class="input">
+               </el-col>
+               <el-col :span="6" :offset="2">
+                 <el-select v-model="value" size="small" placeholder="请选择">
+                   <el-option
+                     v-for="item in options"
+                     :key="item.value"
+                     :label="item.label"
+                     :value="item.value">
+                   </el-option>
+                 </el-select>
+               </el-col>
+             </el-row>
+              <el-row class="row">
+                <el-col :span="4">服务范围</el-col>
+                <el-col :span="20" >
+                    <el-row>
+                      <el-col :span="22"><div class="box">洗剪吹</div></el-col>
+                      <el-col :span="1" :offset="1">
+                        <div class="coupon-radio" >
+                          <div class="coupon-radio-point"></div>
+                        </div>
+                      </el-col>
+                    </el-row>
+                    <el-row>
+                      <el-col :span="22"><div class="box">洗剪吹</div></el-col>
+                      <el-col :span="1" :offset="1" >
+                        <div class="coupon-radio" >
+                          <div class="coupon-radio-point"></div>
+                        </div>
+                      </el-col>
+                    </el-row>
+                    <el-row>
+                      <el-col :span="22"><div class="box">洗剪吹</div></el-col>
+                      <el-col :span="1" :offset="1">
+                        <div class="coupon-radio" >
+                          <div class="coupon-radio-point"></div>
+                        </div>
+                      </el-col>
+                    </el-row>
+                </el-col>
+              </el-row>
+              <el-row class="row">
+                <el-col :span="4">有效期限</el-col>
+                <el-col :span="18">
+                  <el-select v-model="value" size="small" placeholder="请选择">
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
+              <el-row class="row">
+                <el-col :span="4">享受折扣</el-col>
+                <el-col :span="20">
+                  <input type="text" placeholder="请输入会员卡的折扣" class="input">
+                </el-col>
+              </el-row>
+              <el-row class="row">
+                <el-col :span="4">
+                  购买金额
+                </el-col>
+                <el-col :span="20">
+                  <el-row>
+                    <el-col>
+                      <input type="text" placeholder="请输入购买该会员卡的金额" class="input">
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col>· 购买金额会直接算到会员卡余额当中</el-col>
+                  </el-row>
+                </el-col>
+              </el-row>
+              <el-row class="row">
+                <el-col :span="4">
+                  充值金额
+                </el-col>
+                <el-col :span="20">
+                  <el-row>
+                    <el-col>
+                      <input type="text" placeholder="请输入继续充值该会员卡的金额" class="input">
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col>· 继续充值的金额大于等于购买金额</el-col>
+                  </el-row>
+                </el-col>
+              </el-row>
+              <el-row class="row">
+                <el-col>
+                  <div class="opc-btn">开通会员</div>
+                </el-col>
+              </el-row>
+            </el-scrollbar>
+          </div>
+        </ys-popup>
+
+        <!--消费记录-->
+        <ys-popup  :showModal="history.showModal"
+                   v-show="history.showModal"
+                   @close="close"
+                   :width='history.pWidth'
+                   :height="history.pHeight"
+        >
+          <div class="history">
+            <el-row class="history-word">
+              <el-col>消费信息</el-col>
+            </el-row>
+            <el-row>
+              <el-col>
+                <div class="history-title">
+                  <div>Mact消费记录</div>
+                  <div>
+                    总消费：￥281813
+                  </div>
+                </div>
+                <el-table class="history-table" :data="tableData">
+                  <el-table-column
+                    label="姓名"
+                    width="200">
+                    <template slot-scope="scope">
+                      <!--<i class="el-icon-time"></i>-->
+                      <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    label="姓名"
+                    width="203">
+                    <template slot-scope="scope">
+                      <!--<i class="el-icon-time"></i>-->
+                      <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                    </template>
+                  </el-table-column>
+                </el-table>
               </el-col>
             </el-row>
           </div>
@@ -209,10 +351,15 @@
                   </template>
                 </el-table-column>
               </el-table>
-              <div class="table-btns">
-                <div class="btn">添加会员</div>
-                <div class="btn">删除会员</div>
-              </div>
+            </div>
+            <div class="block">
+              <el-pagination
+                prev-text="上一页"
+                next-text="下一页"
+                layout="prev, pager, next"
+                class="page"
+                :total="1000">
+              </el-pagination>
             </div>
           </div>
       </el-tab-pane>
@@ -231,10 +378,20 @@
       },
       data(){
         return {
-          psw:{//修改密码弹窗
+          code:{//支付二维码弹窗
+            showModal:false,
+            pWidth:759,
+            pHeight:748,
+          },
+          opc:{//开发弹窗
+            showModal:false,
+            pWidth:760,
+            pHeight:808,
+          },
+          history:{
             showModal:false,
             pWidth:504,
-            pHeight:323,
+            pHeight:708,
           },
           placeholder:'搜索对应标签',
           options: [{
@@ -283,13 +440,23 @@
           // }
         },
         handleEdit(tab,event){
-            this.psw.showModal=true
+            this.code.showModal=true
+        },
+        //查询消费记录
+        handleHistory(){
+            this.history.showModal=true
+        },
+        //弹起开卡弹窗
+        openCard(e){
+          this.opc.showModal=true
         },
         chose(){
           console.log(123);
         },
         close(e){
-          this.psw.showModal=e;
+          this.code.showModal=e;
+          this.opc.showModal=e;
+          this.history.showModal=e;
         }
       }
     }
@@ -344,6 +511,98 @@
   }
   .title{
     /*margin-top: ;*/
+  }
+  .block{
+    margin-top: 30px;
+    .page{
+      height: 100px;
+    }
+  }
+
+  /*开卡弹窗*/
+  .table-box{
+    width: 100%;
+    padding: 50px;
+    box-sizing: border-box;
+    >.row{
+      border: 1px solid red;
+    }
+  }
+
+  .coupon-radio{
+    margin-top: 22px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid #ffd73a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    .coupon-radio-point{
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: #ffd73a;
+    }
+  }
+  .scroll{
+    width: 100%;
+    height: 700px;
+     /*/deep/ .el-scrollbar__wrap::-webkit-scrollbar{*/
+      /*display: none;*/
+    /*}*/
+    /deep/ .el-scrollbar__thumb{
+      background: @bs-color;
+    }
+    .row{
+      margin: 30px 0;
+    }
+    .input{
+      .base-input;
+    }
+    .box{
+      width: 100%;
+      height: 36px;
+      border: 1px solid #d8d8d8;
+      line-height: 36px;
+      text-align: center;
+      margin: 15px 0;
+      border-radius: 4px;
+    }
+    .opc-btn{
+      .base-btn-111
+    }
+  }
+  /*消费信息弹窗*/
+  .history{
+  width: 100%;
+    padding: 50px 50px 0;
+    &-word{
+      margin-top: 20px;
+      margin-bottom: 30px;
+      text-align: left;
+      font-size: 20px;
+      color:#282828;
+    }
+    &-title{
+      display: flex;
+      width:403px;
+      height:47px;
+      background:rgba(255,215,54,1);
+
+
+      >div{
+        flex: 1;
+        text-align: center;
+        line-height: 47px;
+      }
+    }
+    &-table{
+      /deep/ .cell{
+        text-align: center;
+      }
+    }
   }
 
 </style>
