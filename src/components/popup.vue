@@ -5,7 +5,6 @@
                   @click="close"
             ></span>
       <slot>
-
       </slot>
     </div>
   </div>

@@ -36,7 +36,9 @@ import appointmentList from "@/page/clientManage/appointmentList"
 import clientList from '@/page/clientManage/clientList'
 
 //***********门店员工管理*******************
-import
+//门店管理
+import shopSetting from '@/page/shopManage/shopSetting'
+
 
 
 Vue.use(Router)
@@ -111,6 +113,12 @@ export default new Router({
       path:'/client/clientList',
       name:'clientList',
       component:clientList
+    },
+    //门店管理
+    {
+      path:'/shopManage/shopSetting',
+      name:'shopSetting',
+      component:shopSetting
     }
   ]
 })
