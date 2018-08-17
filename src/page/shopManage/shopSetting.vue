@@ -27,7 +27,7 @@
       :heigth="pHeight"
     >
       <div class="addShop">
-        <el-row>
+        <el-row class="content">
             <el-col class="span9" :span="9">
               <el-scrollbar class="scroll">
                 <shop-detail></shop-detail>
@@ -37,6 +37,9 @@
             </el-col>
             <el-col :span="14">2</el-col>
         </el-row>
+        <el-row>
+          <el-col :span="24"><div class="addBtn">保存</div></el-col>
+        </el-row>
       </div>
     </ys-popup>
   </div>
@@ -45,6 +48,7 @@
 <script>
   import  shopDetail from '@/components/shopDetail';
   import  ysPopup from '@/components/popup'
+  import url from "@/assets/script/url"
     export default {
         name: "shopSetting",
       components:{
@@ -52,18 +56,26 @@
         ysPopup
       },data(){
           return{
-            showModal:false,
+            showModal:true,
             pWidth:1200,
-            pHeight:1129,
+            pHeight:800,
           }
       },
       methods:{
           addShop(){
+              this.$http.post('/shop',{userId:1007})
               this.showModal=true
           },
           close(e){
             this.showModal=e
           }
+
+      },
+      mounted(){
+        console.log(url.shopList);
+        this.$http.post('/shop/recgoodstype/sharelist',{userId:1007}).then(json=>{
+          console.log(json);
+        })
       }
     }
 </script>
@@ -118,12 +130,27 @@
   }
   /*弹窗内容*/
   .scroll{
-    height: 1030px;
+    height: 700px;
     width: 100%;
     overflow: hidden;
+  }
+  .content{
+    height: 700px;
   }
   .iframe{
     width: 100%;
     height: 1000px;
+  }
+  .el-scrollbar__wrap {
+    overflow-x: hidden;
+  }
+
+  .addBtn{
+    width:594px;
+    height:36px;
+    background:rgba(255,215,54,1);
+    border-radius:4px;
+    line-height: 36px;
+    margin: 0 auto;
   }
 </style>

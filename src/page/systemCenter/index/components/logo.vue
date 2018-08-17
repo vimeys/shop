@@ -89,7 +89,6 @@
             height: 609px;
           }
         }
-
       }
     }
     .right{

@@ -10,7 +10,15 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/shop':{//此处并非一定和url一致。
+        target:'https://sslapi.yilianchuang.cn//services/',
+        changeOrigin:true,//允许跨域
+        pathRewrite:{
+          '^/shop': '/'
+        }
+      }
+    },
 
     // Various Dev Server settings
     host: '192.168.0.155', // can be overwritten by process.env.HOST
