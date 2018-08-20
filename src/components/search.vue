@@ -50,7 +50,7 @@
     .input{
        width: 100%;
       border-radius: 4px;
-      border: 1px solid #F9F9F9;
+      border: 1px solid #e1e1e1;
       position: absolute;
       top:0;
       left: 0;

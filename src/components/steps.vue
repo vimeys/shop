@@ -6,9 +6,9 @@
       </div>
       <div class="right">
         <div class="text"
-             @click="href(index)"
+             @click="href(index,item.router)"
              :class="{big:item.active,}"
-             v-for="(item,index) in navList"
+             v-for="(item,index) in selfNavList"
              v-cloak>
           {{item.name}} <span :class="{'el-icon-caret-right':item.active}"></span>
         </div>
@@ -22,19 +22,23 @@
         data(){
            return {
              active:1,
-             title:[{name:'素材中心',status:'wait' },{name:'素材中心',status:'error' },{name:'素材中心',status:'finish' }]
+             title:[{name:'素材中心',status:'wait' },{name:'素材中心',status:'error' },{name:'素材中心',status:'finish' }],
+             selfNavList:this.navList
            }
         },
       methods:{
-          href(i){
+          href(i,router){
             // console.log(this.navList);
             this.navList.forEach((item,index)=>{
                 item.active=false
               if(i==index){
                 item.active=true
               }
+              this.$router.push({
+                path:router
+              })
             })
-            console.log(this.navList);
+            // console.log(this.navList);
           }
       },
       props:{
@@ -44,11 +48,13 @@
                   return [
                     {
                       name:'素材中心',
-                      active:true
+                      active:true,
+                      router:'/index'
                     },
                     {
                       name:'首页',
-                      active:false
+                      active:false,
+                      router:'/client/clientList'
                     },
                     {
                       name:'商品',
@@ -64,6 +70,11 @@
                   ]
               }
 
+          }
+      },
+      watch:{
+          navList:function () {
+            this.selfNavList=this.navList
           }
       }
     }

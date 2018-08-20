@@ -1,0 +1,82 @@
+//运营管理
+ export const client=[
+
+   {
+     name:'首页',
+     active:false,
+     router:'/index'
+   },
+   {
+     name:'服务',
+     active:false,
+     router:'/client/clientList'
+   },
+   {
+     name:'卡券管理',
+     active:false,
+     router:'/system/cardManage'
+   },
+   {
+     name:"裂变分销",
+     active:false
+   }
+ ]
+// 店铺管理
+ export const shopSetting=[
+  {
+    name:'门店设置',
+    active:true,
+    router:'/shopManage/shopSetting'
+  },
+  {
+    name:'员工管理',
+    active:false,
+    router:'/shopManage/staffSetting'
+  },
+]
+//账号管理
+export const accountSetting=[
+  {
+    name:'账号设置',
+    active:true,
+    router:'/shopManage/shopSetting'
+  },
+  {
+    name:'通知中心',
+    active:false,
+    router:'/shopManage/staffSetting'
+  },
+  {
+    name:'使用帮助',
+    active:false,
+    router:'/shopManage/staffSetting'
+  },
+  {
+    name:'余额管理',
+    active:false,
+    router:'/shopManage/staffSetting'
+  },
+]
+//客户管理
+export const clientManage=[
+  {
+    name:'预约管理',
+    active:true,
+    router:'/client/appointmentList'
+  },
+  {
+    name:'客户列表',
+    active:false,
+    router:'/client/clientList'
+  },
+  {
+    name:'分销人员管理',
+    active:false,
+    router:'/client/salesmanList'
+  },
+  {
+    name:'订单管理',
+    active:false,
+    router:'/client/orderManage'
+  },
+]

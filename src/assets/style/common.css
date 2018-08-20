@@ -53,11 +53,11 @@ input {
   display: none;
 }
 .before::before {
-  content: '*';
+  content: '＊';
   color: red;
 }
 .after::after {
-  content: '*';
+  content: '＊';
   color: red;
 }
 /*# sourceMappingURL=common.css.map */

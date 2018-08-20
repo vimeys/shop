@@ -4,7 +4,7 @@ import HelloWorld from '@/components/HelloWorld'
 
 //  公共步骤条
 import steps from '@/components/steps'
-// 后台中心分页
+// **************后台中心分页--运营管理************
 import ysIndex from '@/page/systemCenter/index/index'
 
 import ysAddBg from '@/page/systemCenter/index/components/bg'
@@ -18,12 +18,17 @@ import activity from '@/page/systemCenter/index/components/activity'
 // 促销活动里面的卡券
 import  cardList from '@/page/systemCenter/index/components/cardList'
 
-//后台中心卡券管理
+// 服务商品列表
+import  goodsList from '@/page/systemCenter/goodsList'
+
+//******后台中心卡券管理******
 import  cardManage from "@/page/systemCenter/cardManage/cardManage"
-//后台中心卡券管理优惠券
+//优惠券
 import  vipCard  from '@/page/systemCenter/cardManage/vipCard'
-//中心卡券会员卡
+//会员卡
 import  priceCard from '@/page/systemCenter/cardManage/priceCard'
+
+
 
 //*******客户管理********
 //订单管理
@@ -35,10 +40,13 @@ import appointmentList from "@/page/clientManage/appointmentList"
 //客户列表
 import clientList from '@/page/clientManage/clientList'
 
+
+
 //***********门店员工管理*******************
 //门店管理
 import shopSetting from '@/page/shopManage/shopSetting'
-
+//员工管理
+import  staffSetting from '@/page/shopManage/staffSetting'
 
 
 Vue.use(Router)
@@ -50,6 +58,7 @@ export default new Router({
       name:'steps',
       component:steps
     },
+    //首页
     {
       path:'/index',
       name:'index',
@@ -80,15 +89,35 @@ export default new Router({
         // 促销活动里面的卡券
         {
           path:'/cardList',
+          name:cardList,
           component:cardList
         },
 
       ]
     },
+    //卡券管理
     {
-      path:'/123/cardManage',
-      name:'cardManage',
-      component:cardManage,
+      path: '/system/cardManage',
+      name: 'cardManage',
+      component: cardManage,
+      children: [
+        {
+          path: 'system/priceCard',
+          name: 'priceCard',
+          component: priceCard
+        },
+        {
+          path: 'system/vipCard',
+          name: 'vipCard',
+          component: vipCard
+        },
+      ]
+    },
+    //服务商品列表
+    {
+      path:'/system/goodsList',
+      name:goodsList,
+      component:goodsList
     },
     //订单管理
     {
@@ -119,6 +148,12 @@ export default new Router({
       path:'/shopManage/shopSetting',
       name:'shopSetting',
       component:shopSetting
+    },
+    //员工管理
+    {
+      path:'/shopManage/staffSetting',
+      name:'staffSetting',
+      component:staffSetting
     }
   ]
 })

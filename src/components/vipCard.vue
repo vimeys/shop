@@ -38,7 +38,9 @@
           }
       },
       data(){
+          return {
 
+          }
       }
     }
 </script>

@@ -3,10 +3,15 @@
 *   商品卡片
 */
 <template>
-    <div class="box">
-        <div class="box-image"><img :src="src" alt="">
+    <div class="item">
+        <div class="box-image">
+          <img :src="src" alt="">
+          <div class="box-btns">
+              <div class="box-btns-edit">编辑服务</div>
+              <div class="box-btns-del"> 删除服务</div>
+          </div>
           <div class="coupon-radio" @click="choose" >
-            <div class="coupon-radio-point"></div>
+            <div class="coupon-radio-point" v-show="chosed"></div>
           </div>
         </div>
       <div class="box-content">
@@ -28,7 +33,13 @@
         name: "goodsCard",
       data(){
           return{
-            src:require('../assets/images/goods.jpg')
+            src:require('../assets/images/goods.jpg'),
+            chosed:true
+          }
+      },
+      methods:{
+          choose(){
+
           }
       }
     }
@@ -55,17 +66,45 @@
         background: #ffd73a;
       }
     }
-    .box{
+    .item{
       display: flex;
       flex-direction: column;
+      margin-right: 20px;
       .box-image{
         position: relative;
         width: 175px;
         height: 175px;
+        .box-btns{
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          top:0;
+          left: 0;
+          background:rgba(60,60,60,0.5);
+          /*display: flex;*/
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          display: none;
+        }
+        .box-btns-edit,.box-btns-del{
+          width: 82px;
+          height: 26px;
+          background: @bs-color;
+          font-size: 12px;
+          line-height: 26px;
+          text-align: center;
+          border-radius: 4px;
+          cursor: pointer;
+          margin: 15px;
+        }
         img{
           width: 100%;
           height: 100%;
         }
+      }
+      .box-image:hover .box-btns{
+          display: flex;
       }
       .box-content{
         width: 175px;

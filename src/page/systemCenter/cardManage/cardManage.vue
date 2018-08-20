@@ -5,11 +5,13 @@
 <template>
   <div>
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="优惠券" name="first">优惠券</el-tab-pane>
-      <el-tab-pane label="会员卡" name="fourth">会员卡</el-tab-pane>
+      <el-tab-pane label="优惠券" name="first">
+        <router-view></router-view>
+      </el-tab-pane>
+      <el-tab-pane label="会员卡" name="second"><router-view></router-view></el-tab-pane>
     </el-tabs>
-    <div @click="push">123</div>
-    <router-view></router-view>
+    <!--<div @click="push">123</div>-->
+    <!--<router-view></router-view>-->
   </div>
 
 </template>
@@ -26,13 +28,20 @@
       },
       methods:{
         handleClick(tab, event) {
-          console.log(tab, event);
+          switch (this.activeName) {
+            case 'first':
+              this.$router.push({
+                path: '/system/priceCard'
+              });
+              break;
+            case 'second':
+              this.$router.push({
+                path: '/system/vipCard'
+              });
+              break;
+
+          }
         },
-        push(){
-           this.$router.push({
-             path:'/cardManage/priceCard'
-           })
-        }
       },
       // mounted(){
       //     this.$router.push({
@@ -40,6 +49,12 @@
       //     })
       //
       // }
+      created(){
+
+        this.$router.push({
+          path:'/system/priceCard'
+        })
+      }
     }
 </script>
 

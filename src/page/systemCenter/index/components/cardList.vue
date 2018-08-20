@@ -8,14 +8,14 @@
       <div class="del">删除</div>
     </div>
     <div class="card">
-      <template v-for="item in list">
-        <ys-card
-          :detail="item"
-          @reMake="reMake"
-          :marginBottom="60"
-        >
-        </ys-card>
-      </template>
+      <!--<template v-for="item in list">-->
+        <!--<ys-card-->
+          <!--:detail="item"-->
+          <!--@reMake="reMake"-->
+          <!--:marginBottom="60"-->
+        <!--&gt;-->
+        <!--</ys-card>-->
+      <!--</template>-->
     </div>
     <ys-goods-card></ys-goods-card>
     <ys-popup :showModal="showModal"

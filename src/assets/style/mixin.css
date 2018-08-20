@@ -1,3 +1,65 @@
+html,
+body {
+  overflow-x: hidden;
+  font-family: 'SimHei';
+}
+html {
+  height: 100%;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+img {
+  object-fit: cover;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: rem(28);
+  font-weight: inherit;
+}
+button {
+  background: none;
+  border: none;
+  text-align: center;
+  display: block;
+}
+a {
+  text-decoration: none;
+}
+li {
+  list-style: none;
+}
+.cs-box {
+  background: white !important;
+}
+input {
+  outline-style: none;
+  outline-width: 0px;
+  border: none;
+  border-style: none;
+  text-shadow: none;
+  -webkit-appearance: none;
+  -webkit-user-select: text;
+  outline-color: transparent;
+  box-shadow: none;
+}
+[v-cloak] {
+  display: none;
+}
+.before::before {
+  content: '*';
+  color: red;
+}
+.after::after {
+  content: '*';
+  color: red;
+}
 .tips-font {
   font-size: 16px;
   color: #D0021B;
@@ -8,7 +70,7 @@
   border-radius: 4px;
   line-height: 38px;
   font-size: 14px;
-  color: #1a1a1a;
+  color: #282828;
   background: #FFD736;
   text-align: center;
   display: inline-block;
