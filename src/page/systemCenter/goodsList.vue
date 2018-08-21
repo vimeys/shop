@@ -263,7 +263,6 @@
     padding-right: 17px;
     overflow-y: visible;
     overflow-x: hidden;
-
   }
   .aside{
     height: 800px;

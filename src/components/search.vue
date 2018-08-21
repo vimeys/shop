@@ -1,7 +1,13 @@
 <template>
   <div class="bs-search">
-    <input class="input" type="text" :placeholder="placeholder" v-model="searchVal">
-    <i class="el-icon-search search-icon-right" :class="{'search-icon-left':isLeft} " @click="$emit('search',searchVal)"></i>
+    <input class="input"
+           type="text"
+           :placeholder="placeholder"
+           v-model="searchVal">
+    <i class="el-icon-search search-icon-right"
+       :class="{'search-icon-left':isLeft} "
+       @click="$emit('search',searchVal)">
+    </i>
   </div>
 </template>
 

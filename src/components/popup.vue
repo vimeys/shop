@@ -1,3 +1,6 @@
+
+<!--/弹窗模板/-->
+
 <template>
   <div class="popup" :style="{'z-index':zIndex}">
     <div class="popup-content" :style="{width:width+'px',height:height+'px'}">
@@ -41,40 +44,13 @@
     },
     data() {
       return {
-        options: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }],
-        value: '',
         selfShow:this.showModal,
       }
     },
     methods: {
       close() {
-        console.log(123);
         this.$emit("close",false)
       },
-      open5() {
-        this.$alert('<strong>这是 <i>HTML</i> 片段</strong>', 'HTML 片段', {
-          dangerouslyUseHTMLString: true
-        });
-      },
-      //select选择
-      change(e){
-        console.log(e);
-      }
     }
   }
 </script>
@@ -106,6 +82,7 @@
         font-size: 18px;
         font-weight: bold;
         right: 30px;
+        z-index: 1000;
       }
       .popup-close:hover{
           animation:rotate .4s linear;

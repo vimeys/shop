@@ -1,5 +1,5 @@
 @import "variable";
-@import "common";
+//@import "common";
 .tips-font{
   font-size: 16px;
   color:#D0021B;
@@ -8,6 +8,18 @@
 //111像素的按钮
 .base-btn-111{
   width: 111px;
+  height: 38px;
+  border-radius: 4px;
+  line-height: 38px;
+  font-size:14px;
+  color: @bs-font-color;
+  background:@bs-color;
+  text-align: center;
+  display: inline-block;
+}
+
+.base-btn(@width){
+  width: @width;
   height: 38px;
   border-radius: 4px;
   line-height: 38px;
@@ -27,11 +39,20 @@
   border-radius:4px;
   border: none;
   text-align: center;
-  font-size: 16px;
+  font-size: 14px;
+
 }
 
 //不显示的页面元素
 .none{
   color:#fff;
   font-size: 1px;
+}
+
+
+//文字居中
+.text-center(@lineHeight){
+  text-align: center;
+  height: @lineHeight;
+  line-height:@lineHeight;
 }

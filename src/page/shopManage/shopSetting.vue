@@ -25,13 +25,18 @@
       v-show="showModal"
       :width="pWidth"
       :heigth="pHeight"
+      @close="closePop"
     >
       <div class="addShop">
-        <el-scrollbar class="addshop-contentd">
+        <el-scrollbar class="addshop-contentd" >
           <el-row class="content">
             <el-col class="span9" :span="9">
               <el-scrollbar class="scroll">
-                <shop-detail></shop-detail>
+
+                <!--员工卡片-->
+                <shop-detail :shop="form"></shop-detail>
+
+
                 <iframe src="http://test.csmen.cc/c/6/index.html?userId=755&v=432537"  class="iframe" frameborder="0"></iframe>
               </el-scrollbar>
             </el-col>
@@ -47,37 +52,59 @@
               </el-row>
               <el-row class="row-margin">
                 <el-col :span="6">标题</el-col>
-                <el-col :span="16" ><input type="text" placeholder="请输入标题"></el-col>
+                <el-col :span="16" ><input type="text"
+                                           class="base-input"
+                                           placeholder="请输入标题"
+                                           v-model="form.name"></el-col>
                 <el-col :span="2" class="after"></el-col>
               </el-row>
-              <el-row class="row-margin">
-                <el-col :span="6">标题</el-col>
-                <el-col :span="16" ><input class="base-input" type="text" placeholder="请输入标题"></el-col>
-                <el-col :span="2" class="after"></el-col>
-              </el-row>
+              <!--<el-row class="row-margin">-->
+                <!--<el-col :span="6">标题</el-col>-->
+                <!--<el-col :span="16" ><input class="base-input" type="text" placeholder="请输入标题"></el-col>-->
+                <!--<el-col :span="2" class="after"></el-col>-->
+              <!--</el-row>-->
               <el-row class="row-margin">
                 <el-col :span="6">简介</el-col>
-                <el-col :span="16" ><textarea name="" ></textarea></el-col>
+                <el-col :span="16" >
+                  <textarea name=""
+                            placeholder="请输入简介"
+                            class="textarea"
+                            v-model="form.intro">
+
+                  </textarea>
+                </el-col>
                 <el-col :span="2" class="after"></el-col>
               </el-row>
               <el-row class="row-margin">
                 <el-col :span="6">店名</el-col>
-                <el-col :span="16" ><input  class="base-input"type="text" placeholder="请输入标题"></el-col>
+                <el-col :span="16" ><input  class="base-input"
+                                            type="text"
+                                            v-model="form.shopName"
+                                            placeholder="请输入店名"></el-col>
                 <el-col :span="2" class="after"></el-col>
               </el-row>
               <el-row class="row-margin">
                 <el-col :span="6">地址</el-col>
-                <el-col :span="16" ><input  class="base-input"type="text" placeholder="请输入标题"></el-col>
+                <el-col :span="16" ><input  class="base-input"
+                                            type="text"
+                                            v-model="form.address"
+                                            placeholder="请输入地址"></el-col>
                 <el-col :span="2" class="after"></el-col>
               </el-row>
               <el-row class="row-margin">
                 <el-col :span="6">电话</el-col>
-                <el-col :span="16" ><input  class="base-input"type="text" placeholder="请输入标题"></el-col>
+                <el-col :span="16" ><input  class="base-input"
+                                            type="text"
+                                            v-model="form.phone"
+                                            placeholder="请输入电话"></el-col>
                 <el-col :span="2" class="after"></el-col>
               </el-row>
               <el-row class="row-margin">
                 <el-col :span="6">员工数量</el-col>
-                <el-col :span="16" ><input type="text" class="base-input" placeholder="请输入标题"></el-col>
+                <el-col :span="16" ><input type="text"
+                                           v-model.number="form.staffNum"
+                                           class="base-input"
+                                           placeholder="请输入员工数量"></el-col>
                 <el-col :span="2" class="after"></el-col>
               </el-row>
               <el-row class="row-margin">
@@ -121,8 +148,6 @@
                     <el-col :span="12"> <div  class="base-btn-111">闪电编辑</div></el-col>
                     <el-col :span="12"> <div class="base-btn-111">选择文章</div> </el-col>
                   </el-row>
-
-
                 </el-col>
               </el-row>
             </el-col>
@@ -133,6 +158,9 @@
         </el-row>
       </div>
     </ys-popup>
+    <div style="width: 100px;height: 100px;border: 1px solid red;">
+      <upload></upload>
+    </div>
   </div>
 </template>
 
@@ -140,17 +168,29 @@
   import  shopDetail from '@/components/shopDetail';
   import  ysPopup from '@/components/popup'
   import url from "@/assets/script/url"
+  import upload from '@/components/upload'
     export default {
         name: "shopSetting",
       components:{
           shopDetail,
-        ysPopup
-      },data(){
+          ysPopup,
+          upload
+      },
+      data(){
           return{
             showModal:false,
             pWidth:1200,
-            pHeight:800,
+            pHeight:830,
             value4: [new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 9, 40)],
+            form:{
+              name:'',
+              intro:'',
+              shopName:'',
+              address:'',
+              phone:'',
+              workTime:'',
+              staffNum:0
+            }
           }
       },
       methods:{
@@ -158,21 +198,23 @@
               this.$http.post('/shop',{userId:1007})
               this.showModal=true
           },
-          close(e){
-            this.showModal=e
+        closePop(e){
+            this.showModal=false
           }
 
       },
       mounted(){
         console.log(url.shopList);
-        this.$http.post('/shop/recgoodstype/sharelist',{userId:1007}).then(json=>{
+        this.$http.post('/shop/gameusersmoneylog/version3/list ',{ pageIndex:1,pageSize:10,state:0, key:''}).then(json=>{
           console.log(json);
         })
+        this.$http.post('/shop${url.shopList}')
       }
     }
 </script>
 
 <style lang='less' scoped>
+
   @import "~@/assets/style/mixin";
     .box{
       width: 1200px;
@@ -268,6 +310,17 @@
     background:rgba(255,215,54,1);
     border-radius:4px;
     line-height: 36px;
-    margin: 0 auto;
+    margin: 20px auto;
+  }
+  .textarea{
+    width:466px;
+    height: 106px;
+    max-height: 106px;
+    max-width: 466px;
+    padding-top: 10px;
+    padding-left: 10px;
+    background: #e5e5e5;
+    border: none;
+    border-radius: 4px;
   }
 </style>

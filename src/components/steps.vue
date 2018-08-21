@@ -19,6 +19,37 @@
 <script>
     export default {
         name: "steps",
+      props:{
+        navList:{
+          type:Array,
+          default:function () {
+            return [
+              {
+                name:'素材中心',
+                active:true,
+                router:'/index'
+              },
+              {
+                name:'首页',
+                active:false,
+                router:'/client/clientList'
+              },
+              {
+                name:'商品',
+                active:false
+              },
+              {
+                name:'实体店',
+                active:false
+              },{
+                name:"卡券管理",
+                active:false
+              }
+            ]
+          }
+
+        }
+      },
         data(){
            return {
              active:1,
@@ -41,37 +72,7 @@
             // console.log(this.navList);
           }
       },
-      props:{
-          navList:{
-             type:Array,
-              default:function () {
-                  return [
-                    {
-                      name:'素材中心',
-                      active:true,
-                      router:'/index'
-                    },
-                    {
-                      name:'首页',
-                      active:false,
-                      router:'/client/clientList'
-                    },
-                    {
-                      name:'商品',
-                      active:false
-                    },
-                    {
-                      name:'实体店',
-                      active:false
-                    },{
-                      name:"卡券管理",
-                      active:false
-                    }
-                  ]
-              }
 
-          }
-      },
       watch:{
           navList:function () {
             this.selfNavList=this.navList

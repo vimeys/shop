@@ -7,6 +7,7 @@
         <ys-search></ys-search>
         <el-table
           :data="tableData"
+          class="table"
           style="width: 100%">
           <el-table-column
             label="日期"
@@ -92,5 +93,10 @@
 <style lang='less' scoped>
 .box{
   width: 1200px;
+  .table /deep/ thead tr th{
+    background: #ffd73a;
+    color:#222;
+    text-align: center;
+  }
 }
 </style>
