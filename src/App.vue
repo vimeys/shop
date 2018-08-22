@@ -1,12 +1,14 @@
 <template>
   <div id="app">
-
-
       <ys-nav @chooseNav="chooseNav"></ys-nav>
-
-    <div class="main">
+    <div class="main" v-if="loginType">
       <steps :navList="client"></steps>
       <router-view/>
+    </div>
+    <div v-else>
+      <ys-login @login="login">
+
+      </ys-login>
     </div>
 
   </div>
@@ -15,16 +17,21 @@
 <script>
   import steps from "./components/steps";
   import  ysNav from './components/header'
-  import  {client,shopSetting,accountSetting,clientManage} from './assets/script/stepsData'
+  import  {client,shopSetting,accountSetting,clientManage,fodderCenter,moneyManage,dataView} from './assets/script/stepsData'
+  import  ysLogin from './page/login/login'
 export default {
   name: 'App',
   components: {
     steps,
-    ysNav
+    ysNav,
+    ysLogin
   },
   data(){
     return {
-      client:shopSetting
+      client:shopSetting,
+      loginType:false,
+      phone:'',
+      psw:''
     }
   },
   methods:{
@@ -33,22 +40,29 @@ export default {
       switch (index) {
         case 0:
           that.client=shopSetting;
-          console.log(shopSetting);
-          console.log(accountSetting);
+          break
+        case 1:
+          that.client=moneyManage;
           break
         case 2:
           that.client=clientManage;
-          console.log(that.client);
           break
         case 3:
           that.client=client;
-          console.log(that.client);
           break
         case 4:
-          that.client=accountSetting;
-          console.log(that.client);
+          that.client=dataView;
           break
+        case 5:
+          that.client=fodderCenter;
+          break
+        case 6:
+          that.client=accountSetting;
+          break;
       }
+    },
+    login(e){
+      this.loginType=true
     }
   },
   created(){

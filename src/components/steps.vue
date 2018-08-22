@@ -61,7 +61,7 @@
           href(i,router){
             // console.log(this.navList);
             this.navList.forEach((item,index)=>{
-                item.active=false
+                item.active=false;
               if(i==index){
                 item.active=true
               }
@@ -75,7 +75,10 @@
 
       watch:{
           navList:function () {
-            this.selfNavList=this.navList
+            this.selfNavList=this.navList,
+              this.$router.push({
+                path:this.selfNavList[0].router
+              })
           }
       }
     }

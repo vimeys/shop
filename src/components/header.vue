@@ -11,7 +11,7 @@
 
 <script>
     import RouterLink from "vant/es/mixins/router-link";
-    import {client,shopSetting,accountSetting,clientManage} from "../assets/script/stepsData";
+    import {client,shopSetting,accountSetting,clientManage,fodderCenter} from "../assets/script/stepsData";
 
     export default {
         name: "ysHeader",

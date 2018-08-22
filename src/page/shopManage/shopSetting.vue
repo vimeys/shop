@@ -10,12 +10,12 @@
            <el-col class="col" :span="7" :offset="5">
               <shop-detail></shop-detail>
            </el-col>
-           <el-col class="detail" :span="5" :offset="1">
+           <el-col class="detail" :span="7" :offset="1">
              <div class="detail-word">工位数量：30</div>
-             <div class="detail-word">工位数量：30</div>
-             <div class="detail-word">工位数量：30</div>
-             <div class="detail-word">工位数量：30</div>
-             <div class="detail-word">工位数量：30</div>
+             <div class="detail-word">员工数量：30</div>
+             <div class="detail-word">店铺面积：30</div>
+             <div class="detail-word">经营状态：正常营业</div>
+             <div class="detail-word">午休时间：12:30 - 1:30</div>
              <div class="change-btn">修改</div>
              <div class="change-btn">删除</div>
            </el-col>
@@ -43,11 +43,27 @@
             <!--//from表单-->
             <el-col :span="14" class="content-right">
                 <el-row>
-                  <el-col :span="24"> <h3>实体店</h3></el-col>
+                  <el-col :span="4" :offset="2"> <h3>实体店</h3></el-col>
                 </el-row>
               <el-row>
                 <el-col :span="16" :offset="4">
-                  <div><span>123</span><span>123</span></div>
+                  <el-row>
+                      <el-col :span="10" :offset="6">
+
+                      </el-col>
+                      <el-col>
+                        <!--<img :src="imageUrl" alt="">-->
+                        <el-upload
+                          class="avatar-uploader"
+                          action="http://mdimg.yilianchuang.cn/uploadimage3.ashx"
+                          :show-file-list="false"
+                          :on-success="handleAvatarSuccess"
+                          :before-upload="beforeAvatarUpload">
+                          <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        </el-upload>
+                      </el-col>
+                  </el-row>
                 </el-col>
               </el-row>
               <el-row class="row-margin">
@@ -158,9 +174,9 @@
         </el-row>
       </div>
     </ys-popup>
-    <div style="width: 100px;height: 100px;border: 1px solid red;">
-      <upload></upload>
-    </div>
+    <!--<div style="width: 100px;height: 100px;border: 1px solid red;">-->
+      <!--<upload></upload>-->
+    <!--</div>-->
   </div>
 </template>
 
@@ -182,6 +198,7 @@
             pWidth:1200,
             pHeight:830,
             value4: [new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 9, 40)],
+            imageUrl:'',
             form:{
               name:'',
               intro:'',
@@ -195,20 +212,37 @@
       },
       methods:{
           addShop(){
-              this.$http.post('/shop',{userId:1007})
+              // this.$http.post('/shop',{userId:1007})
               this.showModal=true
           },
         closePop(e){
             this.showModal=false
-          }
+          },
+        // 头像上传
+        handleAvatarSuccess(res, file) {
+          this.imageUrl = URL.createObjectURL(file.raw);
+        },
+        beforeAvatarUpload(file) {
+          const isJPG = file.type === 'image/jpeg';
+          const isLt2M = file.size / 1024 / 1024 < 2;
 
+          if (!isJPG) {
+            this.$message.error('上传头像图片只能是 JPG 格式!');
+          }
+          if (!isLt2M) {
+            this.$message.error('上传头像图片大小不能超过 2MB!');
+          }
+          return isJPG && isLt2M;
+        }
       },
       mounted(){
         console.log(url.shopList);
-        this.$http.post('/shop/gameusersmoneylog/version3/list ',{ pageIndex:1,pageSize:10,state:0, key:''}).then(json=>{
+        // this.$http.post('/shop/gameusersmoneylog/version3/list ',{ pageIndex:1,pageSize:10,state:0, key:''}).then(json=>{
+        //   console.log(json);
+        // })
+        this.$http.post('http://test.csmen.cc/services/usershop/list4web',{}).then(json=>{
           console.log(json);
         })
-        this.$http.post('/shop${url.shopList}')
       }
     }
 </script>
@@ -322,5 +356,31 @@
     background: #e5e5e5;
     border: none;
     border-radius: 4px;
+  }
+
+
+  /*上传输入框*/
+  /deep/ .avatar-uploader .el-upload {
+    border: 1px dashed red;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  /deep/ .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 94px;
+    height: 94px;
+    line-height: 94px;
+    text-align: center;
+  }
+  .avatar {
+    width: 94px;
+    height: 94px;
+    display: block;
   }
 </style>

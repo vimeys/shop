@@ -1,13 +1,13 @@
 /**
-*   Created By  YS  on 2018/8/16
+*   Created By  YS  on 2018/8/22
 */
 <template>
-      <div>财务管理</div>
+    <div>平台推荐</div>
 </template>
 
 <script>
     export default {
-        name: "moneyManage"
+        name: "push"
     }
 </script>
 

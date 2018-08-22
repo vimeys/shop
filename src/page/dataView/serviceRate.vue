@@ -1,13 +1,13 @@
 /**
-*   Created By  YS  on 2018/8/16
+*   Created By  YS  on 2018/8/22
 */
 <template>
-      <div>财务管理</div>
+      <div>评价管理</div>
 </template>
 
 <script>
     export default {
-        name: "moneyManage"
+        name: "rate"
     }
 </script>
 

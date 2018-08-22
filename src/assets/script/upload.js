@@ -23,6 +23,23 @@ const uploadimageData = {
       error(null);
     });
   },
+  // ashx(that, param, callBack, error) {
+  //   mci.qiniuservice.callPost(that, "token", param, (e) => {
+  //     let result = {};
+  //     if (e && e.data && e.data.url) {
+  //       result.isSuc = true;
+  //       result.message = "";
+  //       result.url = e.data.url;
+  //     } else {
+  //       result.isSuc = false;
+  //       result.message = "上传失败";
+  //       result.url = null;
+  //     }
+  //     callBack(result);
+  //   }, (message) => {
+  //     error(null);
+  //   });
+  // },
   /**
    * 	多图上传图片
    *

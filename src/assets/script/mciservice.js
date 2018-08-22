@@ -32,10 +32,10 @@ class jsonProxy {
         console.log("报错:" + error);
         // 没必要提示报错，用户看不懂，用于调试使用
         // (err && err(error));
-        $this.loadTime = setTimeout(() => {
-          $this.$store.commit("loader", false);
-          $this.vload = false;
-        }, 400);
+        // $this.loadTime = setTimeout(() => {
+        //   $this.$store.commit("loader", false);
+        //   $this.vload = false;
+        // }, 400);
       });
   }
 

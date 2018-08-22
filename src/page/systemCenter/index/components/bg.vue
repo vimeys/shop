@@ -5,7 +5,7 @@
       <img src="@/assets/images/nav-image.png"/>
       <div class="swiper">
         <van-swipe :autoplay="3000">
-          <van-swipe-item v-for="(image, index) in images" :key="index">
+          <van-swipe-item v-for="(image, index) in bannerImages" :key="index">
             <img :src="image" />
           </van-swipe-item>
         </van-swipe>
@@ -14,14 +14,17 @@
     <div class="right">
       <div class="title">背景图</div>
       <div class="images">
-        <img src="https://img.yzcdn.cn/2.jpg" alt="">
-        <img src="https://img.yzcdn.cn/2.jpg" alt="">
-        <img src="https://img.yzcdn.cn/2.jpg" alt="">
-        <img src="https://img.yzcdn.cn/2.jpg" alt="">
+        <!--<img src="https://img.yzcdn.cn/2.jpg" alt="">-->
+        <!--<img src="https://img.yzcdn.cn/2.jpg" alt="">-->
+        <!--<img src="https://img.yzcdn.cn/2.jpg" alt="">-->
+        <!--<img src="https://img.yzcdn.cn/2.jpg" alt="">-->
+        <!--action="https://jsonplaceholder.typicode.com/posts/"-->
         <el-upload
-          action="https://jsonplaceholder.typicode.com/posts/"
+          action="http://mdimg.yilianchuang.cn/uploadimage3.ashx"
+
           list-type="picture-card"
           :on-preview="handlePictureCardPreview"
+          :on-success="getFile"
           :on-remove="handleRemove">
           <i class="el-icon-plus"></i>
         </el-upload>
@@ -50,10 +53,7 @@
             touchable:true,
             dialogImageUrl: '',
             dialogVisible: false,
-            images:[
-              'https://img.yzcdn.cn/2.jpg',
-              'https://img.yzcdn.cn/2.jpg'
-            ]
+            bannerImages:[]
           }
 
       },
@@ -64,6 +64,12 @@
         handlePictureCardPreview(file) {
           this.dialogImageUrl = file.url;
           this.dialogVisible = true;
+        },
+        getFile(response, file, fileList){
+          console.log(response, file.response.url, fileList);
+          let url=file.response.url;
+          console.log(file.response.url);
+          this.bannerImages.push(url)
         }
       }
 

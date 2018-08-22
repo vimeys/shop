@@ -21,13 +21,16 @@ import  cardList from '@/page/systemCenter/index/components/cardList'
 // 服务商品列表
 import  goodsList from '@/page/systemCenter/goodsList'
 
+
+
 //******后台中心卡券管理******
 import  cardManage from "@/page/systemCenter/cardManage/cardManage"
 //优惠券
 import  vipCard  from '@/page/systemCenter/cardManage/vipCard'
 //会员卡
 import  priceCard from '@/page/systemCenter/cardManage/priceCard'
-
+//裂变分销
+import  activeSale from '@/page/systemCenter/activeSales'
 
 
 //*******客户管理********
@@ -48,15 +51,29 @@ import shopSetting from '@/page/shopManage/shopSetting'
 //员工管理
 import  staffSetting from '@/page/shopManage/staffSetting'
 
+//*************素材管理**********
+import  fodderCenter from '@/page/fodderCenter/fodder'
+// 平台推荐
+import  push from '@/page/fodderCenter/push'
 
-Vue.use(Router)
+
+
+//****************财务管理*********************
+import  moneyManage from '@/page/moneyManage/moneyManage'
+
+
+//******************运营数据**************************
+import  serviceRate from '@/page/dataView/serviceRate'
+
+Vue.use(Router);
 
 export default new Router({
+  linkActiveClass: 'active',
+  linkExactActiveClass: 'active',
   routes: [
     {
-      path:'/steps',
-      name:'steps',
-      component:steps
+      path:'/',
+      component:shopSetting
     },
     //首页
     {
@@ -119,6 +136,11 @@ export default new Router({
       name:goodsList,
       component:goodsList
     },
+    {
+        path:'/system/activeSale',
+      name:'activeSale',
+      component:activeSale
+    },
     //订单管理
     {
       path:'/client/orderManage',
@@ -154,6 +176,30 @@ export default new Router({
       path:'/shopManage/staffSetting',
       name:'staffSetting',
       component:staffSetting
+    },
+    //素材中心
+    {
+      path:'/fodderCenter/fodder',
+      name:'fodder',
+      component:fodderCenter
+    },
+    //平台推荐
+    {
+      path:'/fodderCenter/push',
+      name:'push',
+      component:push
+    },
+    //财务管理
+    {
+      path:'/moneyManage',
+      name:'moneyManage',
+      component:moneyManage
+    },
+    //服务评价
+    {
+      path:'/dataView/serviceRate',
+      name:'serviceRate',
+      component:serviceRate
     }
   ]
 })

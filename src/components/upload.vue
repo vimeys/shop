@@ -73,6 +73,8 @@ export default {
             result => {
               if (result.isSuc) {
                 //  + imageMogrStr
+                console.log(result.url,'****************');
+                console.log(that,'****************');
                 that.$emit(
                   "imageUrl",
                   that.imgIndex,
