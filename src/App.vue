@@ -2,7 +2,7 @@
   <div id="app">
       <ys-nav @chooseNav="chooseNav"></ys-nav>
     <div class="main" v-if="loginType">
-      <steps :navList="client"></steps>
+      <!--<steps :navList="client"></steps>-->
       <router-view/>
     </div>
     <div v-else>
@@ -29,7 +29,7 @@ export default {
   data(){
     return {
       client:shopSetting,
-      loginType:false,
+      loginType:true,
       phone:'',
       psw:''
     }

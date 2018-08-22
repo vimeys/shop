@@ -46,6 +46,7 @@ import clientList from '@/page/clientManage/clientList'
 
 
 //***********门店员工管理*******************
+import  shop from '@/page/shopManage/index'
 //门店管理
 import shopSetting from '@/page/shopManage/shopSetting'
 //员工管理
@@ -73,7 +74,8 @@ export default new Router({
   routes: [
     {
       path:'/',
-      component:shopSetting
+      redirect:'shop',
+      component:shop
     },
     //首页
     {
@@ -165,18 +167,26 @@ export default new Router({
       name:'clientList',
       component:clientList
     },
-    //门店管理
     {
-      path:'/shopManage/shopSetting',
-      name:'shopSetting',
-      component:shopSetting
+      path:'/shop',
+      component:shop,
+      children:[
+        //门店管理
+        {
+          path:'/shopManage/shopSetting',
+          name:'shopSetting',
+          component:shopSetting
+        },
+        //员工管理
+        {
+          path:'/shopManage/staffSetting',
+          name:'staffSetting',
+          component:staffSetting
+        },
+      ],
+      // redirect:'/shopManage/staffSetting'
     },
-    //员工管理
-    {
-      path:'/shopManage/staffSetting',
-      name:'staffSetting',
-      component:staffSetting
-    },
+
     //素材中心
     {
       path:'/fodderCenter/fodder',

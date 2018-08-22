@@ -5,46 +5,38 @@
         <!--<div class="point"></div>-->
       </div>
       <div class="right">
-        <div class="text"
+        <router-link tag="div" class="text"
+                     :to="item.router"
              @click="href(index,item.router)"
              :class="{big:item.active,}"
              v-for="(item,index) in selfNavList"
-             v-cloak>
+             >
           {{item.name}} <span :class="{'el-icon-caret-right':item.active}"></span>
-        </div>
+        </router-link>
       </div>
   </div>
 </template>
 
 <script>
+    // import RouterLink from "vant/packages/mixins/router-link";
     export default {
         name: "steps",
+      components: {},
       props:{
         navList:{
           type:Array,
           default:function () {
             return [
               {
-                name:'素材中心',
+                name:'门店设置',
                 active:true,
-                router:'/index'
+                router:'/shopManage/shopSetting'
               },
               {
-                name:'首页',
+                name:'员工管理',
                 active:false,
-                router:'/client/clientList'
+                router:'/shopManage/staffSetting'
               },
-              {
-                name:'商品',
-                active:false
-              },
-              {
-                name:'实体店',
-                active:false
-              },{
-                name:"卡券管理",
-                active:false
-              }
             ]
           }
 
