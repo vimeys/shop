@@ -33,12 +33,12 @@
           switch (this.activeName) {
             case 'first':
               this.$router.push({
-                path: '/system/priceCard'
+                path: '/centerIndex/cardManage/priceCard'
               });
               break;
             case 'second':
               this.$router.push({
-                path: '/system/vipCard'
+                path: '/centerIndex/cardManage/vipCard'
               });
               break;
 
@@ -52,10 +52,6 @@
       //
       // }
       created(){
-
-        this.$router.push({
-          path:'/system/priceCard'
-        })
       }
     }
 </script>

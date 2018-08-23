@@ -3,7 +3,7 @@
 */
 <template>
     <div class="box">
-      <img src="@/assets/images/goods.jpg" alt="">
+      <img :src="shop.shopPhoto" alt="">
       <div class="content">
          <h4>
             {{shop.name||'成都旗舰店  丨 成都国际金融中心'}}
@@ -26,6 +26,7 @@
             type:Object,
             default(){
                return {
+                 shopPhoto:'',
                  name:'成都旗舰店  丨 成都国际金融中心',
                  intro:'成都市锦江区春熙路国际金融中心',
                  shopName:'瑞驰成都旗舰店',

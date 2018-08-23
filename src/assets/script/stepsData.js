@@ -4,12 +4,12 @@
   {
     name:'门店设置',
     active:true,
-    router:'/shopManage/shopSetting'
+    router:'/shop/shopSetting'
   },
   {
     name:'员工管理',
     active:false,
-    router:'/shopManage/staffSetting'
+    router:'/shop/staffSetting'
   },
 ]
 //财务数据
@@ -27,22 +27,22 @@ export const clientManage=[
   {
     name:'预约管理',
     active:true,
-    router:'/client/appointmentList'
+    router:'/clientIndex/appointmentList'
   },
   {
     name:'客户列表',
     active:false,
-    router:'/client/clientList'
+    router:'/clientIndex/clientList'
   },
   {
     name:'分销人员管理',
     active:false,
-    router:'/client/salesmanList'
+    router:'/clientIndex/salesmanList'
   },
   {
     name:'订单管理',
     active:false,
-    router:'/client/orderManage'
+    router:'/clientIndex/orderManage'
   },
 ]
 //运营管理
@@ -51,22 +51,22 @@ export const client=[
   {
     name:'首页',
     active:true,
-    router:'/index'
+    router:'/centerIndex/indexPage'
   },
   {
     name:'服务',
     active:false,
-    router:'/client/clientList'
+    router:'/centerIndex/goodsList'
   },
   {
     name:'卡券管理',
     active:false,
-    router:'/system/cardManage'
+    router:'/centerIndex/cardManage'
   },
   {
-    name:"裂变分销",
+    name:"裂变分销123",
     active:false,
-    router:'/system/activeSale'
+    router:'/centerIndex/activeSale'
   }
 ]
 

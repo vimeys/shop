@@ -9,9 +9,10 @@
                      :to="item.router"
              @click="href(index,item.router)"
              :class="{big:item.active,}"
+                     :key="index"
              v-for="(item,index) in selfNavList"
              >
-          {{item.name}} <span :class="{'el-icon-caret-right':item.active}"></span>
+          {{item.name}} <span class="el-icon-caret-right"></span>
         </router-link>
       </div>
   </div>
@@ -30,12 +31,12 @@
               {
                 name:'门店设置',
                 active:true,
-                router:'/shopManage/shopSetting'
+                router:'/shop/shopSetting'
               },
               {
                 name:'员工管理',
                 active:false,
-                router:'/shopManage/staffSetting'
+                router:'/shop/staffSetting'
               },
             ]
           }
@@ -120,17 +121,31 @@
         margin-right: 20px;
         margin-left: -15px;
       }
-      .big:before{
+      .big1:before{
         content: '●';
         font-size: 31px;
         color:#FFD73A;
         margin-left: -20px;
       }
-      .big{
+      .big1{
         font-size: 20px;
       }
-      span{
+      .active{
+        font-size: 20px;
+      }
+      .active:before{
+        content: '●';
+        font-size: 31px;
+        color:#FFD73A;
+        margin-left: -20px;
+      }
+      .active span{
+        display: inline-block;
         font-size: 25px;
+      }
+      span{
+        display: none;
+
       }
     }
   }

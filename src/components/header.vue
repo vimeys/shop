@@ -5,7 +5,7 @@
     <div class="box">
       <ul class="header">
         <!--<li v-for="(item,index) in nav" @click="href(index)">{{item.name}}</li>-->
-        <router-link tag="li" :to="item.path" v-for="(item,index) in nav"  > {{item.name}}</router-link>
+        <router-link tag="li" :to="item.path" v-for="(item,index) in nav"  :key="index" > {{item.name}}</router-link>
       </ul>
     </div>
 </template>
@@ -20,12 +20,12 @@
       data(){
           return {
             nav:[
-              {name:'门店/员工管理',path:'/shopManage/shopSetting',active:true},
+              {name:'门店/员工管理',path:'/shop',active:true},
               {name:'财务管理',path:'/moneyManage',active:false},
-              {name:'客户管理',path:'/cardManage',active:false},
-              {name:'运营管理',path:'/cardManage',active:false},
-              {name:'运营数据',path:'/cardManage',active:false},
-              {name:'素材中心',path:'/cardManage',active:false},
+              {name:'客户管理',path:'/clientIndex',active:false},
+              {name:'运营管理',path:'/centerIndex',active:false},
+              {name:'运营数据',path:'/serviceRate',active:false},
+              {name:'素材中心',path:'/fodderCenter/fodder',active:false},
               {name:'个人中心',path:'/cardManage',active:false},
             ]
           }

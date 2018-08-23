@@ -1,13 +1,13 @@
 <template>
   <div id="app">
       <ys-nav @chooseNav="chooseNav"></ys-nav>
-    <div class="main" v-if="loginType">
+    <div class="main" v-if="loginType" >
       <!--<steps :navList="client"></steps>-->
       <router-view/>
     </div>
     <div v-else>
       <ys-login @login="login">
-
+<!---->
       </ys-login>
     </div>
 
@@ -29,7 +29,7 @@ export default {
   data(){
     return {
       client:shopSetting,
-      loginType:true,
+      loginType:false,
       phone:'',
       psw:''
     }
@@ -37,29 +37,29 @@ export default {
   methods:{
     chooseNav(index){
       let that=this
-      switch (index) {
-        case 0:
-          that.client=shopSetting;
-          break
-        case 1:
-          that.client=moneyManage;
-          break
-        case 2:
-          that.client=clientManage;
-          break
-        case 3:
-          that.client=client;
-          break
-        case 4:
-          that.client=dataView;
-          break
-        case 5:
-          that.client=fodderCenter;
-          break
-        case 6:
-          that.client=accountSetting;
-          break;
-      }
+      // switch (index) {
+      //   case 0:
+      //     that.client=shopSetting;
+      //     break
+      //   case 1:
+      //     that.client=moneyManage;
+      //     break
+      //   case 2:
+      //     that.client=clientManage;
+      //     break
+      //   case 3:
+      //     that.client=client;
+      //     break
+      //   case 4:
+      //     that.client=dataView;
+      //     break
+      //   case 5:
+      //     that.client=fodderCenter;
+      //     break
+      //   case 6:
+      //     that.client=accountSetting;
+      //     break;
+      // }
     },
     login(e){
       this.loginType=true
@@ -70,9 +70,7 @@ export default {
 
   },
   watch:{
-      client:function(){
-        console.log(this.client);
-      }
+
   }
 }
 </script>

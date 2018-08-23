@@ -1,23 +1,6 @@
 <template>
   <div class="box">
-    <!--<el-button type="text" @click="open5">点击打开 Message Box</el-button>-->
-    <!--<ys-popup>-->
-      <!--<div class="popup-slide-left">-->
-        <!--<el-select v-model="value" @change="change" placeholder="请选择">-->
-          <!--<el-option-->
-            <!--v-for="item in options"-->
-            <!--:key="item.value"-->
-            <!--:label="item.label"-->
-            <!--:value="item.value">-->
-          <!--</el-option>-->
-        <!--</el-select>-->
-      <!--</div>-->
-      <!--<div class="popup-slide-right">-->
-        <!--<el-button type="text" @click="open5">点击打开 Message Box</el-button>-->
-      <!--</div>-->
-      <!--<el-button type="text" @click="open5">点击打开 Message Box</el-button>-->
-    <!--</ys-popup>-->
-    <!--<ys-steps></ys-steps>-->
+    <!--<ysSteps :navList="client"></ysSteps>-->
       <div class="right">
         <el-tabs v-model="activeName" @tab-click="handleClick" value="first">
           <el-tab-pane label="背景图" name="first">
@@ -48,6 +31,7 @@
   import  ysPopup from '@/components/popup'
   import RouterLink from "vant/es/mixins/router-link";
   import  ysCoupon from "@/components/coupon"
+  import {client} from '../../../assets/script/stepsData'
   // Vue.use(Swipe).use(SwipeItem);
     export default {
         name: "index",
@@ -69,40 +53,37 @@
             }, {
               value: '选项2',
               label: '双皮奶'
-            }, {
-              value: '选项3',
-              label: '蚵仔煎'
-            }, {
-              value: '选项4',
-              label: '龙须面'
-            }, {
-              value: '选项5',
-              label: '北京烤鸭'
             }],
             value: '',
+            client:client
           }
       },
       methods:{
           handleClick(tab, event){
             switch (this.activeName) {
+              case  'first':
+                this.$router.replace({
+                  path:'/centerIndex/indexPage/bg'
+                });
+                    break
               case 'second':
                 this.$router.replace({
-                  path: '/logo'
+                  path: '/centerIndex/indexPage/logo'
                 });
                 break;
               case 'third':
                 this.$router.replace({
-                  path: '/diyImage'
+                  path: '/centerIndex/indexPage/diyImage'
                 });
                 break;
               case 'fourth':
                 this.$router.push({
-                  path: '/activity'
+                  path: '/centerIndex/indexPage/activity'
                 });
                 break;
               case 'fifth':
                 this.$router.replace({
-                  path:'/orderManage'
+                  path:'/centerIndex/indexPage/cardList'
                 })
             }
           },
@@ -122,12 +103,7 @@
             })
         }
       },
-      created(){
 
-        this.$router.push({
-            path:'/bg'
-          })
-      }
     }
 </script>
 

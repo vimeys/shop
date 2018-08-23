@@ -10,19 +10,20 @@
            <el-col class="col" :span="7" :offset="5">
               <shop-detail></shop-detail>
            </el-col>
-           <el-col class="detail" :span="7" :offset="1">
-             <div class="detail-word">工位数量：30</div>
-             <div class="detail-word">员工数量：30</div>
-             <div class="detail-word">店铺面积：30</div>
-             <div class="detail-word">经营状态：正常营业</div>
-             <div class="detail-word">午休时间：12:30 - 1:30</div>
+           <el-col class="detail" :span="9" :offset="1">
+             <!--<div class="detail-word">工位数量：30</div>-->
+             <!--<div class="detail-word">员工数量：30</div>-->
+             <!--<div class="detail-word">店铺面积：30</div>-->
+             <!--<div class="detail-word">经营状态：正常营业</div>-->
+             <!--<div class="detail-word">午休时间：12:30 - 1:30</div>-->
+             <img  class="detail-logo" :src="logo" alt="">
              <div class="change-btn">修改</div>
              <div class="change-btn">删除</div>
            </el-col>
         </el-row>
     </div>
     <ys-popup
-      v-show="showModal"
+      v-if="showModal"
       :width="pWidth"
       :heigth="pHeight"
       @close="closePop"
@@ -32,11 +33,8 @@
           <el-row class="content">
             <el-col class="span9" :span="9">
               <el-scrollbar class="scroll">
-
                 <!--员工卡片-->
                 <shop-detail :shop="form"></shop-detail>
-
-
                 <iframe src="http://test.csmen.cc/c/6/index.html?userId=755&v=432537"  class="iframe" frameborder="0"></iframe>
               </el-scrollbar>
             </el-col>
@@ -48,16 +46,24 @@
               <el-row>
                 <el-col :span="16" :offset="4">
                   <el-row>
-                      <el-col :span="10" :offset="6">
-
+                      <el-col :span="10" :offset="2">
+                        <el-upload
+                          class="avatar-uploader"
+                          action="http://mdimg.yilianchuang.cn/uploadimage3.ashx"
+                          :show-file-list="false"
+                          :on-success="handleAvatarSuccess1"
+                          :before-upload="beforeAvatarUpload">
+                          <img v-if="form.shopPhoto" :src="form.shopPhoto" class="avatar">
+                          <i v-else class="el-icon-plus avatar-uploader-icon logo"></i>
+                        </el-upload>
                       </el-col>
-                      <el-col>
+                      <el-col :span="10">
                         <!--<img :src="imageUrl" alt="">-->
                         <el-upload
                           class="avatar-uploader"
                           action="http://mdimg.yilianchuang.cn/uploadimage3.ashx"
                           :show-file-list="false"
-                          :on-success="handleAvatarSuccess"
+                          :on-success="handleAvatarSuccess2"
                           :before-upload="beforeAvatarUpload">
                           <img v-if="imageUrl" :src="imageUrl" class="avatar">
                           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -141,7 +147,7 @@
                 <el-col :span="6">午休时间</el-col>
                 <el-col :span="16" ><el-time-picker
                   is-range
-                  v-model="value4"
+                  v-model="value5"
                   range-separator="至"
                   start-placeholder="开始时间"
                   end-placeholder="结束时间"
@@ -170,7 +176,7 @@
           </el-row>
         </el-scrollbar>
         <el-row>
-          <el-col :span="24"><div class="addBtn">保存</div></el-col>
+          <el-col :span="24"><div class="addBtn" @click="addshop">保存</div></el-col>
         </el-row>
       </div>
     </ys-popup>
@@ -183,7 +189,7 @@
 <script>
   import  shopDetail from '@/components/shopDetail';
   import  ysPopup from '@/components/popup'
-  import url from "@/assets/script/url"
+  import api from "@/assets/script/url"
   import upload from '@/components/upload'
     export default {
         name: "shopSetting",
@@ -194,19 +200,22 @@
       },
       data(){
           return{
+            logo:require('../../assets/images/goods.jpg'),
             showModal:false,
             pWidth:1200,
             pHeight:830,
-            value4: [new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 9, 40)],
+            value4: [new Date(2018, 9, 10, 8, 40), new Date(2018, 9, 10, 9, 40)],
+            value5: [new Date(2018, 9, 10, 8, 40), new Date(2018, 9, 10, 9, 40)],
             imageUrl:'',
             form:{
-              name:'',
-              intro:'',
-              shopName:'',
-              address:'',
-              phone:'',
-              workTime:'',
-              staffNum:0
+            shopPhoto:'',
+            name:'',
+            intro:'',
+            shopName:'',
+            address:'',
+            phone:'',
+            workTime:'',
+            staffNum:0
             }
           }
       },
@@ -218,8 +227,11 @@
         closePop(e){
             this.showModal=false
           },
+        handleAvatarSuccess1(res, file){
+            this.form.shopPhoto=URL.createObjectURL(file.raw);
+        },
         // 头像上传
-        handleAvatarSuccess(res, file) {
+        handleAvatarSuccess2(res, file) {
           this.imageUrl = URL.createObjectURL(file.raw);
         },
         beforeAvatarUpload(file) {
@@ -233,14 +245,40 @@
             this.$message.error('上传头像图片大小不能超过 2MB!');
           }
           return isJPG && isLt2M;
+        },
+        //点击上传店铺信息
+        addshop(){
+            let form=this.form;
+            let obj={
+              model:{
+                Pics:form.shopPhoto,
+                Name:form.name,
+                Address:form.shopName,
+                Tel:form.phone,
+                Logo:this.imageUrl,
+                ShopStartDate:'08:40',
+                ShopEndDate:'08:40',
+                LunchStartDate:'08:40',
+                LunchEndDate:'08:40',
+                //todo死数据
+                Position:'12312313',
+                TuwenUrl:'http://mdimg.yilianchuang.cn/uploadimage3.ashx',
+                EmployeesNumber:form.staffNum
+              }
+            }
+            this.$http.post('/shop/usershop/addUserShop',obj).then(json=>{
+              console.log(json);
+            }).catch(err=>{
+              console.log(err);
+            })
+
         }
       },
       mounted(){
-        console.log(url.shopList);
         // this.$http.post('/shop/gameusersmoneylog/version3/list ',{ pageIndex:1,pageSize:10,state:0, key:''}).then(json=>{
         //   console.log(json);
         // })
-        this.$http.post('http://test.csmen.cc/services/usershop/list4web',{}).then(json=>{
+        this.$http.post('/shop/usershop/list4web',{}).then(json=>{
           console.log(json);
         })
       }
@@ -270,23 +308,30 @@
     width: 100%;
     background: #fff;
     padding: 15px ;
-    .detail-word{
+    /*.detail-word{
       text-align: left;
         color: @bs-font-color;
       font-size: 16px;
       margin: 30px 20px;
+    }*/
+    .detail-logo{
+      width: 187px;
+      height: 187px;
+      margin: 0 auto;
     }
+
     .change-btn{
       width:239px;
       height:37px;
       line-height: 37px;
-
+      margin: 0 auto;
       background:@bs-color;
       font-size: 14px;
       color:@bs-font-color;
       border-radius:4px;
-      margin-top: 20px;
+      margin-top: 40px;
       margin-bottom: 10px;
+      margin-left: 100px;
     }
 
   }
@@ -361,7 +406,7 @@
 
   /*上传输入框*/
   /deep/ .avatar-uploader .el-upload {
-    border: 1px dashed red;
+    border: 1px dashed #282828;
     border-radius: 6px;
     cursor: pointer;
     position: relative;
@@ -378,9 +423,13 @@
     line-height: 94px;
     text-align: center;
   }
+
   .avatar {
     width: 94px;
     height: 94px;
     display: block;
+  }
+  .logo{
+    width: 188px;
   }
 </style>

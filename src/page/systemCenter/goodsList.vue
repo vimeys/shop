@@ -65,8 +65,8 @@
 
     <!--/添加商品/-->
     <ys-popup
-      :pWidth="goods.width"
-      :pHieght="goods.height"
+      :width="goods.width"
+      :hieght="goods.height"
       v-show="goods.showModal"
     >
       <div class="popup-slide-left">
@@ -94,6 +94,22 @@
         <!--<el-button type="text" @click="open5">点击打开 Message Box</el-button>-->
       </div>
     </ys-popup>
+
+    <!--添加分列-->
+    <ys-popup :width="sort.width"
+              :height="sort.height"
+              v-show="sort.showModal"
+      >
+      <!--<div>-->
+        <!--<el-row>-->
+          <!--<el-col :span="24" class="small-title">分类管理</el-col>-->
+        <!--</el-row>-->
+        <!--<el-row>-->
+          <!--<el-col :span=""></el-col>-->
+        <!--</el-row>-->
+      <!--</div>-->
+
+    </ys-popup>
   </div>
 
 </template>
@@ -112,9 +128,14 @@
       data(){
           return{
             goods:{
-              showModal:true,
+              showModal:false,
               width:900,
               height:800
+            },
+            sort:{
+              showModal:false,
+              width:670,
+              height:670
             },
             chosed:false,
             options: [{
@@ -123,15 +144,6 @@
             }, {
               value: '选项2',
               label: '双皮奶'
-            }, {
-              value: '选项3',
-              label: '蚵仔煎'
-            }, {
-              value: '选项4',
-              label: '龙须面'
-            }, {
-              value: '选项5',
-              label: '北京烤鸭'
             }],
             value: '',
             data: [{

@@ -13,6 +13,7 @@
 
 <script>
     import YsHeader from "../../components/header";
+    import  api  from '../../assets/script/url'
     export default {
       name: "login",
       components:{
@@ -24,11 +25,12 @@
         }
       },methods:{
         login(){
-          this.$http.post('http://test.csmen.cc/services/user/loginbyphonenum',{username:'18981736266',password:'123456'}).then(this.log)
+          this.$emit('login',true)
+          this.$http.post(api.logincom,{username:'18981736266',password:'123456'}).then(this.log)
         },
         log(){
-          this.$http.post('http://test.csmen.cc/services/user/login',{companyname:"luozhi666",password:'e10adc3949ba59abbe56e057f20f883e'}).then(()=>{
-            this.$emit('login',true)
+          this.$http.post(api.login,{companyname:"luozhi666",password:'e10adc3949ba59abbe56e057f20f883e'}).then(()=>{
+
           })
         }
       }
