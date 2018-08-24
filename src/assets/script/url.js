@@ -1,5 +1,5 @@
-const head='http://test.csmen.cc/services/';
-// const head='';
+// const head='http://test.csmen.cc/services/';
+const head='';
 
 const url={
   // 登录

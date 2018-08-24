@@ -5,20 +5,15 @@
 <template>
   <div class="box">
       <div class="btn" @click="addShop"><img src="@/assets/images/icon/addBtn.png" alt="">新建门店</div>
-    <div class="shop">
+    <div class="shop" v-for="(item,index) in shopList" :key="item.UserShopId">
         <el-row>
            <el-col class="col" :span="7" :offset="5">
-              <shop-detail></shop-detail>
+              <shop-detail :shop="item"></shop-detail>
            </el-col>
            <el-col class="detail" :span="9" :offset="1">
-             <!--<div class="detail-word">工位数量：30</div>-->
-             <!--<div class="detail-word">员工数量：30</div>-->
-             <!--<div class="detail-word">店铺面积：30</div>-->
-             <!--<div class="detail-word">经营状态：正常营业</div>-->
-             <!--<div class="detail-word">午休时间：12:30 - 1:30</div>-->
-             <img  class="detail-logo" :src="logo" alt="">
-             <div class="change-btn">修改</div>
-             <div class="change-btn">删除</div>
+             <img  class="detail-logo" :src="item.Logo" alt="">
+             <div class="change-btn" @click="modify(item,index)">修改</div>
+             <div class="change-btn" @click="delShop(item,index)">删除</div>
            </el-col>
         </el-row>
     </div>
@@ -53,7 +48,7 @@
                           :show-file-list="false"
                           :on-success="handleAvatarSuccess1"
                           :before-upload="beforeAvatarUpload">
-                          <img v-if="form.shopPhoto" :src="form.shopPhoto" class="avatar">
+                          <img v-if="form.Pics" :src="form.Pics" class="avatar">
                           <i v-else class="el-icon-plus avatar-uploader-icon logo"></i>
                         </el-upload>
                       </el-col>
@@ -65,7 +60,7 @@
                           :show-file-list="false"
                           :on-success="handleAvatarSuccess2"
                           :before-upload="beforeAvatarUpload">
-                          <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                          <img v-if="form.logo" :src="form.logo" class="avatar">
                           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
                       </el-col>
@@ -77,7 +72,7 @@
                 <el-col :span="16" ><input type="text"
                                            class="base-input"
                                            placeholder="请输入标题"
-                                           v-model="form.name"></el-col>
+                                           v-model="form.title"></el-col>
                 <el-col :span="2" class="after"></el-col>
               </el-row>
               <!--<el-row class="row-margin">-->
@@ -91,7 +86,7 @@
                   <textarea name=""
                             placeholder="请输入简介"
                             class="textarea"
-                            v-model="form.intro">
+                            v-model="form.Content">
 
                   </textarea>
                 </el-col>
@@ -101,7 +96,7 @@
                 <el-col :span="6">店名</el-col>
                 <el-col :span="16" ><input  class="base-input"
                                             type="text"
-                                            v-model="form.shopName"
+                                            v-model="form.Name"
                                             placeholder="请输入店名"></el-col>
                 <el-col :span="2" class="after"></el-col>
               </el-row>
@@ -109,7 +104,7 @@
                 <el-col :span="6">地址</el-col>
                 <el-col :span="16" ><input  class="base-input"
                                             type="text"
-                                            v-model="form.address"
+                                            v-model="form.Address"
                                             placeholder="请输入地址"></el-col>
                 <el-col :span="2" class="after"></el-col>
               </el-row>
@@ -117,14 +112,14 @@
                 <el-col :span="6">电话</el-col>
                 <el-col :span="16" ><input  class="base-input"
                                             type="text"
-                                            v-model="form.phone"
+                                            v-model="form.Tel"
                                             placeholder="请输入电话"></el-col>
                 <el-col :span="2" class="after"></el-col>
               </el-row>
               <el-row class="row-margin">
                 <el-col :span="6">员工数量</el-col>
                 <el-col :span="16" ><input type="text"
-                                           v-model.number="form.staffNum"
+                                           v-model.number="form.EmployeesNumber"
                                            class="base-input"
                                            placeholder="请输入员工数量"></el-col>
                 <el-col :span="2" class="after"></el-col>
@@ -135,7 +130,8 @@
                   <el-time-picker
                     is-range
                     v-model="value4"
-                    range-separator="至"
+                    editable
+                    range-separator="-"
                     start-placeholder="开始时间"
                     end-placeholder="结束时间"
                     placeholder="选择时间范围">
@@ -148,8 +144,9 @@
                 <el-col :span="16" ><el-time-picker
                   is-range
                   v-model="value5"
-                  range-separator="至"
+                  range-separator="-"
                   start-placeholder="开始时间"
+
                   end-placeholder="结束时间"
                   placeholder="选择时间范围">
                 </el-time-picker></el-col>
@@ -186,105 +183,194 @@
   </div>
 </template>
 
+
 <script>
   import  shopDetail from '@/components/shopDetail';
   import  ysPopup from '@/components/popup'
-  import api from "@/assets/script/url"
+
   import upload from '@/components/upload'
-    export default {
-        name: "shopSetting",
-      components:{
-          shopDetail,
-          ysPopup,
-          upload
-      },
-      data(){
-          return{
-            logo:require('../../assets/images/goods.jpg'),
-            showModal:false,
-            pWidth:1200,
-            pHeight:830,
-            value4: [new Date(2018, 9, 10, 8, 40), new Date(2018, 9, 10, 9, 40)],
-            value5: [new Date(2018, 9, 10, 8, 40), new Date(2018, 9, 10, 9, 40)],
-            imageUrl:'',
-            form:{
-            shopPhoto:'',
-            name:'',
-            intro:'',
-            shopName:'',
-            address:'',
-            phone:'',
-            workTime:'',
-            staffNum:0
-            }
-          }
-      },
-      methods:{
-          addShop(){
-              // this.$http.post('/shop',{userId:1007})
-              this.showModal=true
-          },
-        closePop(e){
-            this.showModal=false
-          },
-        handleAvatarSuccess1(res, file){
-            this.form.shopPhoto=URL.createObjectURL(file.raw);
-        },
-        // 头像上传
-        handleAvatarSuccess2(res, file) {
-          this.imageUrl = URL.createObjectURL(file.raw);
-        },
-        beforeAvatarUpload(file) {
-          const isJPG = file.type === 'image/jpeg';
-          const isLt2M = file.size / 1024 / 1024 < 2;
+  import {emptyObj} from "../../assets/script/util";
+  import api from "@/assets/script/url"
+  export default {
+    name: "shopSetting",
+    components:{
+      shopDetail,
+      ysPopup,
+      upload
+    },
+    data(){
+      return{
 
-          if (!isJPG) {
-            this.$message.error('上传头像图片只能是 JPG 格式!');
-          }
-          if (!isLt2M) {
-            this.$message.error('上传头像图片大小不能超过 2MB!');
-          }
-          return isJPG && isLt2M;
-        },
-        //点击上传店铺信息
-        addshop(){
-            let form=this.form;
-            let obj={
-              model:{
-                Pics:form.shopPhoto,
-                Name:form.name,
-                Address:form.shopName,
-                Tel:form.phone,
-                Logo:this.imageUrl,
-                ShopStartDate:'08:40',
-                ShopEndDate:'08:40',
-                LunchStartDate:'08:40',
-                LunchEndDate:'08:40',
-                //todo死数据
-                Position:'12312313',
-                TuwenUrl:'http://mdimg.yilianchuang.cn/uploadimage3.ashx',
-                EmployeesNumber:form.staffNum
-              }
-            }
-            this.$http.post('/shop/usershop/addUserShop',obj).then(json=>{
-              console.log(json);
-            }).catch(err=>{
-              console.log(err);
-            })
+        showModal:false,
+        pWidth:1200,
+        pHeight:830,
+        value4: [new Date(2018, 9, 10, 8, 40), new Date(2018, 9, 10, 9, 40)],
+        value5: [new Date(2018, 9, 10, 8, 40), new Date(2018, 9, 10, 9, 40)],
 
+        form:{
+          Pics:'',
+          logo:'',
+          title:'',
+          Content:'',
+          Name:'',
+          Address:'',
+          Tel:'',
+          ShopStartDate:'',
+          ShopEndDate:'',
+          LunchStartDate:'',
+          LunchEndDate:'',
+          EmployeesNumber:''
+        },
+        shopList:[]
+      }
+    },
+    methods:{
+      addShop(){
+        // this.$http.post('/shop',{userId:1007})
+        this.showModal=true
+      },
+      closePop(e){
+        this.showModal=false
+      },
+      handleAvatarSuccess1(res, file){
+        this.form.Pics=URL.createObjectURL(file.raw);
+      },
+      // 头像上传
+      handleAvatarSuccess2(res, file) {
+        this.form.logo= URL.createObjectURL(file.raw);
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
         }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
       },
-      mounted(){
-        // this.$http.post('/shop/gameusersmoneylog/version3/list ',{ pageIndex:1,pageSize:10,state:0, key:''}).then(json=>{
-        //   console.log(json);
-        // })
-        this.$http.post('/shop/usershop/list4web',{}).then(json=>{
-          console.log(json);
+      //点击上传店铺信息
+      addshop(isEdit){
+        if(isEdit){
+          let form = this.form;
+          let obj = {
+            model: {
+              UserShopId:form.UserShopId,
+              Pics: form.Pics,
+              Logo: form.logo,
+              Name: form.Name,
+              Content: form.Content,
+              Address: form.Address,
+              Tel: form.Tel,
+              ShopStartDate: this.value4[0].toString().substr(16, 5),
+              ShopEndDate: this.value4[1].toString().substr(16, 5),
+              LunchStartDate: this.value5[0].toString().substr(16, 5),
+              LunchEndDate: this.value5[1].toString().substr(16, 5),
+              //todo死数据
+              Position: '12312313',
+              TuwenUrl: 'http://mdimg.yilianchuang.cn/uploadimage3.ashx',
+              EmployeesNumber: form.EmployeesNumber
+            }
+          }
+          this.$http.post('/shop/'+api.updataShop, obj).then(json => {
+            let data = json.data;
+            if (data.isSuc == true) {
+              this.showModal = false;
+              this.getShopList()
+              this.form = emptyObj(this.form);
+              this.$message({
+                message: '店铺修改成功',
+                type: 'success'
+              });
+            }
+          }).catch(err => {
+            console.log(err);
+          })
+        }else{
+          let form = this.form;
+          let obj = {
+            model: {
+              Pics: form.Pics,
+              Logo: form.logo,
+              Name: form.shopName,
+              Content: form.Content,
+              Address: form.Address,
+              Tel: form.Tel,
+              ShopStartDate: this.value4[0].toString().substr(16, 5),
+              ShopEndDate: this.value4[1].toString().substr(16, 5),
+              LunchStartDate: this.value5[0].toString().substr(16, 5),
+              LunchEndDate: this.value5[1].toString().substr(16, 5),
+              //todo死数据
+              Position: '12312313',
+              TuwenUrl: 'http://mdimg.yilianchuang.cn/uploadimage3.ashx',
+              EmployeesNumber: form.EmployeesNumber
+            }
+          }
+          this.$http.post('/shop/usershop/addUserShop', obj).then(json => {
+            let data = json.data;
+            if (data.isSuc == true) {
+              this.showModal = false;
+              this.getShopList()
+              this.form = emptyObj(this.form);
+              this.$message({
+                message: '店铺添加成功',
+                type: 'success'
+              });
+            }
+          }).catch(err => {
+            console.log(err);
+          })
+        }
+
+
+      },
+
+      // 删除店铺
+      delShop(id,index){
+        console.log(id);
+        this.$http.post('/shop/'+api.delShop,{userShopId:id.UserShopId}).then(json=>{
+          let data=json.data
+          if(data.isSuc==true){
+            this.shopList.splice(index,1);
+            this.$message({
+              message:'成功'
+            })
+          }
+        })
+      },
+      // 修改
+      modify(item,index){
+        let shopData=this.shopList[index];
+        this.form=shopData;
+        this.showModal=true;
+
+
+      },
+      // 获取列表
+      getShopList(){
+        this.$http.post('/shop/'+api.shopList,{}).then(json=>{
+          let data=json.data
+          if(data.isSuc==true){
+            this.shopList=data.result;
+            this.$message({
+              message: '恭喜你，这是一条成功消息',
+              type: 'warning'
+            })
+          }
+        }).catch(error=>{
+          console.log(error);
         })
       }
-    }
-</script>
 
+
+    },
+    mounted(){
+      this.getShopList()
+    }
+  }
+</script>
 <style lang='less' scoped>
 
   @import "~@/assets/style/mixin";
@@ -308,6 +394,7 @@
     width: 100%;
     background: #fff;
     padding: 15px ;
+    margin-bottom: 50px;
     /*.detail-word{
       text-align: left;
         color: @bs-font-color;

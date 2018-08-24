@@ -25,11 +25,10 @@
           <span>详细信息</span>
           <span class="el-icon-arrow-down"></span>
         </div>
-        <div class="" style="display: none">
+        <div class="coupon-detail" style="display: none">
           相信信息相信信息相信信息相信信息相信信息相信信息相信信息相信信息相信信息相信信息相信信息
         </div>
       </div>
-
     </div>
     <div class="coupon-radio" @click="choose" v-show="isChecke">
       <div class="coupon-radio-point" v-show="chosed"></div>
@@ -206,6 +205,12 @@
         height: 30px;
         line-height: 30px;
       }
+    }
+    .coupon-detail{
+      width: 360px;
+      min-height: 30px;
+      max-height: 90px;
+      position: ;
     }
     .coupon-radio{
       width: 34px;

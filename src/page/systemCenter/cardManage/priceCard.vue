@@ -14,16 +14,16 @@
               <el-main >
                 <div class="cards">
                   <ys-coupon></ys-coupon>
-                  <ys-coupon></ys-coupon>
-                  <ys-coupon></ys-coupon>
-                  <ys-coupon></ys-coupon>
-                  <ys-coupon></ys-coupon>
-                  <ys-coupon></ys-coupon>
+                  <!--<ys-coupon></ys-coupon>-->
+                  <!--<ys-coupon></ys-coupon>-->
+                  <!--<ys-coupon></ys-coupon>-->
+                  <!--<ys-coupon></ys-coupon>-->
+                  <!--<ys-coupon></ys-coupon>-->
                 </div>
 
               </el-main>
             </el-container>
-          <ys-goods-card></ys-goods-card>
+          <!--<ys-goods-card></ys-goods-card>-->
         </div>
 </template>
 

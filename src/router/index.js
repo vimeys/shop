@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
 
 //  公共步骤条
 import steps from '@/components/steps'
@@ -105,12 +104,12 @@ export default new Router({
             {
               path:'activity',
               component:activity,
-              children: [
-                {
-                  path:'/:id',
-                  component:cardList
-                }
-              ]
+              // children: [
+              //   {
+              //     path:'/:id',
+              //     component:cardList
+              //   }
+              // ]
             },
             // 促销活动里面的卡券
             {

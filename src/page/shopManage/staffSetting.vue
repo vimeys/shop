@@ -8,11 +8,10 @@
           <el-col :span="4">
             <el-select v-model="value" placeholder="请选择" size="small">
               <el-option
-                v-for="item in options"
+                v-for="item in shopList"
                 :key="item.value"
-
-                :label="item.label"
-                :value="item.value">
+                :label="item.Name"
+                :value="item.UserShopId">
               </el-option>
             </el-select>
           </el-col>
@@ -190,6 +189,7 @@
 <script>
     import ysSearch from '@/components/search';
     import  YsPopup from '@/components/popup'
+    import api from "@/assets/script/url"
     export default {
         name: "staffSetting",
         components:{
@@ -217,6 +217,7 @@
               zIndex: 1000
             },
             table:[1,3,4],
+            shopList:[]
           }
       },
       methods:{
@@ -232,7 +233,26 @@
         },
         closeMove(e){
           this.move.showModal=e
+        },
+        // 获取列表
+        getShopList(){
+          this.$http.post('/shop/'+api.shopList,{}).then(json=>{
+            let data=json.data
+            if(data.isSuc==true){
+              this.shopList=data.result;
+              this.$message({
+                message: '恭喜你，这是一条成功消息',
+                type: 'warning'
+              })
+            }
+          }).catch(err=>{
+            console.log(err);
+          })
         }
+
+      },
+      created(){
+        this.getShopList();
       }
     }
 </script>

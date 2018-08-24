@@ -3,17 +3,17 @@
 */
 <template>
     <div class="box">
-      <img :src="shop.shopPhoto" alt="">
+      <img :src="shop.Pics" alt="">
       <div class="content">
          <h4>
-            {{shop.name||'成都旗舰店  丨 成都国际金融中心'}}
+            {{shop.title||'成都旗舰店  丨 成都国际金融中心'}}
          </h4>
-        <p class="light-font">{{shop.intro||'成都国际金融中心'}}</p>
+        <p class="light-font">{{shop.Content||'成都国际金融中心'}}</p>
         <div class="border"></div>
-        <h4>{{shop.shopName}}</h4>
-        <p class="light-font">地址：{{shop.address||'瑞驰成都旗舰店'}}</p>
-        <p class="light-font">电话：{{shop.phone||'11234513'}}</p>
-        <p class="light-font">营业时间：{{shop.workTime||'10:00 - 22:00'}}</p>
+        <h4>{{shop.Name||'瑞驰成都旗舰店'}}</h4>
+        <p class="light-font">地址：{{shop.Address||'瑞驰成都旗舰店地址'}}</p>
+        <p class="light-font">电话：{{shop.Tel||'11234513'}}</p>
+        <p class="light-font">营业时间：{{`${shop.ShopStartDate}-${shop.ShopEndDate}`||`10:00-22:00`}}</p>
       </div>
     </div>
 </template>
@@ -35,6 +35,11 @@
                  workTime:'10:00 - 22:00'
                }
             }
+          }
+      },
+      data(){
+          return{
+
           }
       }
     }

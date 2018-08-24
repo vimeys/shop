@@ -1,43 +1,56 @@
 <template>
   <div>
-    <!--<div v-show="show" @back="back">-->
-      <!--<el-container>-->
-        <!--<el-header>-->
-          <!--<div class="active-header">-->
-            <!--<div class="disabled"><span class="el-icon-circle-plus"></span>&nbsp;&nbsp;新建活动</div>-->
-            <!--<div @click="addCard">管理</div>-->
-            <!--<div class="del">删除</div>-->
-          <!--</div>-->
-        <!--</el-header>-->
-        <!--<el-main class="main">-->
-          <!--<div class="active-items-one" @click="hrefCard(1)" :data="1">-->
-            <!--<img src="../../../../assets/images/active.png" alt="">-->
-            <!--<div class="active-text"> 测试文字sfasdfasdfsfas</div>-->
-            <!--<div class="active-radio" @click="choose" v-show="isChecke">-->
-              <!--<div class="active-radio-point" v-show="chosed"></div>-->
-            <!--</div>-->
-          <!--</div>-->
-          <!--<div class="active-items-s" @click="hrefCard(2)" :data="2">-->
-            <!--<img src="../../../../assets/images/active.png" alt="">-->
-            <!--<div class="active-text"> 测试文字爱的范fas</div>-->
-            <!--<div class="active-radio" @click="choose" v-show="isChecke">-->
-              <!--<div class="active-radio-point" v-show="chosed"></div>-->
-            <!--</div>-->
-          <!--</div>-->
-          <!--<div class="active-items-l" @click="hrefCard(3)" :data="3">-->
-            <!--<img src="../../../../assets/images/active.png" alt="">-->
-            <!--<div class="active-text"> 测试文字sfas</div>-->
-            <!--<div class="active-radio" @click="choose" v-show="isChecke">-->
-              <!--<div class="active-radio-point" v-show="chosed"></div>-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</el-main>-->
-      <!--</el-container>-->
-      <!--<div class="coupons-items">-->
-        <!--<div class="coupons-item">-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
+    <div v-show="show" @back="back">
+      <el-container>
+        <el-header>
+          <div class="active-header">
+            <div :class="{disabled:isEdit}" @click="addCard">
+              <span class="el-icon-circle-plus"></span>&nbsp;&nbsp;新建活动
+            </div>
+            <div @click="editCards">管理</div>
+            <div class="del" v-show="showDel">删除</div>
+          </div>
+        </el-header>
+        <el-main class="main">
+          <!--一元买券-->
+          <div class="active-items-one" @click="hrefCard(1)" :data="0">
+            <img src="../../../../assets/images/oneBg.png" alt="">
+            <div class="active-text"> 12:00-13:00 限／时／抢／购</div>
+            <div class="active-radio" @click.stop="choose" v-show="isChecke">
+              <div class="active-radio-point" v-show="chosed"></div>
+            </div>
+          </div>
+          <!--拼团-->
+          <div class="active-items-team" @click="hrefCard(1)" :data="1">
+            <img src="../../../../assets/images/teamBg.png" alt="">
+            <div class="active-text">3人即享拼团价</div>
+            <div class="active-radio" @click.stop="choose" v-show="isChecke">
+              <div class="active-radio-point" v-show="chosed"></div>
+            </div>
+          </div>
+          <!--秒杀-->
+          <div class="active-items-s" @click="hrefCard(2)" :data="2">
+            <img src="../../../../assets/images/secondBg.png" alt="">
+            <div class="active-text"> 测试文字爱的范fas</div>
+            <div class="active-radio" @click.stop="choose" v-show="isChecke">
+              <div class="active-radio-point" v-show="chosed"></div>
+            </div>
+          </div>
+          <!--抽奖-->
+          <div class="active-items-l" @click="hrefCard(3)" :data="3">
+            <img src="../../../../assets/images/luckBg.png" alt="">
+            <div class="active-text"> 测试文字sfas</div>
+            <div class="active-radio" @click.stop="choose" v-show="isChecke">
+              <div class="active-radio-point" v-show="chosed"></div>
+            </div>
+          </div>
+        </el-main>
+      </el-container>
+      <div class="coupons-items">
+        <div class="coupons-item">
+        </div>
+      </div>
+    </div>
     <ys-popup :showModal="showModal"
               v-show="showModal"
               @close="close"
@@ -139,6 +152,8 @@
           chosed:false,
           isChecke:false,
           value:'',
+          isEdit:false,//是否可以添加
+          showDel:false,//是否有删除
           options: [{
             value: '选项1',
             label: '黄金糕'
@@ -190,6 +205,20 @@
         addCard(){
           this.showModal=true
         },
+        //编辑卡片
+        editCards(){
+          if(!this.showDel){
+            this.isEdit=true;
+            this.showDel=true;
+            this.isChecke=true;
+          }else {
+            this.isEdit=true;
+            this.showDel=false;
+            this.isChecke=false;
+          }
+
+        },
+
         // 上传组件的事件
         handleRemove(file, fileList) {
           console.log(file, fileList);
@@ -216,7 +245,7 @@
       height: 37px;
       background: #FFD736;
       font-size: 14px;
-      line-height: 37px;
+      line-height: 44px;
       text-align: center;
       margin-right: 30px;
     }
@@ -231,12 +260,18 @@
   .main{
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    >div{
+      margin-bottom: 30px;
+      margin-top: 30px;
+    }
   }
   .active-items-one{
     width:375px;
     height: 175px;
     position: relative;
+    margin-right: 25px;
     img{
       width: 100%;
       height: 100%;
@@ -255,8 +290,8 @@
       align-items: center;
       background: #fff;
       .active-radio-point{
-        width: 28px;
-        height: 28px;
+        width: 26px;
+        height: 26px;
         border-radius: 50%;
         background: #ffd73a;
       }
@@ -273,10 +308,11 @@
       left: 30px;
     }
   }
-  .active-items-s{
+  .active-items-team{
     width:375px;
     height: 175px;
     position: relative;
+    margin-right: 25px;
     img{
       width: 100%;
       height: 100%;
@@ -295,8 +331,50 @@
       align-items: center;
       background: #fff;
       .active-radio-point{
-        width: 28px;
-        height: 28px;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: #ffd73a;
+      }
+    }
+    .active-text{
+      width: 180px;
+      height: 16px;
+      text-align: center;
+      line-height: 16px;
+      font-size: 12px;
+      color:#fff;
+      position: absolute;
+      top:113px;
+      left: 30px;
+    }
+  }
+
+  .active-items-s{
+    width:375px;
+    height: 175px;
+    position: relative;
+    margin-right: 25px;
+    img{
+      width: 100%;
+      height: 100%;
+    }
+    .active-radio{
+      width: 34px;
+      height: 34px;
+
+      position: absolute;
+      top:-17px;
+      right: -17px;
+      border-radius: 50%;
+      border: 2px solid #ffd73a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #fff;
+      .active-radio-point{
+        width: 26px;
+        height: 26px;
         border-radius: 50%;
         background: #ffd73a;
       }
@@ -318,6 +396,7 @@
     width:375px;
     height: 175px;
     position: relative;
+    margin-right: 25px;
     img{
       width: 100%;
       height: 100%;
@@ -336,8 +415,8 @@
       align-items: center;
       background: #fff;
       .active-radio-point{
-        width: 28px;
-        height: 28px;
+        width: 26px;
+        height: 26px;
         border-radius: 50%;
         background: #ffd73a;
       }

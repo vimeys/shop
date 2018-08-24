@@ -29,7 +29,7 @@ export default {
   data(){
     return {
       client:shopSetting,
-      loginType:false,
+      loginType:true,
       phone:'',
       psw:''
     }

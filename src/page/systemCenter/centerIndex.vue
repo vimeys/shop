@@ -6,7 +6,6 @@
     <ys-steps :navList="client"></ys-steps>
     <div>
       <router-view/>
-      dadfasdf
       <!--<index-page></index-page>-->
     </div>
   </div>
