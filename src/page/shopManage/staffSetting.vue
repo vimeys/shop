@@ -217,7 +217,13 @@
               zIndex: 1000
             },
             table:[1,3,4],
-            shopList:[]
+            shopList:[],
+            options:[
+              {
+                value: '1',
+                label: '满减劵'
+              }
+            ]
           }
       },
       methods:{

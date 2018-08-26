@@ -3,7 +3,7 @@
 *   卡券管理
 */
 <template>
-  <div>
+  <div class="card-box">
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="优惠券" name="first">
         <router-view></router-view>
@@ -58,4 +58,7 @@
 
 <style lang='less' scoped>
 
+  .card-box{
+    width: 1200px;
+  }
 </style>

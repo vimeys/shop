@@ -1,7 +1,9 @@
 <template>
   <div class="card" :style="{marginBottom: marginBottom+'px'}">
     <div class="coupon-item-left">
-      <img src="@/assets/images/Coupons-bgimg.png" alt="">
+      <img v-if="CardType==1" src="@/assets/images/Coupons-bgimg.png" alt="">
+      <img v-else-if="CardType==2" src="@/assets/images/card02.png" alt="">
+      <img  v-else="CardType==3" src="@/assets/images/card03.png" alt="">
       <div class="coupon-item-left-text">
         <h1>¥{{card.price}}</h1>
         <h4>¥{{card.mPrice}}</h4>
@@ -9,23 +11,32 @@
     </div>
     <div class="coupons-item-right">
       <div>
-        <div>{{card.cardName}}</div>
+        <div v-if="CardType==1">{{card.cardName}}</div>
+        <div class="card02" v-else-if="CardType==2">{{card.cardName}}</div>
+        <div class="card03" v-else="CardType==3">{{card.cardName}}</div>
         <div>{{card.shopName}}</div>
         <div>{{card.useName}}</div>
       </div>
       <div>
-        库存: <span>{{card.storeName}}</span>涨
+        库存:
+        <span v-if="CardType==1">{{card.storeName}}</span>
+        <span class="card02" v-else-if="CardType==2">{{card.storeName}}</span>
+        <span class="card03" v-else="CardType==3">{{card.storeName}}</span>
+
+        张
       </div>
       <div>
         {{card.start_time}}-{{card.end_time}}
       </div>
-      <div class="reBtn" @click="reMake(card.id)">修改</div>
+      <div class="reBtn" v-if="CardType==1"  @click="reMake(card.id)">修改</div>
+      <div class="reBtn reBtn02" v-else-if="CardType==2"  @click="reMake(card.id)">修改</div>
+      <div class="reBtn reBtn03" v-else="CardType==3"  @click="reMake(card.id)">修改</div>
       <div>
         <div>
           <span>详细信息</span>
-          <span class="el-icon-arrow-down"></span>
+          <span class="el-icon-arrow-down" @click="toggle"></span>
         </div>
-        <div class="coupon-detail" style="display: none">
+        <div class="coupon-detail" style="border-top: none;padding-right: 20px" v-show="toggleData">
           相信信息相信信息相信信息相信信息相信信息相信信息相信信息相信信息相信信息相信信息相信信息
         </div>
       </div>
@@ -39,13 +50,17 @@
 <script>
   export default {
     name: "coupon",
-    props:{
+    props: {
       // 内容
       detail: {
         type: Object,
         default() {
           return {
+            CardType: 2,
             id: 1,
+            reBtn03: {
+              reBtn03: true
+            },
             price: 100,
             mPrice: 10,
             cardName: '满减劵',
@@ -57,25 +72,30 @@
           }
         }
       },
+
       // 是否有选择框
-      isChecke:{
-        type:Boolean,
-        default(){
-            return false
+      isChecke: {
+        type: Boolean,
+        default() {
+          return false
         }
       },
-      marginBottom:{
-        type:Number,
-        default(){
+      marginBottom: {
+        type: Number,
+        default() {
           return 0
         }
       }
     },
-    data(){
-      return{
-        chosed:true,
-        imgUr:'Coupons-bgimg.png',
-        card:this.detail
+
+    data() {
+      return {
+        chosed: true,
+        imgUr: 'Coupons-bgimg.png',
+        card: this.detail,
+        CardType:this.detail.CardType,
+        abb:true,
+        toggleData:false
       }
     },
     methods:{
@@ -86,6 +106,9 @@
       //修改当前卡片
       reMake(id){
             this.$emit('reMake',id)
+      },
+      toggle(){
+          this.toggleData=!this.toggleData
       }
     }
   }
@@ -147,6 +170,12 @@
         color:#fff;
         font-size: 10px;
       }
+      .reBtn02{
+        background:#ED3269;
+      }
+      .reBtn03{
+        background: #343C44;
+      }
       div:first-child{
         /*display: flex;*/
         display: -webkit-box;
@@ -160,6 +189,14 @@
           line-height: 24px;
           font-size: 12px;
           color: #F8B74E;
+        }
+        div.card02{
+          border: 1px solid #ED3269;
+          color:#ED3269;
+        }
+        div.card03{
+          border: 1px solid #343C44;
+          color:#343C44;
         }
         div:nth-child(2){
           color: #4A4A4A;
@@ -181,6 +218,12 @@
         color:#888888;
         span{
           color:#F8B74E;
+        }
+        span.card02{
+          color:#ED3269;
+        }
+        span.card03{
+          color:#343C44;
         }
       }
       div:nth-child(3){
@@ -210,7 +253,9 @@
       width: 360px;
       min-height: 30px;
       max-height: 90px;
-      position: ;
+      position:absolute;
+      top:108px;
+      left: -94px;
     }
     .coupon-radio{
       width: 34px;
