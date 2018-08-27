@@ -86,15 +86,22 @@
                       有效期限
                     </el-col>
                     <el-col :span="17">
-                      <el-time-picker
-                        is-range
-                        v-model="value4"
-                        editable
+                      <!--<el-time-picker-->
+                        <!--is-range-->
+                        <!--v-model="value4"-->
+                        <!--editable-->
+                        <!--range-separator="-"-->
+                        <!--start-placeholder="开始时间"-->
+                        <!--end-placeholder="结束时间"-->
+                        <!--placeholder="选择时间范围">-->
+                      <!--</el-time-picker>-->
+                      <el-date-picker
+                        v-model="value6"
+                        type="daterange"
                         range-separator="-"
-                        start-placeholder="开始时间"
-                        end-placeholder="结束时间"
-                        placeholder="选择时间范围">
-                      </el-time-picker>
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期">
+                      </el-date-picker>
                     </el-col>
                     <el-col :span="1" class="before">
                     </el-col>
@@ -164,11 +171,7 @@
             }, {
               value: '3',
               label: '现金券'
-            },
-              {
-                value: '3',
-                label: '现金券'
-              }
+            }
             ],
           }
       },methods:{
