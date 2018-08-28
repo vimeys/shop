@@ -11,37 +11,37 @@
     </div>
     <div class="coupons-item-right">
       <div>
-        <div v-if="CardType==1">{{card.cardName}}</div>
-        <div class="card02" v-else-if="CardType==2">{{card.cardName}}</div>
-        <div class="card03" v-else="CardType==3">{{card.cardName}}</div>
-        <div>{{card.shopName}}</div>
-        <div>{{card.useName}}</div>
+        <div v-if="CardType==1">{{Type}}</div>
+        <div class="card02" v-else-if="CardType==2">{{Type}}</div>
+        <div class="card03" v-else="CardType==3">{{Type}}</div>
+        <div>{{card.Name}}</div>
+        <div>{{useName}}</div>
       </div>
       <div>
         库存:
-        <span v-if="CardType==1">{{card.storeName}}</span>
-        <span class="card02" v-else-if="CardType==2">{{card.storeName}}</span>
-        <span class="card03" v-else="CardType==3">{{card.storeName}}</span>
+        <span v-if="CardType==1">{{card.storeName}}1</span>
+        <span class="card02" v-else-if="CardType==2">{{card.storeName}}1</span>
+        <span class="card03" v-else="CardType==3">{{card.storeName}}1</span>
 
         张
       </div>
       <div>
-        {{card.start_time}}-{{card.end_time}}
+        {{StartTime}}
       </div>
-      <div class="reBtn" v-if="CardType==1"  @click="reMake(card.id)">修改</div>
-      <div class="reBtn reBtn02" v-else-if="CardType==2"  @click="reMake(card.id)">修改</div>
-      <div class="reBtn reBtn03" v-else="CardType==3"  @click="reMake(card.id)">修改</div>
+      <div class="reBtn" v-if="CardType==1"  @click="reMake(index)">修改</div>
+      <div class="reBtn reBtn02" v-else-if="CardType==2"  @click="reMake(index)">修改</div>
+      <div class="reBtn reBtn03" v-else="CardType==3"  @click="reMake(index)">修改</div>
       <div>
         <div>
           <span>详细信息</span>
           <span class="el-icon-arrow-down" @click="toggle"></span>
         </div>
         <div class="coupon-detail" style="border-top: none;padding-right: 20px" v-show="toggleData">
-          相信信息相信信息相信信息相信信息相信信息相信信息相信信息相信信息相信信息相信信息相信信息
+            {{card.Details}}
         </div>
       </div>
     </div>
-    <div class="coupon-radio" @click="choose" v-show="isChecke">
+    <div class="coupon-radio" @click="choose(index)" v-show="isChecke">
       <div class="coupon-radio-point" v-show="chosed"></div>
     </div>
   </div>
@@ -56,7 +56,7 @@
         type: Object,
         default() {
           return {
-            CardType: 2,
+            Type: 2,
             id: 1,
             reBtn03: {
               reBtn03: true
@@ -64,15 +64,15 @@
             price: 100,
             mPrice: 10,
             cardName: '满减劵',
-            shopName: 'ATH眼镜店铺',
+            Name: 'ATH眼镜店铺',
             useName: '一元买券',
             storeName: 200,
-            start_time: '2018.06.18',
-            end_time: '2018.06.20'
+            StartTime1: '2018.06.18',
+            EndTime: '2018.06.20'
           }
         }
       },
-
+      index:Number,
       // 是否有选择框
       isChecke: {
         type: Boolean,
@@ -92,23 +92,71 @@
       return {
         chosed: true,
         imgUr: 'Coupons-bgimg.png',
+
         card: this.detail,
-        CardType:this.detail.CardType,
+        CardType:this.detail.Type,
         abb:true,
         toggleData:false
       }
     },
     methods:{
-      choose(){
+      choose(index){
         this.chosed=!this.chosed
         console.log(this.card);
+          this.$emit('choose',[index,this.chosed])
       },
       //修改当前卡片
-      reMake(id){
-            this.$emit('reMake',id)
+      reMake(index){
+            this.$emit('reMake',index)
       },
       toggle(){
           this.toggleData=!this.toggleData
+      }
+    },
+    computed:{
+      useName(){
+        let Name='';
+        switch (this.detail.SourceType) {
+          case 2:
+            Name='一元买卷';
+            break;
+          case 4:
+            Name='刮卡';
+            break;
+          case 6 :
+            Name='集赞';
+            break;
+          case  7:
+            Name='幸运大抽奖';
+            break;
+        }
+        return Name
+      },
+      Type(){
+        let Name='';
+        switch (this.detail.SourceType) {
+          case 1:
+            Name='满减卷';
+            break;
+          case 2:
+            Name='折扣券';
+            break;
+          case 3 :
+            Name='现金券';
+            break;
+        }
+        return Name
+      },
+      StartTime(){
+        let date=new Date(parseInt(this.detail.StartTime))
+        var Y = date.getFullYear() + '.';
+        var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '.';
+        var D = date.getDate();
+        let date1=new Date(parseInt(this.detail.EndTime));
+    var Y2 = date1.getFullYear() + '.';
+        var M2 = (date1.getMonth()+1 < 10 ? '0'+(date1.getMonth()+1) : date1.getMonth()+1) + '.';
+        var D2 = date1.getDate();
+        return Y+M+D+'-'+Y2+M2+D2;
       }
     }
   }
@@ -121,6 +169,7 @@
     width: 360px;
     height: 108px;
     margin-bottom: 60px;
+    margin-top: 30px;
     display: flex;
     flex-direction: row;
     .coupon-item-left{

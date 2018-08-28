@@ -23,24 +23,44 @@
         <div>有效期：1年</div>
       </div>
     </div>
+    <div class="coupon-radio" @click="choose" v-show="isChecke">
+      <div class="coupon-radio-point" v-show="chosed"></div>
+    </div>
   </div>
 </template>
 
 <script>
     export default {
         name: "vipCard",
-      props:{
-          cardNum:{
-            type:Number,
-            default(){
-               return 1//1是充值卡,2是定制卡,3是次卡
-            }
+      props: {
+        cardNum: {
+          type: Number,
+          default() {
+            return 1//1是充值卡,2是定制卡,3是次卡
           }
+        },
+        isChecke: {
+          type: Boolean,
+          default() {
+            return true
+          }
+        },
+        chosed:{
+          type:Boolean,
+          default(){
+            return true
+          }
+        }
       },
       data(){
           return {
 
           }
+      },
+      methods:{
+        choose(){
+
+        }
       }
     }
 </script>
@@ -51,6 +71,8 @@
     width: 369px;
     height: 144px;
     position: relative;
+    margin-bottom: 20px;
+    margin-top: 20px;
     img{
       position: absolute;
       top:0;
@@ -95,7 +117,26 @@
         justify-content: space-between;
       }
     }
-
+    .coupon-radio{
+      width: 34px;
+      height: 34px;
+      position: absolute;
+      top:-17px;
+      right: -17px;
+      border-radius: 50%;
+      border: 2px solid #ffd73a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #fff;
+      z-index: 50;
+      .coupon-radio-point{
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #ffd73a;
+      }
+    }
   }
 
 </style>

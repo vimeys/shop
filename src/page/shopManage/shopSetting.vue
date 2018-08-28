@@ -206,7 +206,7 @@
         pHeight:830,
         value4: [new Date(2018, 9, 10, 8, 40), new Date(2018, 9, 10, 9, 40)],
         value5: [new Date(2018, 9, 10, 8, 40), new Date(2018, 9, 10, 9, 40)],
-
+        isEdit:false,
         form:{
           Pics:'',
           logo:'',
@@ -253,7 +253,8 @@
       },
       //点击上传店铺信息
       addshop(isEdit){
-        if(isEdit){
+        if(this.isEdit){
+          this.isEdit=false
           let form = this.form;
           let obj = {
             model: {
@@ -345,7 +346,7 @@
         let shopData=this.shopList[index];
         this.form=shopData;
         this.showModal=true;
-
+        this.isEdit=true
 
       },
       // 获取列表
