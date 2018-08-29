@@ -5,8 +5,8 @@
       <img v-else-if="CardType==2" src="@/assets/images/card02.png" alt="">
       <img  v-else="CardType==3" src="@/assets/images/card03.png" alt="">
       <div class="coupon-item-left-text">
-        <h1>¥{{card.price}}</h1>
-        <h4>¥{{card.mPrice}}</h4>
+        <h1>¥{{card.Amount}}</h1>
+        <h4>¥{{card.DiscountAmount}}</h4>
       </div>
     </div>
     <div class="coupons-item-right">
@@ -41,8 +41,8 @@
         </div>
       </div>
     </div>
-    <div class="coupon-radio" @click="choose(index)" v-show="isChecke">
-      <div class="coupon-radio-point" v-show="chosed"></div>
+    <div class="coupon-radio" @click="choose(index)" v-show="hasChecke">
+      <div class="coupon-radio-point" v-show="ischosed"></div>
     </div>
   </div>
 </template>
@@ -72,9 +72,9 @@
           }
         }
       },
-      index:Number,
+      index: Number,
       // 是否有选择框
-      isChecke: {
+      hasChecke: {
         type: Boolean,
         default() {
           return false
@@ -85,14 +85,19 @@
         default() {
           return 0
         }
+      },
+      ischosed: {
+        type: Boolean,
+        default() {
+          return false
+        }
       }
     },
 
     data() {
       return {
-        chosed: true,
         imgUr: 'Coupons-bgimg.png',
-
+        selfischosed:this.ischosed,
         card: this.detail,
         CardType:this.detail.Type,
         abb:true,
@@ -101,13 +106,15 @@
     },
     methods:{
       choose(index){
-        this.chosed=!this.chosed
+        this.selfischosed=!this.selfischosed
         console.log(this.card);
-          this.$emit('choose',[index,this.chosed])
+          this.$emit('choose',[index,this.selfischosed])
       },
       //修改当前卡片
       reMake(index){
-            this.$emit('reMake',index)
+        console.log(this.card);
+        console.log(this.detail);
+        this.$emit('reMake',index)
       },
       toggle(){
           this.toggleData=!this.toggleData
@@ -157,6 +164,11 @@
         var M2 = (date1.getMonth()+1 < 10 ? '0'+(date1.getMonth()+1) : date1.getMonth()+1) + '.';
         var D2 = date1.getDate();
         return Y+M+D+'-'+Y2+M2+D2;
+      }
+    },
+    watch:{
+      detail(){
+        this.card=this.detail
       }
     }
   }

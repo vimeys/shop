@@ -50,8 +50,8 @@
   .bs-search{
     display: flex;
     flex-direction: row;
-    width: 279px;
-    height: 35px;
+    width: 279px !important;
+    height: 35px!important;
     position: relative;
     .input{
        width: 100%;
