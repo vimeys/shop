@@ -15,7 +15,11 @@ const url={
   addWaiter:head+'user/reg2',//添加成员
   waiterList:head+'group/list',//获取成员列表
 
-
+  //管理分类
+  addType:head+'goodstype/version3/add',
+  updataType:head+'goodstype/version3/update',
+  delType:head+'goodstype/version3/delete',
+  typeList:head+'goodstype/version3/list',
 
   //添加优惠券
   addCoupon:head+'couponBook/version3/add',//添加优惠券
@@ -26,7 +30,7 @@ const url={
   //添加会员卡
   addMemberCard:head+'membershipCard/addMembershipCard',//添加会员卡
   updataMemberCard:head+'membershipCard/updateMembershipCard',//修改会员卡
-  delMemberCard:head+'services/membershipCard/delete',//删除会员卡
+  delMemberCard:head+'membershipCard/delete',//删除会员卡
   memberCardList:head+'membershipCard/listbyshopId',//所有会员卡列表
 
   //

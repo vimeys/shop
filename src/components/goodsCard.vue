@@ -7,8 +7,8 @@
         <div class="box-image">
           <img :src="src" alt="">
           <div class="box-btns">
-              <div class="box-btns-edit">编辑服务</div>
-              <div class="box-btns-del"> 删除服务</div>
+              <div class="box-btns-edit" @click="edit">编辑服务</div>
+              <div class="box-btns-del" @click="del"> 删除服务</div>
           </div>
           <div class="coupon-radio" @click="choose" >
             <div class="coupon-radio-point" v-show="chosed"></div>
@@ -31,6 +31,17 @@
 <script>
     export default {
         name: "goodsCard",
+      props:{
+          index:Number,
+          detail:{
+            type:Object,
+            default(){
+              return {
+
+              }
+            }
+          }
+      },
       data(){
           return{
             src:require('../assets/images/goods.jpg'),
@@ -40,7 +51,13 @@
       methods:{
           choose(){
 
-          }
+          },
+          edit(){
+
+          },
+        del(){
+
+        }
       }
     }
 </script>
@@ -85,7 +102,8 @@
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          display: none;
+          /*display: none;*/
+          opacity: 0;
         }
         .box-btns-edit,.box-btns-del{
           width: 82px;
@@ -105,6 +123,9 @@
       }
       .box-image:hover .box-btns{
           display: flex;
+        opacity: 1;
+        transition: all .3s ease-in;
+
       }
       .box-content{
         width: 175px;

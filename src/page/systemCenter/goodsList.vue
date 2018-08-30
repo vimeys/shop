@@ -49,7 +49,7 @@
         </div>
       </el-main>
       <el-aside width="288px" class="aside">
-          <div class="aside-title">分类管理</div>
+          <div class="aside-title" @click="addTypePopup">分类管理</div>
         <div>
           <el-tree :data="data"
                    :props="defaultProps"
@@ -95,19 +95,69 @@
       </div>
     </ys-popup>
 
-    <!--添加分列-->
-    <ys-popup :width="sort.width"
-              :height="sort.height"
-              v-show="sort.showModal"
+    <!--添加分类-->
+    <ys-popup :width="type.width"
+              :height="type.height"
+              v-show="type.showModal"
+              @close="closeTypePopup"
       >
-      <!--<div>-->
-        <!--<el-row>-->
-          <!--<el-col :span="24" class="small-title">分类管理</el-col>-->
-        <!--</el-row>-->
-        <!--<el-row>-->
-          <!--<el-col :span=""></el-col>-->
-        <!--</el-row>-->
-      <!--</div>-->
+      <div class="type-box">
+        <el-row>
+          <el-col :span="6" class="small-title" :offset="2"><h2>分类管理</h2></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-scrollbar class="type-scroll">
+                <el-row class="type-row-col">
+                  <el-col :span="10">
+                    一级分类1
+                  </el-col>
+                  <el-col :span="12" :offset="2">
+                    <div class="base-btn-111">修改</div>
+                    <div class="base-btn-111">删除</div>
+                  </el-col>
+                </el-row>
+              <el-row>
+                  <el-col>
+                    <el-container>
+                      <el-aside width="100px">
+                        <div class="type-title">
+                          一级分类
+                        </div>
+
+                      </el-aside>
+                      <el-main>
+                        <el-row>
+                          <el-col class="type-input"><input v-model="firstType" type="text" placeholder="请输入一级分类的名称" class="base-input"></el-col>
+
+                          <el-col class="type-input" v-for="item in secondType"><input type="text" class="base-input" v-model="item.val" placeholder="请输入二级分类的名称"></el-col>
+                          <el-col  >
+                            <div class="base-btn type-input"  @click="addSecondType">增加二级分类</div>
+                          </el-col>
+                        </el-row>
+                        <el-row>
+                          <el-col>
+                            <div class="type-btn-save" @click="saveType">保存</div>
+                          </el-col>
+                        </el-row>
+                      </el-main>
+                    </el-container>
+                  </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="6" :offset="9">
+                  <div class="type-add" @click="addFirstType">添加分类</div>
+                </el-col>
+              </el-row>
+            </el-scrollbar>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <div class="type-btn-confirm">确定</div>
+          </el-col>
+        </el-row>
+      </div>
 
     </ys-popup>
   </div>
@@ -118,6 +168,8 @@
   import  goodsCard from '@/components/goodsCard';
   import  ysSearch from '@/components/search'
   import  ysPopup from '@/components/popup'
+  import api from '@/assets/script/url'
+  import {comfirm} from '@/assets/script/util'
     export default {
         name: "goodsList",
       components:{
@@ -132,7 +184,7 @@
               width:900,
               height:800
             },
-            sort:{
+            type:{//控制分类
               showModal:false,
               width:670,
               height:670
@@ -170,18 +222,63 @@
 
               }]
             }],
+
             defaultProps: {
               children: 'children',
               label: 'label'
-            }
+            },
+            secondType:[],//二级分类
+            firstType:''//一级分类
+
           }
       },methods:{
           choose(){
             console.log(123);
           },
+
         handleNodeClick(data) {
           console.log(data);
+        },
+        //弹起添加分类
+        addTypePopup(){
+            this.type.showModal=true
+        },
+        //关闭添加分类
+        closeTypePopup(){
+          this.type.showModal=false
+        },
+        addSecondType(){
+            this.secondType.push({Name:''})
+        },
+        addFirstType(){
+
+        },
+        //保存分类
+        saveType(){
+            let goodsType={
+              name:this.firstType,
+              Pic:'123213',
+              ParentId:0,
+              Type:1
+            };
+            let goodsTypeSecond=[];
+            this.secondType.forEach((item)=>{
+              let obj=Object.assign({Pic:'12312',Type:1},item)
+                goodsTypeSecond.push({obj})
+            })
+            this.$http.post('/shop/'+api.addType,{goodsType,goodsTypeSecond}).then(json=>{
+              console.log(json);
+            })
+        },
+        getTypeList(){
+            this.$http.post('/shop/'+api.typeList,{type:2}).then(json=>{
+              console.log(json);
+            })
         }
+
+      },
+      created(){
+          this.getTypeList();
       }
     }
 </script>
@@ -370,10 +467,56 @@
       height: 700px;
     }
   }
-
   .btn{
     .base-btn-111;
     margin-top: 30px;
   }
-
+//添加分类
+  .small-title{
+    margin-top: 30px
+  }
+  .type-box{
+    width: 100%;
+  }
+  .type-scroll{
+    height: 465px;
+    margin-bottom: 10px;
+    padding: 0 50px;
+    background: rgba(245,245,245,1);
+  }
+  .type-row-col{
+    width: 100%;
+    height: 55px;
+    background: rgba(225,225,225,1);
+    line-height: 55px;
+    /*background: rgba(2,2,0,1);*/
+  }
+  .type-btn-confirm{
+    .base-btn(570px)
+  }
+  .base-btn-111{
+    display: inline-block;
+  }
+  .type-add{
+    width:189px;
+    height:37px;
+    background:rgba(253,215,49,1);
+    border-radius:4px;
+    line-height: 37px;
+  }
+  .base-btn{
+    .base-btn(120px);
+  }
+  .type-input:first-child{
+    margin-top: 15px;
+  }
+  .type-title{
+    margin-top: 44px;
+  }
+  .type-input{
+    margin-bottom: 15px;
+  }
+  .type-btn-save{
+    .base-btn(445px)
+  }
 </style>

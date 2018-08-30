@@ -1,6 +1,6 @@
 /**
 *   Created By  YS  on 2018/8/8
-*   卡券管理
+*   卡券管理总页面
 */
 <template>
   <div class="card-box">
@@ -60,5 +60,8 @@
 
   .card-box{
     width: 1200px;
+    /deep/ .el-tabs__content{
+      overflow: visible !important;
+    }
   }
 </style>

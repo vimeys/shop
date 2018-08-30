@@ -1,5 +1,6 @@
 /**
 *   Created By  YS  on 2018/8/8
+*   会员卡管理页面
 */
 <template>
   <div class="box">
@@ -264,7 +265,7 @@
         this.$http.post('/shop/' + api.addCoupon, {couponBook: obj}).then(json => {
           let data = json.data;
           if (data.isSuc == true) {
-            this
+            // this
             this.$message({
               message: '店铺添加成功',
               type: 'success'

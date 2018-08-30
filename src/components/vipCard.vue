@@ -1,15 +1,15 @@
 /**
 *   Created By  YS  on 2018/8/15
-*会员卡
+*   公共会员卡
 */
 <template>
   <div class="card">
-    <img src="../assets/images/payCardBg.png" alt="" v-if="cardNum==1">
-    <img src="../assets/images/fixCard.png" alt="" v-else-if="cardNum==2">
-    <img src="../assets/images/onceCard.png" alt="" v-else="cardNum==3">
+    <img src="../assets/images/payCardBg.png" alt="" v-if="detail.MembershipType==1">
+    <img src="../assets/images/fixCard.png" alt="" v-else-if="detail.MembershipType==2">
+    <img src="../assets/images/onceCard.png" alt="" v-else="detail.MembershipType==3">
     <div class="content">
       <div class="name">
-        充值卡
+        {{detail.MembershipName}}
       </div>
       <div class="detail">
         <div>
@@ -18,13 +18,15 @@
         <div>具体权益：美发类享受8折优惠</div>
       </div>
       <div class="money-date">
-        <div v-if="cardNum==3">消费次数：20次</div>
-        <div v-else>卡内额度：5000</div>
-        <div>有效期：1年</div>
+        <div v-if="cardNum==3">消费次数：{{detail.Frequency}}次</div>
+        <div v-else>卡内额度：{{detail.BuyAmount}}</div>
+        <div>有效期：{{detail.EffectiveTime/12}}年</div>
       </div>
     </div>
-    <div class="coupon-radio" @click="choose" v-show="isChecke">
-      <div class="coupon-radio-point" v-show="chosed"></div>
+    <div class="coupon-radio"
+         @click="choose(index)"
+         v-show="detail.hasChecked">
+      <div class="coupon-radio-point" v-show="detail.isChecked"></div>
     </div>
   </div>
 </template>
@@ -39,16 +41,53 @@
             return 1//1是充值卡,2是定制卡,3是次卡
           }
         },
-        isChecke: {
+        hasChecked: {//是否有选框
           type: Boolean,
           default() {
             return true
           }
         },
-        chosed:{
-          type:Boolean,
+        index:{//是否选中
+          type:Number,
           default(){
-            return true
+            return 0
+          }
+        },
+        detail:{
+          type:Object,
+          default(){
+             return {
+               BuyAmount:
+                 null,
+               CardType:
+                 null,
+               Content:
+                 null,
+               CreateDate:
+                 "/Date(1535566017000)/",
+               Discount:
+                 12,
+               EffectiveTime:
+                 null,
+               ExpireDate:
+                 "/Date(1567102017000)/",
+               Frequency:
+                 0,
+               IsEnable:
+                 null,
+               MembershipCardId:
+                 5,
+               MembershipName:
+                 "定制卡",
+               MembershipType:
+                 1,
+               Minimum:
+                 null,
+               ShopId:
+                 270,
+               Type:
+                 null
+             }
           }
         }
       },
@@ -58,8 +97,10 @@
           }
       },
       methods:{
-        choose(){
-
+        choose(index){
+          console.log(index);
+          this.detail.ischecked=!this.detail.ischecked;
+          this.$emit('choose',[index,this.detail.ischecked])
         }
       }
     }
@@ -73,6 +114,7 @@
     position: relative;
     margin-bottom: 20px;
     margin-top: 20px;
+    margin-right: 30px;
     img{
       position: absolute;
       top:0;
@@ -131,12 +173,15 @@
       background: #fff;
       z-index: 50;
       .coupon-radio-point{
-        width: 28px;
-        height: 28px;
+        width: 26px;
+        height: 26px;
         border-radius: 50%;
         background: #ffd73a;
       }
     }
+  }
+  .card:nth-child(3n+0){
+    margin-right: 0;
   }
 
 </style>

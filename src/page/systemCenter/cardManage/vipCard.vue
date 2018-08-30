@@ -1,5 +1,6 @@
 /**
 *   Created By  YS  on 2018/8/8
+*
 */
 <template>
   <div class="box">
@@ -8,15 +9,20 @@
         <span class="el-icon-circle-plus"></span>&nbsp;&nbsp;新建会员卡
       </div>
       <div @click="addCard">删除会员卡</div>
-      <div class="del">删除</div>
+      <div class="del" @click="delCard">删除</div>
     </div>
-    <div class="card-list">
-      <ys-vip-card></ys-vip-card>
-      <ys-vip-card></ys-vip-card>
-      <ys-vip-card></ys-vip-card>
-      <ys-vip-card></ys-vip-card>
-      <ys-vip-card></ys-vip-card>
+    <div class="card-list" >
+      <template v-for="(item,index) in cardListType">
+        <ys-vip-card
+          :detail="item"
+          :index="index"
+          @choose="choose"
+        >
+
+        </ys-vip-card>
+      </template>
     </div>
+
     <ys-popup
       :width="pWidth"
       :height="pHeight"
@@ -136,10 +142,11 @@
   import  ysVipCard from '@/components/vipCard';
   import  ysPopup from '@/components/popup'
   import  api from '@/assets/script/url'
+  import  {confirm} from '@/assets/script/util'
     export default {
         name: "vipCard",
       components:{
-          ysVipCard,
+        ysVipCard,
         ysPopup
       },
       data(){
@@ -216,7 +223,8 @@
                 value: '选项3',
                 label: '蚵仔煎'
               }
-            ]
+            ],
+            cardListType:[]
           }
       },
       methods:{
@@ -229,8 +237,21 @@
           console.log(123);
           this.showModal=false
         },
+        // 单个会员卡选中
+        choose(e){
+          console.log(e);
+          this.cardListType[e[0]].isChecked=e[1]
+        },
+        // 开卡
         addCardPost(){
           let obj={};
+          if(this.carlType==0){
+            obj.MembershipName='充值卡';
+          }else if(this.carlType==1){
+            obj.MembershipName='定制卡'
+          }else{
+            obj.MembershipName='次卡'
+          }
           obj.MembershipName='定制卡';
           obj.MembershipType=this.carlType;
           obj.EffectiveTime= this.yearNum>0?this.yearNum*12:-1;
@@ -239,8 +260,46 @@
           obj.Discount=this.Discount?this.Discount:0;
             this.$http.post('/shop/'+api.addMemberCard,{goodsTypeIds:[1,2,3],model:obj}).then(json=>{
               console.log(json);
+              let data=json.data;
+              if(data.isSuc==true){
+                  this.showModal=false;
+                  this.carlType=1;
+                  this.yearNum=1;
+                  this.Frequency='';
+                  this.buyMoney='';
+                  this.Discount='';
+              }
             })
         },
+        // 删除卡片
+        delCard(){
+            let delArr=[];
+            this.cardListType.forEach(item=>{
+              if(item.isChecked){
+                delArr.push(item.MembershipCardId)
+              }
+            })
+          confirm(this).then(() => {
+            console.log(123)
+            this.$http.post('/shop/'+api.delMemberCard,{membershipCardId:delArr}).then(json=>{
+              let data=json.data;
+
+              if(data.isSuc==true){
+                this.getCardList()
+              }
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
+          });
+          // this.$http.post('/shop/'+api.delMemberCard,{membershipCardId:delArr}).then(json=>{
+          //   let data=json.data;
+          //   // if(json)
+          // })
+        },
+        //获取会员卡列表
         getCardList(){
             let obj={}
             obj.pageIndex=1;
@@ -248,8 +307,16 @@
             obj.isEnable=-1;
             this.$http.post('/shop/'+api.memberCardList,obj).then(json=>{
               console.log(json);
+              let data=json.data;
+              if(data.isSuc==true){
+                data.result.Items.forEach(item=>{
+                  item.hasChecked=true;
+                  item.isChecked=false;
+                })
+                    this.cardListType=data.result.Items
+              }
             })
-        }
+        },
       },
       created(){
           this.getCardList()
@@ -289,7 +356,7 @@
         width: 100%;
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-between;
+        justify-content: flex-start;
       }
     }
   //弹窗
@@ -304,4 +371,5 @@
       font-size: 14px;
     }
   }
+
 </style>

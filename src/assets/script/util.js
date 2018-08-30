@@ -26,3 +26,12 @@ export  function getTime(parseTime) {
   // console.log(first, last);
   return time
 }
+
+//确认框
+export function confirm(that) {
+  return that.$confirm('您确定要删除吗?', '删除', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+}
