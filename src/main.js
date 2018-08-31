@@ -14,10 +14,13 @@ import 'vant/lib/vant-css/index.css';
 import 'vue-easytable/libs/themes-base/index.css'
 // 注册到全局
 import {VTable,VPagination} from 'vue-easytable'
-
+import  url from './assets/script/url'
+import * as util from './assets/script/util'
 // 引入样式
 
 Vue.config.productionTip = false
+Vue.prototype.$api=url;
+Vue.prototype.$util=util;
 Vue.use(ElementUI);
 Vue.use(Vant);
 // Vue.use(axios);

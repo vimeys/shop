@@ -258,7 +258,7 @@
           obj.Frequency=this.Frequency?this.Frequency:0;
           obj.buyMoney=this.buyMoney?this.buyMoney:0;
           obj.Discount=this.Discount?this.Discount:0;
-            this.$http.post('/shop/'+api.addMemberCard,{goodsTypeIds:[1,2,3],model:obj}).then(json=>{
+            this.$http.post(api.addMemberCard,{goodsTypeIds:[1,2,3],model:obj}).then(json=>{
               console.log(json);
               let data=json.data;
               if(data.isSuc==true){
@@ -281,7 +281,7 @@
             })
           confirm(this).then(() => {
             console.log(123)
-            this.$http.post('/shop/'+api.delMemberCard,{membershipCardId:delArr}).then(json=>{
+            this.$http.post(api.delMemberCard,{membershipCardId:delArr}).then(json=>{
               let data=json.data;
 
               if(data.isSuc==true){
@@ -305,7 +305,7 @@
             obj.pageIndex=1;
             obj.pageSize=10;
             obj.isEnable=-1;
-            this.$http.post('/shop/'+api.memberCardList,obj).then(json=>{
+            this.$http.post(api.memberCardList,obj).then(json=>{
               console.log(json);
               let data=json.data;
               if(data.isSuc==true){

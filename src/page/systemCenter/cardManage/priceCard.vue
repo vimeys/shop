@@ -262,7 +262,7 @@
         obj.Name = 'ATH眼镜店铺';
         // console.log(StartTime);
         // return
-        this.$http.post('/shop/' + api.addCoupon, {couponBook: obj}).then(json => {
+        this.$http.post(api.addCoupon, {couponBook: obj}).then(json => {
           let data = json.data;
           if (data.isSuc == true) {
             // this
@@ -276,7 +276,7 @@
 
       //获取优惠券列表
       getCouponList() {
-        this.$http.post('/shop/' + api.couponList, {query: {PageIndex: 1, PageSize: 10, Key: ''}}).then(json => {
+        this.$http.post( api.couponList, {query: {PageIndex: 1, PageSize: 10, Key: ''}}).then(json => {
           // console.log(json);
           let data = json.data
           if (data.isSuc == true) {
@@ -337,7 +337,7 @@
             })
           }
         console.log(delArr);
-        this.$http.post('/shop/'+api.delCoupon,{couponBookId:delArr}).then(json=>{
+        this.$http.post(api.delCoupon,{couponBookId:delArr}).then(json=>{
               let data=json.data;
             if(data.isSuc==true){
               this.$message({

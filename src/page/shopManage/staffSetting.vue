@@ -22,6 +22,7 @@
     <div class="btns">
       <!--<div class="setting">设置权限</div>-->
       <div class="classify">员工分类</div>
+      <div class="setting" @click="openJob">职位设置</div>
       <!--<div class="project">管理员工服务项目</div>-->
     </div>
     <div class="tables">
@@ -111,10 +112,19 @@
             <input type="text" class="base-input" placeholder="请输入成员姓名">
           </el-col>
           <el-col :span="7">
-            <input type="text" class="base-input" placeholder="请输入职位（可为空）">
+            <!--<input type="text" class="base-input" placeholder="请输入职位（可为空）">-->
+            <el-select v-model="job" placeholder="请选择职位">
+              <el-option
+                v-for="item in jobList"
+                :key =item
+                :value=item.value
+                :label=item.label
+              >
+              </el-option>
+            </el-select>
           </el-col>
           <el-col :span="8">
-            <input type="text" class="base-input" placeholder="请输入职位（可为空）">
+            <input type="text" class="base-input" placeholder="请输入成员手机号">
           </el-col>
           <el-col :span="4">
             <div class="base-btn-111">邀请</div>
@@ -180,6 +190,17 @@
       </div>
     </ys-popup>
 
+
+    <!--职位设置-->
+    <ys-popup
+      :width="jobPopup.width"
+      :height="jobPopup.height"
+      v-show="jobPopup.showModal"
+    >
+      <div class="job-box">
+
+      </div>
+    </ys-popup>
   </div>
 
 
@@ -223,6 +244,17 @@
                 value: '1',
                 label: '满减劵'
               }
+            ],
+            jobPopup:{
+                width:645,
+                height:766,
+                showModal:true
+            },
+            job:'',
+            jobList:[
+              {value:1,label:'店长'},
+              {value:2,label:'总监'},
+              {value:3,label:'高级'},
             ]
           }
       },
@@ -242,7 +274,7 @@
         },
         // 获取列表
         getShopList(){
-          this.$http.post('/shop/'+api.shopList,{}).then(json=>{
+          this.$http.post(api.shopList,{}).then(json=>{
             let data=json.data
             if(data.isSuc==true){
               this.shopList=data.result;
@@ -361,6 +393,11 @@
     }
   }
 
+
+  //添加职位弹窗
+  .job-box{
+    width: 100%;
+  }
 
 
 

@@ -1,5 +1,5 @@
 // const head='http://test.csmen.cc/services/';
-const head='';
+const head='/shop/';
 
 const url={
   // 登录
@@ -13,13 +13,22 @@ const url={
 
   //店铺成员管理
   addWaiter:head+'user/reg2',//添加成员
-  waiterList:head+'group/list',//获取成员列表
+  groupList:head+'group/list',//获取分组列表
+  waterGroupList:head+'services/group/list2',//分组下面的列表
 
   //管理分类
   addType:head+'goodstype/version3/add',
   updataType:head+'goodstype/version3/update',
   delType:head+'goodstype/version3/delete',
   typeList:head+'goodstype/version3/list',
+
+
+  //商品管理
+  addGoods:head+'goods/version3/add',
+  updataGoods:head+'goods/version3/update',
+  delGoods:head+'services/goods/delete',
+  goodsDetail:head+'services/goods/version3/detail',
+  goodsList:head+'goods/version3/list4web',
 
   //添加优惠券
   addCoupon:head+'couponBook/version3/add',//添加优惠券
@@ -33,7 +42,8 @@ const url={
   delMemberCard:head+'membershipCard/delete',//删除会员卡
   memberCardList:head+'membershipCard/listbyshopId',//所有会员卡列表
 
-  //
+  //添加优惠券
+
 }
 
 

@@ -275,7 +275,7 @@
               EmployeesNumber: form.EmployeesNumber
             }
           }
-          this.$http.post('/shop/'+api.updataShop, obj).then(json => {
+          this.$http.post(+api.updataShop, obj).then(json => {
             let data = json.data;
             if (data.isSuc == true) {
               this.showModal = false;
@@ -331,7 +331,7 @@
       // 删除店铺
       delShop(id,index){
         console.log(id);
-        this.$http.post('/shop/'+api.delShop,{userShopId:id.UserShopId}).then(json=>{
+        this.$http.post(api.delShop,{userShopId:id.UserShopId}).then(json=>{
           let data=json.data
           if(data.isSuc==true){
             this.shopList.splice(index,1);
@@ -351,7 +351,7 @@
       },
       // 获取列表
       getShopList(){
-        this.$http.post('/shop/'+api.shopList,{}).then(json=>{
+        this.$http.post(api.shopList,{}).then(json=>{
           let data=json.data
           if(data.isSuc==true){
             this.shopList=data.result;
