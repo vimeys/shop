@@ -275,7 +275,7 @@
               EmployeesNumber: form.EmployeesNumber
             }
           }
-          this.$http.post(+api.updataShop, obj).then(json => {
+          this.$http.post(api.updataShop, obj).then(json => {
             let data = json.data;
             if (data.isSuc == true) {
               this.showModal = false;

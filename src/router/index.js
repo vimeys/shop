@@ -67,6 +67,7 @@ import  moneyManage from '@/page/moneyManage/moneyManage'
 
 //******************运营数据**************************
 import  serviceRate from '@/page/dataView/serviceRate'
+import  dataView from '@/page/dataView/dataView'
 
 Vue.use(Router);
 
@@ -227,16 +228,23 @@ export default new Router({
       name:'moneyManage',
       component:moneyManage
     },
-    //服务评价
-    {
-      path:'/dataView/serviceRate',
-      name:'serviceRate',
-      component:serviceRate
-    },
+    // //服务评价
+    // {
+    //   path:'/dataView/serviceRate',
+    //   name:'serviceRate',
+    //   component:serviceRate
+    // },
     //运营数据
     {
-      path:'/serviceRate',
-      component:serviceRate
+      path:'/dataView',
+      component:dataView,
+      children:[
+        {
+          path:'serviceRate',
+          name:'serviceRate',
+          component:serviceRate
+        }
+      ]
     }
 
   ]

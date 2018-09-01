@@ -6,9 +6,12 @@
     <div class="item">
         <div class="box-image">
           <img :src="src" alt="">
-          <div class="box-btns">
+          <div class="box-btns" v-if="one">
               <div class="box-btns-edit" @click="edit">编辑服务</div>
               <div class="box-btns-del" @click="del"> 删除服务</div>
+          </div>
+          <div class="box-btns" v-else>
+              <div class="box-btns-edit" @click="check">查看评价</div>
           </div>
           <div class="coupon-radio" @click="choose" >
             <div class="coupon-radio-point" v-show="chosed"></div>
@@ -33,6 +36,12 @@
         name: "goodsCard",
       props:{
           index:Number,
+          one:{
+            type:Boolean,
+            default(){
+              return false
+            }
+          },
           detail:{
             type:Object,
             default(){
@@ -52,11 +61,16 @@
           choose(){
 
           },
+
           edit(){
 
           },
         del(){
 
+        },
+        //查看详情
+        check(){
+            this.$emit('check',index)
         }
       }
     }

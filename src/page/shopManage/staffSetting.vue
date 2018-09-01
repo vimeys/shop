@@ -116,7 +116,7 @@
             <el-select v-model="job" placeholder="请选择职位">
               <el-option
                 v-for="item in jobList"
-                :key =item
+                :key =item.value
                 :value=item.value
                 :label=item.label
               >
@@ -196,9 +196,27 @@
       :width="jobPopup.width"
       :height="jobPopup.height"
       v-show="jobPopup.showModal"
+      @click="closeJob"
     >
       <div class="job-box">
+        <el-row class="base-row">
+          <el-col :span="4"><h3>职位设置</h3></el-col>
+        </el-row>
 
+        <el-row class="base-row" v-for="item in jobList">
+          <el-col class="" :span="12"><el-input v-model="Name" placeholder="请输入内容"  :disabled="jobIsEdit"></el-input></el-col>
+          <el-col :span="4" :offset="1">
+            <div @click="jobEdit" v-if="jobIsEdit" class="base-btn-111">修改</div>
+            <div @click="jobConfirm" v-else class="base-btn-111">确定</div>
+
+          </el-col>
+          <el-col :span="4" :offset="2"><div class="base-btn-111">删除</div></el-col>
+        </el-row>
+        <el-row class="base-row">
+          <el-col :span="10">
+            <div class="base-btn-111" @click="addNewJob">添加新职位</div>
+          </el-col>
+        </el-row>
       </div>
     </ys-popup>
   </div>
@@ -219,7 +237,9 @@
         },
       data(){
           return {
-
+            Name:'店长',//职位名字
+            jobIsEdit:false,//是否可以编辑职位
+            value:'',//
             placeholder:'搜索姓名或手机号',
             add:{
               width:900,
@@ -248,7 +268,7 @@
             jobPopup:{
                 width:645,
                 height:766,
-                showModal:true
+                showModal:false
             },
             job:'',
             jobList:[
@@ -269,6 +289,16 @@
         closeAdd(e){
           this.add.showModal=e
         },
+        //打开弹窗
+        openJob(){
+          this.jobPopup.showModal=true
+        },
+        //关闭添加工作弹窗
+        closeJob(e){
+          console.log(e);
+          this.jobPopup.showModal=e
+        },
+
         closeMove(e){
           this.move.showModal=e
         },
@@ -286,8 +316,19 @@
           }).catch(err=>{
             console.log(err);
           })
-        }
+        },
+        // 职位设置编辑
+        jobEdit(){
+            this.jobIsEdit=false
 
+        },
+        //职位编辑确定
+        jobConfirm(){
+          this.jobIsEdit=true
+        },
+        addNewJob(){
+            this.jobList.push({value:'1',label:'2'})
+        }
       },
       created(){
         this.getShopList();
@@ -397,8 +438,8 @@
   //添加职位弹窗
   .job-box{
     width: 100%;
+    padding: 50px;
   }
-
 
 
 </style>
