@@ -48,7 +48,9 @@
       }
     },
     methods: {
+
       close() {
+        console.log('emit');
         this.$emit("close",false)
       },
     }

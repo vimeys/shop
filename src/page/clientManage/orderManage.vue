@@ -4,7 +4,10 @@
 */
 <template>
       <div class="box">
-        <ys-search></ys-search>
+        <div class="order-header">
+          <div class="base-btn-111"> 导出excel</div><ys-search></ys-search>
+        </div>
+
         <el-table
           :data="tableData"
           class="table"
@@ -91,9 +94,18 @@
 </script>
 
 <style lang='less' scoped>
+  @import "~@/assets/style/mixin";
 .box{
   width: 1200px;
+  .order-header{
+    display: flex;
+    margin: 30px 0;
+    .base-btn-111{
+      margin-right: 30px;
+    }
+  }
   .table /deep/ thead tr th{
+
     background: #ffd73a;
     color:#222;
     text-align: center;
