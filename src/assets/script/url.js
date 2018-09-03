@@ -42,9 +42,13 @@ const url={
   delMemberCard:head+'membershipCard/delete',//删除会员卡
   memberCardList:head+'membershipCard/listbyshopId',//所有会员卡列表
 
-  //添加优惠券
+  //人员管理
 
-}
+
+
+
+
+};
 
 
 export default url

@@ -29,32 +29,35 @@
         <div class="title">星巴克一号店(2人)</div>
         <el-row class="table-title">
           <!--<el-col></el-col>-->
-          <el-col :span="4">姓名</el-col>
-          <el-col :span="3">手机号</el-col>
+          <el-col :span="3">姓名</el-col>
+          <el-col :span="2">手机号</el-col>
           <el-col :span="2">权限</el-col>
-          <el-col :span="2">权限</el-col>
-          <el-col :span="2">权限</el-col>
-          <el-col :span="2">权限</el-col>
-          <el-col :span="8">管理</el-col>
+          <el-col :span="2">职位</el-col>
+          <el-col :span="2">状态</el-col>
+          <el-col :span="2">密码</el-col>
+          <el-col :span="11">管理</el-col>
         </el-row>
       <el-row class="row" v-for="item in table" :key="item">
-        <el-col :span="4">
+        <el-col :span="3">
           <el-row>
             <el-col :span="8">.</el-col>
             <el-col :span="8">张三</el-col>
           </el-row>
         </el-col>
-        <el-col :span="3">13350900722</el-col>
+        <el-col :span="2">13350900722</el-col>
         <el-col :span="2">管理员</el-col>
         <el-col :span="2">理发师</el-col>
         <el-col :span="2">激活</el-col>
         <el-col :span="2">123</el-col>
-        <el-col :span="9">
+        <el-col :span="11">
             <el-row :gutter="10">
               <el-col :span="4"><div class="table-btn" @click="openMove">移动</div></el-col>
+              <el-col :span="4">
+                <div class="table-btn">冻结</div>
+              </el-col>
               <el-col :span="4"><div class="table-btn">编辑</div></el-col>
               <el-col :span="4"><div class="table-btn">删除</div></el-col>
-              <el-col :span="11">
+              <el-col :span="7">
                 <el-select v-model="value" placeholder="请选择" size="small">
                   <el-option
                     v-for="item in options"

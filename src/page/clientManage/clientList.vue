@@ -4,6 +4,7 @@
 */
 <template>
   <div class="box">
+    <div class="open-card-btn" @click="openCard">开卡</div>
     <el-tabs v-model="activeName" @tab-click="handleClick" value="first">
       <el-tab-pane label="会员用户" name="first">
         <div class="header">
@@ -115,18 +116,17 @@
               </template>
             </el-table-column>
           </el-table>
-          <div class="table-btns">
-            <div class="btn" @click="openCard">开卡</div>
-          </div>
+          <!--<div class="table-btns">-->
+
+          <!--</div>-->
         </div>
         <ys-popup
-          :showModal="code.showModal"
-          v-show="code.showModal"
+          v-show="pay.showModal"
           @close="close"
-          :width='code.pWidth'
-          :height="code.pHeight"
+          :width='pay.pWidth'
+          :height="pay.pHeight"
         >
-          <div class="changePsw">
+          <div class="pay">
             <el-row class="title">
               <el-col :span="6" :offset="4">修改密码</el-col>
             </el-row>
@@ -140,8 +140,19 @@
             </el-row>
           </div>
         </ys-popup>
+
+        <!--&lt;!&ndash;//支付&ndash;&gt;-->
+        <!--<ys-popup-->
+          <!--:width="pay.width"-->
+          <!--:height="pay.height"-->
+          <!--v-show="pay.showModel"-->
+          <!--@close="closePayPopup"-->
+        <!--&gt;-->
+
+        <!--</ys-popup>-->
+
+        <!--//开卡...-->
         <ys-popup
-          ::showModal="opc.showModal"
           v-show="opc.showModal"
           @close="close"
           :width='opc.pWidth'
@@ -159,7 +170,7 @@
                <el-col :span="8" :offset="2">
                  <input type="text" placeholder="请输入会员手机号" class="input">
                </el-col>
-               <el-col :span="6" :offset="2">
+               <el-col :span="5" :offset="2">
                  <el-select v-model="value" size="small" placeholder="请选择">
                    <el-option
                      v-for="item in options"
@@ -172,7 +183,7 @@
              </el-row>
               <el-row class="row">
                 <el-col :span="4">服务范围</el-col>
-                <el-col :span="20" >
+                <el-col :span="23" >
                     <el-row>
                       <el-col :span="22"><div class="box">洗剪吹</div></el-col>
                       <el-col :span="1" :offset="1">
@@ -214,7 +225,7 @@
               </el-row>
               <el-row class="row">
                 <el-col :span="4">享受折扣</el-col>
-                <el-col :span="20">
+                <el-col :span="19">
                   <input type="text" placeholder="请输入会员卡的折扣" class="input">
                 </el-col>
               </el-row>
@@ -222,7 +233,7 @@
                 <el-col :span="4">
                   购买金额
                 </el-col>
-                <el-col :span="20">
+                <el-col :span="19">
                   <el-row>
                     <el-col>
                       <input type="text" placeholder="请输入购买该会员卡的金额" class="input">
@@ -237,7 +248,7 @@
                 <el-col :span="4">
                   充值金额
                 </el-col>
-                <el-col :span="20">
+                <el-col :span="19">
                   <el-row>
                     <el-col>
                       <input type="text" placeholder="请输入继续充值该会员卡的金额" class="input">
@@ -250,7 +261,7 @@
               </el-row>
               <el-row class="row">
                 <el-col>
-                  <div class="opc-btn">开通会员</div>
+                  <div class="opc-btn" @click="handleEdit">开通会员</div>
                 </el-col>
               </el-row>
             </el-scrollbar>
@@ -378,20 +389,22 @@
       },
       data(){
         return {
-          code:{//支付二维码弹窗
-            showModal:false,
-            pWidth:759,
-            pHeight:748,
-          },
+          activeName:'first',
+
           opc:{//开发弹窗
             showModal:false,
             pWidth:760,
             pHeight:808,
           },
-          history:{
+          history:{//消费记录
             showModal:false,
             pWidth:504,
             pHeight:708,
+          },
+          pay:{//付费页面
+            showModel:false,
+            width:759,
+            height:748,
           },
           placeholder:'搜索对应标签',
           options: [{
@@ -446,15 +459,23 @@
         handleHistory(){
             this.history.showModal=true
         },
+
+        // pay(){
+        //   this.
+        // },
+
+
         //弹起开卡弹窗
         openCard(e){
+          console.log(e);
           this.opc.showModal=true
         },
         chose(){
           console.log(123);
         },
         close(e){
-          this.code.showModal=e;
+          this.pay.showModel=e;
+          // this.code.showModal=e;
           this.opc.showModal=e;
           this.history.showModal=e;
         }
@@ -464,9 +485,20 @@
 
 <style lang='less' scoped>
 @import "~@/assets/style/mixin";
+  /deep/ .el-scrollbar__wrap{
+    overflow-x: hidden;
+  }
   .box{
     width:1200px;
+    margin-top: 30px;
   }
+.open-card-btn{
+  .base-btn-111;
+  position: relative;
+  top:30px;
+  right: -500px;
+  z-index: 50;
+}
   .header{
     display: flex;
     justify-content: space-between;
@@ -500,6 +532,9 @@
       width: 100%;
       height: 90px;
       background: #fff;
+      position: relative;
+      top:0;
+      left: 0;
       display: flex;
       align-items: center;
       justify-content: flex-start;
@@ -508,6 +543,7 @@
         margin-left: 30px;
       }
     }
+
   }
   .title{
     /*margin-top: ;*/
@@ -522,10 +558,10 @@
   /*开卡弹窗*/
   .table-box{
     width: 100%;
-    padding: 50px;
+    padding: 50px 0 50px 50px;
     box-sizing: border-box;
     >.row{
-      border: 1px solid red;
+      /*border: 1px solid red;*/
     }
   }
 
@@ -603,6 +639,12 @@
         text-align: center;
       }
     }
+  }
+    //支付页面弹窗
+  .pay{
+    width: 100%;
+    height: 100%;
+
   }
 
 </style>

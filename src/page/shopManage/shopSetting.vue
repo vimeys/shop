@@ -233,11 +233,15 @@
         this.showModal=false
       },
       handleAvatarSuccess1(res, file){
-        this.form.Pics=URL.createObjectURL(file.raw);
+        console.log(file);
+        // this.form.Pics=URL.createObjectURL(file.raw);
+        this.form.Pics=file.response.url;
+        console.log(this.form.Pics);
       },
       // 头像上传
       handleAvatarSuccess2(res, file) {
         this.form.logo= URL.createObjectURL(file.raw);
+
       },
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg';
@@ -375,6 +379,9 @@
 <style lang='less' scoped>
 
   @import "~@/assets/style/mixin";
+  /deep/ .el-scrollbar__wrap{
+    overflow-x: hidden;
+  }
     .box{
       width: 1200px;
       .btn{

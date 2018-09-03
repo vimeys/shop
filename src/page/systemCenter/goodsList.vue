@@ -8,21 +8,21 @@
       <el-main class="goods-main">
         <div class="goods-btns">
           <div class="header">
-            <div class="new" @click="openGoods"><img src="@/assets/images/icon/addBtn.png" alt="">新建服务</div>
-            <div class="manage">批量管理</div>
-            <div class="del">排序</div>
+            <div class="new" :class="{'disable':disable}" @click="openGoods"><img src="@/assets/images/icon/addBtn.png" alt="">新建服务</div>
+            <div class="manage" @click="manage">批量管理</div>
+            <div class="del" :class="{'disable':disable}">排序</div>
           </div>
           <ys-search></ys-search>
         </div>
-        <el-row class="edit-btns">
+        <el-row class="edit-btns" v-if="disable">
           <el-col :span="6">
             <el-row>
               <el-col :span="4" :offset="8">
-                <div class="coupon-radio" @click="choose">
-                  <div class="coupon-radio-point" v-show="chosed"></div>
+                <div class="coupon-radio" @click="chooseAll">
+                  <div class="coupon-radio-point" v-show="allChoosed"></div>
                 </div>
               </el-col>
-              <el-col :span="4" class="choose-word">
+              <el-col :span="4" class="choose-word" >
                 全选
               </el-col>
             </el-row>
@@ -42,16 +42,19 @@
           <el-col :span="4" class="edit-move">
             <div>移动</div>
           </el-col>
-          <el-col :span="4" class="edit-del">
+          <el-col :span="4" class="edit-del" @click="delGoods">
             <div>删除</div>
           </el-col>
         </el-row>
         <div class="goods-list">
-          <goods-card></goods-card>
-          <goods-card></goods-card>
-          <goods-card></goods-card>
-          <goods-card></goods-card>
-          <goods-card></goods-card>
+          <template v-for="(item,index) in goodsList">
+            <goods-card :detail="item" :index="index"></goods-card>
+          </template>
+
+          <!--<goods-card></goods-card>-->
+          <!--<goods-card></goods-card>-->
+          <!--<goods-card></goods-card>-->
+          <!--<goods-card></goods-card>-->
         </div>
       </el-main>
       <el-aside width="289px" class="aside">
@@ -63,9 +66,7 @@
                    @node-click="handleNodeClick"
                    class="aside-tree"
           >
-
           </el-tree>
-
         </div>
       </el-aside>
     </el-container>
@@ -81,23 +82,193 @@
         <div class="list-title">新建优惠券</div>
         <div class="list-btns">
           <ul>
-            <li><i class="el-icon-document "></i><span class="after">服务属性</span><i class="el-icon-arrow-right"></i></li>
-            <li><i class="el-icon-document"></i>服务详情<i class="el-icon-arrow-right"></i></li>
+            <li :class="[goodsItemClass1]" @click="chooseGoodsItem(1)">
+              <i class="el-icon-document "></i>
+              <span class="after">服务属性</span>
+              <i class="el-icon-arrow-right"></i>
+            </li>
+            <li :class="[goodsItemClass2]" @click="chooseGoodsItem(2)" >
+              <i class="el-icon-document"></i>
+              服务详情
+              <i class="el-icon-arrow-right"></i>
+            </li>
             <li class="list-tips">*为必填项</li>
           </ul>
         </div>
       </div>
 
       <div class="popup-slide-right">
-        <el-scrollbar class="scroll">
+        <el-scrollbar class="scroll" v-if="goodsItemClass1">
           <div class="content">
-            <div>
-
+            <div class="img-list" >
+              <el-upload
+                v-if="aPics.length<5"
+                action="http://mdimg.yilianchuang.cn/uploadimage3.ashx"
+                list-type="picture-card"
+                :on-success="handlePictureSuccess"
+                :limit="5"
+                :on-remove="handleRemove">
+                <i class="el-icon-plus"></i>
+              </el-upload>
+            </div>
+            <div class="page-size">{{aPics.length}}/5</div>
+            <div content="goods-form">
+              <el-row class="base-row">
+                <el-col :span="4">上传到</el-col>
+                <el-col :span="19">
+                  <el-select v-model="value" placeholder="分类" size="small">
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-col>
+                <el-col :span="1" class="before"></el-col>
+              </el-row>
+              <el-row class="base-row">
+                <el-col :span="4"></el-col>
+                <el-col :span="19" :offset="4">
+                  <el-select v-model="value" placeholder="二级分类" size="small">
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-col>
+                <el-col :span="1" class="before"></el-col>
+              </el-row>
+              <el-row class="base-row">
+                <el-col :span="4">服务名称</el-col>
+                <el-col :span="19" >
+                  <input type="text" class="base-input" placeholder="请输入服务名称，最多20字">
+                </el-col>
+                <el-col :span="1" class="before"></el-col>
+              </el-row>
+              <el-row class="base-row">
+                <el-col :span="4">服务标签</el-col>
+                <el-col :span="19" >
+                  <el-select v-model="value" placeholder="二级分类" size="small">
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-col>
+                <el-col :span="1" class="before"></el-col>
+              </el-row>
+              <el-row class="base-row">
+                <el-col :span="4">原价</el-col>
+                <el-col :span="19" >
+                  <input type="text" class="base-input" placeholder="请输入服务原价">
+                </el-col>
+                <el-col :span="1" class="before"></el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="4">规格</el-col>
+                <el-col :span="19">
+                  <el-row class="small-row" v-for="item in [1,2,3]">
+                      <el-col :span="14">
+                        <el-select v-model="value" placeholder="二级分类" size="small">
+                          <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                          </el-option>
+                        </el-select>
+                      </el-col>
+                    <el-col :span="8" :offset="2">
+                      <input type="text" class="base-input" placeholder="请输入价格">
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="14">
+                      · 根据不同岗位输入不同佣金
+                    </el-col>
+                    <el-col :span="8" :offset="2">
+                      <span class="plus">+</span>
+                    </el-col>
+                  </el-row>
+                </el-col>
+                <el-col :span="1" class="before"></el-col>
+              </el-row>
+              <el-row class="mt15">
+                <el-col :span="4">服务佣金</el-col>
+                <el-col :span="19">
+                  <el-row class="small-row" v-for="item in [1,2,3]">
+                      <el-col :span="14">
+                        <el-select v-model="value" placeholder="二级分类" size="small">
+                          <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                          </el-option>
+                        </el-select>
+                      </el-col>
+                    <el-col :span="8" :offset="2">
+                      <input type="text" class="base-input" placeholder="请输入价格">
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="14">
+                      · 根据不同岗位输入不同佣金
+                    </el-col>
+                    <el-col :span="8" :offset="2">
+                      <span class="plus">+</span>
+                    </el-col>
+                  </el-row>
+                </el-col>
+                <el-col :span="1" class="before"></el-col>
+              </el-row>
+              <el-row class="mt15">
+                <el-col :span="4">分销佣金</el-col>
+                <el-col :span="19">
+                  <el-row>
+                    <el-col :span="11">
+                      <input type="text " class="base-input" placeholder="请输入分享佣金">
+                    </el-col>
+                    <el-col :span="11" :offset="2">
+                      <input type="text" class="base-input" placeholder="请输入获客佣金">
+                    </el-col>
+                  </el-row>
+                </el-col>
+                <el-col :span="1" class="before"></el-col>
+              </el-row>
             </div>
           </div>
         </el-scrollbar>
+        <div class="goods-detail" v-else>
+            <el-row class="base-row">
+              <el-col :span="4" :offset="1">商品详情</el-col>
+              <el-col :span="16" :offset="1"><input type="text " class="base-input" placeholder="请填写文章链接"></el-col>
+            </el-row>
+          <el-row class="base-row">
+            <el-col :span="6" :offset="6">
+              <div  class="base-btn-111 block">选择现有</div>
+            </el-col>
+            <el-col :span="6" :offset="2">
+                <div class="base-btn-111 block">
+                  创建
+                </div>
+            </el-col>
+          </el-row>
+          <el-row class="goods-detail-confirm">
+            <el-col :offset="10" :span="4">
+              <div class="base-btn-111" @click="confirmGoodsDetail">
+                确定
+              </div>
+            </el-col>
+          </el-row>
+        </div>
         <div>
-          <div class="btn" @click="addGoods" >确认</div>
+          <div class="btn" @click="addGoods" v-if="goodsItemClass1" >确认</div>
         </div>
         <!--<el-button type="text" @click="open5">点击打开 Message Box</el-button>-->
       </div>
@@ -201,10 +372,12 @@
     data() {
       return {
         goods: {
-          showModal: false,
+          showModal: true,
           width: 900,
           height: 800
         },
+        disable:false,//是否禁用
+        allChoosed:false,
         type: {//控制分类
           showModal: false,
           width: 670,
@@ -266,10 +439,42 @@
         secondType: [],//二级分类
         firstType: '',//一级分类
         typeList:'',//获取分类列表
+        aPics:[],//图片数组
+        goodsItemClass1:'goods-active',//分类class
+        goodsItemClass2:'',//分类class
+        goodsList:[],//商品列表
       }
     }, methods: {
       choose() {
         console.log(123);
+      },
+      //批量管理
+      manage(){
+          if(this.disable){
+            this.disable=false;
+            this.goodsList.forEach(item=>{
+              item.hasChecked=false
+            })
+          }else{
+            this.disable=true
+            this.goodsList.forEach(item=>{
+              item.hasChecked=true
+            })
+          }
+      },
+      //全部选中
+      chooseAll(){
+          if(this.allChoosed){
+            this.allChoosed=false
+            this.goodsList.forEach(item=>{
+              item.isChecked=false
+            })
+          }else {
+            this.allChoosed=true;
+            this.goodsList.forEach(item=>{
+              item.isChecked=true
+            })
+          }
       },
       //打开商品弹窗
       openGoods(){
@@ -279,6 +484,20 @@
       //关闭商品弹窗
       closeGoods(){
           this.goods.showModal=false;
+      },
+      //选择分类
+      chooseGoodsItem(value){
+          if(value==1){
+            this.goodsItemClass1='goods-active';
+            this.goodsItemClass2=''
+          }else {
+            this.goodsItemClass1='';
+            this.goodsItemClass2='goods-active'
+          }
+      },
+      //确认文章
+      confirmGoodsDetail(){
+
       },
 
       //生成新的服务
@@ -325,7 +544,30 @@
       getGoodsList(){
           this.$http.post(this.$api.goodsList,{ pageIndex:1, pageSize:100, goodTypeParentId:0, goodsTypeId:0}).then(json=>{
             console.log(json);
+            let data=json.data;
+            if(data.isSuc==true){
+              data.result.Items.forEach(item=>{
+                item.hasChecked=false;
+                item.isChecked=false
+              })
+              this.goodsList=data.result.Items
+              }
           })
+      },
+      // 删除商品
+      delGoods(){
+        let delArr=[]
+        if(this.ischoseAll){
+          this.couponList.forEach(item=>{
+            delArr.push(item.CouponBookId)
+          })
+        }else {
+          this.couponList.forEach(item=>{
+            if(item.ischosed){
+              delArr.push(item.CouponBookId)
+            }
+          })
+        }
       },
       handleNodeClick(data) {
         console.log(data);
@@ -363,6 +605,17 @@
               console.log(json.data.isSuc);
             })
         })
+      },
+      //添加图片
+      handlePictureSuccess(res,file){
+        this.aPics.push(URL.createObjectURL(file.raw));
+      },
+      //移除图片
+      handleRemove(file,fileList){
+        console.log(file, fileList);
+        let index=this.aPics.indexOf(file)
+        this.aPics.splice(index,1)
+        console.log(this.aPics);
       },
       //保存分类
       saveType() {
@@ -413,17 +666,18 @@
 
       },
 
-      //获取列表
+      //获取分类列表
        getTypeList :async function() {
         let json= await this.$http.post(this.$api.typeList, {type: 2});
         let data=json.data;
         if(data.isSuc==true){
             this.typeList=data.result
         }
-       }
+       },
+
     },
     created() {
-      // this.getTypeList();
+      this.getTypeList();
       this.getGoodsList()
     }
   }
@@ -431,7 +685,9 @@
 
 <style lang='less' scoped>
   @import "~@/assets/style/mixin";
-
+  /deep/ .el-scrollbar__wrap{
+    overflow-x: hidden;
+  }
   .box {
     width: 1200px;
     box-sizing: border-box;
@@ -439,7 +695,9 @@
     justify-content: space-between;
     margin-top: 50px;
   }
-
+  .disable{
+    background: #E5E5E5 !important;
+  }
   .coupon-radio {
     width: 21px;
     height: 21px;
@@ -453,8 +711,8 @@
     align-items: center;
     background: #fff;
     .coupon-radio-point {
-      width: 17px;
-      height: 17px;
+      width: 15px;
+      height: 15px;
       border-radius: 50%;
       background: #ffd73a;
     }
@@ -582,7 +840,6 @@
         width: 276px;
         height: 48px;
         border-radius: 4px;
-        background: @bs-color;
         align-items: center;
         font-size: 16px;
         i {
@@ -590,6 +847,11 @@
           display: inline-block;
           margin: 0 20px;
         }
+      }
+
+
+      li.goods-active{
+        background: @bs-color;
       }
       .list-tips {
         color: red;
@@ -618,6 +880,48 @@
     /*}*/
     /*}*/
     /*}*/
+    /deep/ .el-select--small{
+      width: 100%;
+    }
+    /deep/ input{
+      text-align: center;
+    }
+    .content{
+      width: 500px;
+      margin-left: 30px;
+      .img-list{
+        margin-top: 80px;
+        display: flex;
+        width: 100%;
+        justify-content: center;
+      }
+      .page-size{
+        margin-top: 30px;
+      }
+      .plus{
+        display: inline-block;
+        width:27px;
+        height:27px;
+        background:rgba(255,215,54,1);
+        text-align: center;
+        line-height: 27px;
+        color: #fff;
+        border-radius:4px;
+      }
+
+    }
+    .goods-detail{
+      width: 500px;
+      margin-top: 100px;
+    }
+    .block{
+      background: #282828;
+      color: #fff;
+    }
+    .goods-detail-confirm{
+      margin-top: 200px;
+    }
+
     .scroll {
       width: 100%;
       height: 700px;

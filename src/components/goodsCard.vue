@@ -5,7 +5,7 @@
 <template>
     <div class="item">
         <div class="box-image">
-          <img :src="src" alt="">
+          <img class="box-images" :src="detail.Pic" alt="">
           <div class="box-btns" v-if="one">
               <div class="box-btns-edit" @click="edit">编辑服务</div>
               <div class="box-btns-del" @click="del"> 删除服务</div>
@@ -13,19 +13,23 @@
           <div class="box-btns" v-else>
               <div class="box-btns-edit" @click="check">查看评价</div>
           </div>
-          <div class="coupon-radio" @click="choose" >
-            <div class="coupon-radio-point" v-show="chosed"></div>
+          <div class="coupon-radio" @click="choose(index)" v-show="detail.hasChecked" >
+            <div class="coupon-radio-point" v-show="detail.isChecked"></div>
           </div>
         </div>
       <div class="box-content">
-        <div class="name"> 小户型客厅布艺沙发 可拆 洗套装组合</div>
+        <div class="name"> {{detail.Name}} </div>
         <div class="main">
           <div class="price">
-            <div class="price-old">原价：￥1200</div>
-            <div class="price-new">现价：<span>￥120</span></div>
+            <div class="price-old">原价：￥{{detail.Price}}</div>
+            <div class="price-new">现价：<span>￥{{discountPrice||0}}</span></div>
           </div>
           <div class="active-image">
-            <img src="@/assets/images/icon/activeNum.png" alt=""></div>
+            <img v-if="detail.FlagId==1" src="@/assets/images/icon/activeNum.png" alt="">
+            <img v-else-if="detail.FlagId==2" src="@/assets/images/icon/activePrice.png" alt="">
+            <img v-else-if="detail.FlagId==3" src="@/assets/images/icon/activeTeam.png" alt="">
+            <img  v-else src="@/assets/images/icon/activeTime.png" alt="">
+          </div>
         </div>
       </div>
     </div>
@@ -39,7 +43,7 @@
           one:{
             type:Boolean,
             default(){
-              return false
+              return true
             }
           },
           detail:{
@@ -71,6 +75,27 @@
         //查看详情
         check(){
             this.$emit('check',index)
+        },
+
+      },
+      computed:{
+        discountPrice(){
+            let aPrice=this.detail.SpecList;
+            let a=[]
+            aPrice.forEach(item=>{
+              a.push(item.Price)
+            })
+            function s(a,b) {
+              return a-b
+            }
+            a.sort(s)
+          try{
+
+          }catch (err) {
+            console.log(err);
+          }
+          console.log(a);
+            return a[0]
         }
       }
     }
