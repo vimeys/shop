@@ -200,7 +200,6 @@
       :height="jobPopup.height"
       v-show="jobPopup.showModal"
       @close="closeJob"
-
     >
       <div class="job-box">
         <el-row class="base-row">
