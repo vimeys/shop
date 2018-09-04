@@ -6,7 +6,7 @@
       <img :src="shop.Pics" alt="">
       <div class="content">
          <h4>
-            {{shop.title||'成都旗舰店  丨 成都国际金融中心'}}
+            {{shop.Title||'成都旗舰店  丨 成都国际金融中心'}}
          </h4>
         <p class="light-font">{{shop.Content||'成都国际金融中心'}}</p>
         <div class="border"></div>

@@ -118,7 +118,8 @@ export default new Router({
               name:cardList,
               component:cardList
             },
-          ]
+          ],
+          redirect:'/centerIndex/indexPage/bg'
         },
         //卡券管理
         {
@@ -136,7 +137,9 @@ export default new Router({
               name: 'vipCard',
               component: vipCard
             },
-          ]
+
+          ],
+          redirect:'/centerIndex/cardManage/priceCard',
         },
         //服务商品列表
         {

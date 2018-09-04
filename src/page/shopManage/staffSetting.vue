@@ -6,7 +6,7 @@
       <div class="choose-title">
         <el-row>
           <el-col :span="4">
-            <el-select v-model="value" placeholder="请选择" size="small">
+            <el-select v-model="value" placeholder="请选择" size="small" @change="chooseShop" v-if="shopList.length">
               <el-option
                 v-for="item in shopList"
                 :key="item.value"
@@ -15,18 +15,20 @@
               </el-option>
             </el-select>
           </el-col>
-          <el-col :span="2">总数：2人</el-col>
+          <el-col :span="2" class="base-col">总数：2人</el-col>
           <el-col :span="6" :offset="12"> <div><ys-search></ys-search></div></el-col>
         </el-row>
       </div>
     <div class="btns">
       <!--<div class="setting">设置权限</div>-->
-      <div class="classify">员工分类</div>
-      <div class="setting" @click="openJob">职位设置</div>
+      <div class="classify" @click="openGroup">新建员工分类</div>
+      <!--<div class="setting" @click="openJob">职位设置</div>-->
       <!--<div class="project">管理员工服务项目</div>-->
     </div>
-    <div class="tables">
-        <div class="title">星巴克一号店(2人)</div>
+    <div class="tables"v-for="(item,index) in groupList" >
+        <div class="title">分类1(2人) <i class="el-icon-delete"
+                                        @click="delGroup(index)"
+                                      style="position: relative; right: -500px"></i></div>
         <el-row class="table-title">
           <!--<el-col></el-col>-->
           <el-col :span="3">姓名</el-col>
@@ -58,9 +60,9 @@
               <el-col :span="4"><div class="table-btn">编辑</div></el-col>
               <el-col :span="4"><div class="table-btn">删除</div></el-col>
               <el-col :span="7">
-                <el-select v-model="value" placeholder="请选择" size="small">
+                <el-select v-model="job" placeholder="请选择" size="small">
                   <el-option
-                    v-for="item in options"
+                    v-for="item in jobList"
                     :key="item.value"
 
                     :label="item.label"
@@ -74,7 +76,7 @@
       <el-row class="table-btns" :gutter="20">
         <el-col :span="3">
           <div class="base-btn-111"
-               @click="addNewPeople"
+               @click="addNewPeople(index)"
           >添加成员</div>
         </el-col>
         <el-col :span="3">
@@ -95,6 +97,30 @@
       </el-row>
     </div>
 
+    <!--*********添加分组********-->
+    <ys-popup
+      v-show="group.showModal"
+      :width="group.width"
+      @close="closeGroup"
+      :height="group.height"
+    >
+      <div class="group-box">
+          <el-row class="group-title">
+            <el-col  :span="6"><h3>新建员工分类</h3></el-col>
+          </el-row>
+        <el-row class="group-input">
+          <el-col>
+            <input type="text" v-model="groupName" placeholder="请输入员工分类名称" class="base-input">
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4" :offset="10">
+            <div class="base-btn-111" @click="addGroup">确定</div>
+          </el-col>
+        </el-row>
+      </div>
+    </ys-popup>
+
 
     <!--********添加新员工*******-->
     <ys-popup
@@ -105,7 +131,7 @@
     >
       <div class="add">
         <el-row  class="header" justify="start">
-          <el-col :span="4">123</el-col>
+          <el-col :span="4"><h3>添加成员</h3></el-col>
         </el-row>
         <el-row class="add-text">
           <el-col :span="20">我们将向您的成员手机发送有店+的邀请</el-col>
@@ -115,22 +141,22 @@
             <input type="text" class="base-input" placeholder="请输入成员姓名">
           </el-col>
           <el-col :span="7">
-            <!--<input type="text" class="base-input" placeholder="请输入职位（可为空）">-->
-            <el-select v-model="job" placeholder="请选择职位">
-              <el-option
-                v-for="item in jobList"
-                :key =item.value
-                :value=item.value
-                :label=item.label
-              >
-              </el-option>
-            </el-select>
+            <input type="text" class="base-input" placeholder="请输入职位（可为空）">
+            <!--<el-select v-model="job" placeholder="请选择职位">-->
+              <!--<el-option-->
+                <!--v-for="item in jobList"-->
+                <!--:key =item.value-->
+                <!--:value=item.value-->
+                <!--:label=item.label-->
+              <!--&gt;-->
+              <!--</el-option>-->
+            <!--</el-select>-->
           </el-col>
           <el-col :span="8">
             <input type="text" class="base-input" placeholder="请输入成员手机号">
           </el-col>
           <el-col :span="4">
-            <div class="base-btn-111">邀请</div>
+            <div class="base-btn-111" @click="sendMessage">邀请</div>
           </el-col>
         </el-row>
         <el-row class="add-tips">
@@ -195,33 +221,33 @@
 
 
     <!--职位设置-->
-    <ys-popup
-      :width="jobPopup.width"
-      :height="jobPopup.height"
-      v-show="jobPopup.showModal"
-      @close="closeJob"
-    >
-      <div class="job-box">
-        <el-row class="base-row">
-          <el-col :span="4"><h3>职位设置</h3></el-col>
-        </el-row>
+    <!--<ys-popup-->
+      <!--:width="jobPopup.width"-->
+      <!--:height="jobPopup.height"-->
+      <!--v-show="jobPopup.showModal"-->
+      <!--@close="closeJob"-->
+    <!--&gt;-->
+      <!--<div class="job-box">-->
+        <!--<el-row class="base-row">-->
+          <!--<el-col :span="4"><h3>职位设置</h3></el-col>-->
+        <!--</el-row>-->
 
-        <el-row class="base-row" v-for="item in jobList">
-          <el-col class="" :span="12"><el-input v-model="Name" placeholder="请输入内容"  :disabled="jobIsEdit"></el-input></el-col>
-          <el-col :span="4" :offset="1">
-            <div @click="jobEdit" v-if="jobIsEdit" class="base-btn-111">修改</div>
-            <div @click="jobConfirm" v-else class="base-btn-111">确定</div>
+        <!--<el-row class="base-row" v-for="item in jobList">-->
+          <!--<el-col class="" :span="12"><el-input v-model="Name" placeholder="请输入内容"  :disabled="jobIsEdit"></el-input></el-col>-->
+          <!--<el-col :span="4" :offset="1">-->
+            <!--<div @click="jobEdit" v-if="jobIsEdit" class="base-btn-111">修改</div>-->
+            <!--<div @click="jobConfirm" v-else class="base-btn-111">确定</div>-->
 
-          </el-col>
-          <el-col :span="4" :offset="2"><div class="base-btn-111">删除</div></el-col>
-        </el-row>
-        <el-row class="base-row">
-          <el-col :span="10">
-            <div class="base-btn-111" @click="addNewJob">添加新职位</div>
-          </el-col>
-        </el-row>
-      </div>
-    </ys-popup>
+          <!--</el-col>-->
+          <!--<el-col :span="4" :offset="2"><div class="base-btn-111">删除</div></el-col>-->
+        <!--</el-row>-->
+        <!--<el-row class="base-row">-->
+          <!--<el-col :span="10">-->
+            <!--<div class="base-btn-111" @click="addNewJob">添加新职位</div>-->
+          <!--</el-col>-->
+        <!--</el-row>-->
+      <!--</div>-->
+    <!--</ys-popup>-->
   </div>
 
 
@@ -249,6 +275,12 @@
               height:427,
               showModal:false
             },
+            group:{//添加分组
+              width:645 ,
+              height:327,
+              showModal:false
+            },
+            groupName:'',
             move:{
               width:645,
               height:445,
@@ -261,7 +293,10 @@
               zIndex: 1000
             },
             table:[1,3,4],
-            shopList:[],
+            currentShopId:'',//当前店铺的id
+            shopList:[],//店铺列表
+            groupList:[],//当前店铺分组列表
+            currentGroupId:'',//当前分组id
             options:[
               {
                 value: '1',
@@ -275,6 +310,7 @@
             },
             job:'',
             jobList:[
+              {value:0,label:'管理员'},
               {value:1,label:'店长'},
               {value:2,label:'总监'},
               {value:3,label:'高级'},
@@ -282,9 +318,26 @@
           }
       },
       methods:{
-        addNewPeople(){
-          console.log(123);
+         //选择店铺
+        chooseShop(e){
+          console.log(e);
+          this.currentShopId=e
+          // alert(e)
+        },
+      //往分组下添加新的成员
+        addNewPeople(index){
           this.add.showModal=true
+          this.currentGroupId=this.groupList[index].GroupId;
+        },
+        //发送邀请
+        sendMessage(){
+          //todo 添加成员
+            let  obj={
+              user:{
+                UserName:'',
+              }
+            }
+
         },
         openMove(){
           this.move.showModal=true
@@ -292,15 +345,72 @@
         closeAdd(e){
           this.add.showModal=e
         },
-        //打开弹窗
-        openJob(){
-          this.jobPopup.showModal=true
+        //打开分组
+        openGroup(){
+          this.group.showModal=true;
         },
-        //关闭添加工作弹窗
-        closeJob(e){
-          console.log(e);
-          this.jobPopup.showModal=e
+        //添加分组
+        addGroup(){
+            let obj={
+              group:{
+                GroupName:this.groupName,
+                UserShopId:this.currentShopId
+              }
+            }
+          console.log(obj);
+          this.$http.post(this.$api.addGroup,obj).then(json=>{
+              let data=json.data;
+              if(data.isSuc==true){
+               this.getGroupList(this.currentShopId)
+              }
+            })
         },
+        //删除分组
+        delGroup(index){
+          let id=this.groupList[index].GroupId
+            this.$http.post(this.$api.delGroup,{groupId:id}).then(json=>{
+                let data=json.data;
+                if(data.isSuc==true){
+                  this.groupList.splice(index,1)
+                  this.$message({
+                    message:'删除成功',
+                    type:'success'
+                  })
+                }else{
+                  this.$message({
+                    message:'该分组有用户,不能删除',
+                    type:'error'
+                  })
+                }
+            })
+        },
+
+
+        //关闭分组
+        closeGroup(){
+          this.group.showModal=false;
+          this.groupName=''
+        },
+
+        // 获取当前分组的列表
+        getGroupList(shopId){
+            this.$http.post(this.$api.waterGroupList,
+              {pageindex:1,pagesize:10,userShopId:shopId}).then(json=>{
+              console.log(json);
+                  if(json.data.isSuc==true){
+                    this.groupList=json.data.result.Items;
+                  }
+            })
+        },
+        // //打开弹窗
+        // openJob(){
+        //   this.jobPopup.showModal=true
+        // },
+        // //关闭添加工作弹窗
+        // closeJob(e){
+        //   console.log(e);
+        //   this.jobPopup.showModal=e
+        // },
 
         closeMove(e){
           this.move.showModal=e
@@ -311,6 +421,9 @@
             let data=json.data
             if(data.isSuc==true){
               this.shopList=data.result;
+              let firstShopId=data.result[0].UserShopId;
+              this.currentShopId=firstShopId
+              this.getGroupList(this.currentShopId)
               this.$message({
                 message: '恭喜你，这是一条成功消息',
                 type: 'warning'
@@ -320,21 +433,25 @@
             console.log(err);
           })
         },
-        // 职位设置编辑
-        jobEdit(){
-            this.jobIsEdit=false
-
-        },
-        //职位编辑确定
-        jobConfirm(){
-          this.jobIsEdit=true
-        },
-        addNewJob(){
-            this.jobList.push({value:'1',label:'2'})
-        }
+        // // 职位设置编辑
+        // jobEdit(){
+        //     this.jobIsEdit=false
+        //
+        // },
+        // //职位编辑确定
+        // jobConfirm(){
+        //   this.jobIsEdit=true
+        // },
+        // addNewJob(){
+        //     this.jobList.push({value:'1',label:'2'})
+        // }
       },
       created(){
         this.getShopList();
+        // if(this.currentShopId){
+        //   this.getGroupList(this.currentShopId)
+        // }
+
       }
     }
 </script>
@@ -364,6 +481,7 @@
       }
     }
     .tables{
+        margin-top: 50px;
         .title{
           width: 100%;
           height: 48px;
@@ -399,7 +517,11 @@
         padding-bottom: 30px;
         box-sizing: border-box;
         margin: 0 10px;
+        background: #fff;
       }
+    }
+    .tables:first-child{
+      margin-top: 0;
     }
   }
 
@@ -443,6 +565,16 @@
     width: 100%;
     padding: 50px;
   }
-
+  //添加分组
+  .group-box{
+    width: 100%;
+    padding: 50px;
+    .group-title{
+      margin-top: 10px;
+    }
+    .group-input{
+      margin: 40px 0 55px;
+    }
+  }
 
 </style>

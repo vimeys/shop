@@ -880,6 +880,8 @@
     /*}*/
     /*}*/
     /*}*/
+
+    //todo  设置选择框的宽度
     /deep/ .el-select--small{
       width: 100%;
     }

@@ -40,7 +40,8 @@
           <template slot-scope="scope">
             <el-button
               size="medium"
-              @click="handleEdit(scope.$index, scope.row)">授权分销商</el-button>
+              class="base-input"
+              @click="handleEdit(scope.$index, scope.row)">授权分销商{{scope.row.date}}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -90,7 +91,22 @@
       methods:{
         handleEdit(index,data){
           console.log(data);
+          console.log(index);
+        },
+        //获取经销商列表
+        getSalesman(){
+            let obj={
+              query:{
+                pageIndex:1, pageSize:10, key:''
+              }
+            };
+            this.$http.post(this.$api.getSalesman,obj).then(json=>{
+              console.log(json);
+            })
         }
+      },
+      mounted(){
+          this.getSalesman()
       }
     }
 </script>
@@ -110,9 +126,20 @@
   .table{
     padding-top:40px;
   }
+  //todo 表格倒圆角及表头颜色这只
   .table /deep/ thead tr th{
     background: #ffd73a;
     color:#222;
     text-align: center;
+  }
+  .table /deep/ thead tr th:first-child{
+
+    border-top-left-radius: 4px;
+  }
+  .table /deep/ thead tr th:last-child{
+    border-top-right-radius: 4px;
+  }
+  .full-btn{
+    background:@bs-color;
   }
 </style>

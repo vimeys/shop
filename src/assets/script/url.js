@@ -14,7 +14,16 @@ const url={
   //店铺成员管理
   addWaiter:head+'user/reg2',//添加成员
   groupList:head+'group/list',//获取分组列表
-  waterGroupList:head+'services/group/list2',//分组下面的列表
+  waterGroupList:head+'group/list2',//分组下面的列表
+
+
+  //店铺分组
+  addGroup:head+'group/add',//添加分组
+  updateGroup:head+'group/update',//修改分组
+  delGroup:head+'group/delete',//删除分组
+
+
+
 
   //管理分类
   addType:head+'goodstype/version3/add',
@@ -42,11 +51,18 @@ const url={
   delMemberCard:head+'membershipCard/delete',//删除会员卡
   memberCardList:head+'membershipCard/listbyshopId',//所有会员卡列表
 
-  //人员管理
+  //经销商
+  getSalesman:head+'gameusershop/list',//经销商列表
+  getSalesmanDetail:head+'gameusershop/setstate',//经销商是否通过
 
+  //活动管理----拆红包
+   isRedPack:head+'usergame/version3/isexsitredpack',//是否存在红包
+  openRedPack:head+'usergame/version3/openredpack',//开通红包
+  closeRedPack:head+'usergame/version3/closeredpack',//关闭红包
 
-
-
+  //客户管理页面
+  openVipCard:head+'membershipCard/version3/addMembershipCard',//开新会员卡
+  getVipList:head+'gameuser/version3/list4web',//获取会员列表
 
 };
 

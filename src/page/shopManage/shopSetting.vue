@@ -72,7 +72,7 @@
                 <el-col :span="16" ><input type="text"
                                            class="base-input"
                                            placeholder="请输入标题"
-                                           v-model="form.title"></el-col>
+                                           v-model="form.Title"></el-col>
                 <el-col :span="2" class="after"></el-col>
               </el-row>
               <!--<el-row class="row-margin">-->
@@ -210,7 +210,7 @@
         form:{
           Pics:'',
           logo:'',
-          title:'',
+          Title:'',
           Content:'',
           Name:'',
           Address:'',
@@ -240,7 +240,8 @@
       },
       // 头像上传
       handleAvatarSuccess2(res, file) {
-        this.form.logo= URL.createObjectURL(file.raw);
+        this.form.logo=file.response.url;
+        // this.form.logo= URL.createObjectURL(file.raw);
 
       },
       beforeAvatarUpload(file) {
@@ -257,7 +258,7 @@
       },
       //点击上传店铺信息
       addshop(isEdit){
-        if(this.isEdit){
+        if(this.isEdit){//是否是编辑
           this.isEdit=false
           let form = this.form;
           let obj = {
@@ -269,6 +270,7 @@
               Content: form.Content,
               Address: form.Address,
               Tel: form.Tel,
+              Title:form.Title,
               ShopStartDate: this.value4[0].toString().substr(16, 5),
               ShopEndDate: this.value4[1].toString().substr(16, 5),
               LunchStartDate: this.value5[0].toString().substr(16, 5),
@@ -299,10 +301,11 @@
             model: {
               Pics: form.Pics,
               Logo: form.logo,
-              Name: form.shopName,
+              Name: form.Name,
               Content: form.Content,
               Address: form.Address,
               Tel: form.Tel,
+              Title:form.Title,
               ShopStartDate: this.value4[0].toString().substr(16, 5),
               ShopEndDate: this.value4[1].toString().substr(16, 5),
               LunchStartDate: this.value5[0].toString().substr(16, 5),
@@ -527,4 +530,5 @@
   .logo{
     width: 188px;
   }
+
 </style>

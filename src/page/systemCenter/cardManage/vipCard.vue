@@ -101,9 +101,21 @@
             {{tips[carlType].name1}}
           </el-col>
           <el-col :offset="1" :span="16">
-            <input type="text" v-model.number="Discount" v-if="carlType==1" class="base-input" :placeholder="tips[carlType].placeholder1">
-            <input type="text" v-model.number="Discount" v-else-if="carlType==2" class="base-input" :placeholder="tips[carlType].placeholder1">
-            <input type="text" v-model.number="Frequency" v-else="carlType==3" class="base-input" :placeholder="tips[carlType].placeholder1">
+            <input type="text"
+                   v-model.number="Discount"
+                   v-if="carlType==1"
+                   class="base-input"
+                   :placeholder="tips[carlType].placeholder1">
+            <input type="text"
+                   v-model.number="Discount"
+                   v-else-if="carlType==2"
+                   class="base-input"
+                   :placeholder="tips[carlType].placeholder1">
+            <input type="text"
+                   v-model.number="Frequency"
+                   v-else="carlType==3"
+                   class="base-input"
+                   :placeholder="tips[carlType].placeholder1">
           </el-col>
           <el-col :span="1" class="before">
           </el-col>

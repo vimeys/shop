@@ -1,6 +1,6 @@
 /**
 *   Created By  YS  on 2018/8/3
-*客户列表
+*   客户列表
 */
 <template>
   <div class="box">
@@ -12,7 +12,7 @@
           <ys-search :placeholder="placeholder"></ys-search>
         </div>
         <div class="select-bar">
-          <el-select v-model="value" @change="change" placeholder="满减券" class="select">
+          <el-select v-model="value123" @change="change" placeholder="满减券" class="select">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -165,15 +165,15 @@
             <el-scrollbar class="scroll">
              <el-row class="row">
                <el-col :span="6">
-                 <input type="text" placeholder="请输入会员姓名" class="input">
+                 <input type="text" placeholder="请输入会员姓名" class="input" v-model="GameusersName">
                </el-col>
                <el-col :span="8" :offset="2">
-                 <input type="text" placeholder="请输入会员手机号" class="input">
+                 <input type="text" placeholder="请输入会员手机号" class="input" v-model="PhoneNum">
                </el-col>
                <el-col :span="5" :offset="2">
-                 <el-select v-model="value" size="small" placeholder="请选择">
+                 <el-select v-model="carlType" size="small" placeholder="请选择">
                    <el-option
-                     v-for="item in options"
+                     v-for="item in cardList"
                      :key="item.value"
                      :label="item.label"
                      :value="item.value">
@@ -183,39 +183,47 @@
              </el-row>
               <el-row class="row">
                 <el-col :span="4">服务范围</el-col>
-                <el-col :span="23" >
-                    <el-row>
-                      <el-col :span="22"><div class="box">洗剪吹</div></el-col>
-                      <el-col :span="1" :offset="1">
-                        <div class="coupon-radio" >
-                          <div class="coupon-radio-point"></div>
-                        </div>
-                      </el-col>
-                    </el-row>
-                    <el-row>
-                      <el-col :span="22"><div class="box">洗剪吹</div></el-col>
-                      <el-col :span="1" :offset="1" >
-                        <div class="coupon-radio" >
-                          <div class="coupon-radio-point"></div>
-                        </div>
-                      </el-col>
-                    </el-row>
-                    <el-row>
-                      <el-col :span="22"><div class="box">洗剪吹</div></el-col>
-                      <el-col :span="1" :offset="1">
-                        <div class="coupon-radio" >
-                          <div class="coupon-radio-point"></div>
-                        </div>
-                      </el-col>
-                    </el-row>
+                <el-col :span="19" >
+                  <el-select v-model="typeNum" multiple size="small" placeholder="请选择">
+                    <el-option
+                      v-for="item in typeList"
+                      :key="item.value"
+                      :label="item.Name"
+                      :value="item.GoodsTypeId">
+                    </el-option>
+                  </el-select>
+                    <!--<el-row>-->
+                      <!--<el-col :span="22"><div class="box">洗剪吹</div></el-col>-->
+                      <!--<el-col :span="1" :offset="1">-->
+                        <!--<div class="coupon-radio" >-->
+                          <!--<div class="coupon-radio-point"></div>-->
+                        <!--</div>-->
+                      <!--</el-col>-->
+                    <!--</el-row>-->
+                    <!--<el-row>-->
+                      <!--<el-col :span="22"><div class="box">洗剪吹</div></el-col>-->
+                      <!--<el-col :span="1" :offset="1" >-->
+                        <!--<div class="coupon-radio" >-->
+                          <!--<div class="coupon-radio-point"></div>-->
+                        <!--</div>-->
+                      <!--</el-col>-->
+                    <!--</el-row>-->
+                    <!--<el-row>-->
+                      <!--<el-col :span="22"><div class="box">洗剪吹</div></el-col>-->
+                      <!--<el-col :span="1" :offset="1">-->
+                        <!--<div class="coupon-radio" >-->
+                          <!--<div class="coupon-radio-point"></div>-->
+                        <!--</div>-->
+                      <!--</el-col>-->
+                    <!--</el-row>-->
                 </el-col>
               </el-row>
               <el-row class="row">
                 <el-col :span="4">有效期限</el-col>
-                <el-col :span="18">
-                  <el-select v-model="value" size="small" placeholder="请选择">
+                <el-col :span="19">
+                  <el-select v-model="yearNum" size="small" placeholder="请选择">
                     <el-option
-                      v-for="item in options"
+                      v-for="item in year"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
@@ -224,26 +232,43 @@
                 </el-col>
               </el-row>
               <el-row class="row">
-                <el-col :span="4">享受折扣</el-col>
-                <el-col :span="19">
-                  <input type="text" placeholder="请输入会员卡的折扣" class="input">
-                </el-col>
-              </el-row>
-              <el-row class="row">
                 <el-col :span="4">
-                  购买金额
+                  {{tips[carlType].name1}}
                 </el-col>
                 <el-col :span="19">
-                  <el-row>
-                    <el-col>
-                      <input type="text" placeholder="请输入购买该会员卡的金额" class="input">
-                    </el-col>
-                  </el-row>
-                  <el-row>
-                    <el-col>· 购买金额会直接算到会员卡余额当中</el-col>
-                  </el-row>
+                  <!--<input type="text" placeholder="请输入会员卡的折扣" class="input">-->
+                  <input type="text"
+                         v-model.number="Discount"
+                         v-if="carlType==0"
+                         class="base-input"
+                         :placeholder="tips[carlType].placeholder1">
+                  <input type="text"
+                         v-model.number="Discount"
+                         v-else-if="carlType==1"
+                         class="base-input"
+                         :placeholder="tips[carlType].placeholder1">
+                  <input type="text"
+                         v-model.number="Frequency"
+                         v-else="carlType==2"
+                         class="base-input"
+                         :placeholder="tips[carlType].placeholder1">
                 </el-col>
               </el-row>
+              <!--<el-row class="row">-->
+                <!--<el-col :span="4">-->
+                  <!--购买金额-->
+                <!--</el-col>-->
+                <!--<el-col :span="19">-->
+                  <!--<el-row>-->
+                    <!--<el-col>-->
+                      <!--<input type="text" placeholder="请输入购买该会员卡的金额" class="input">-->
+                    <!--</el-col>-->
+                  <!--</el-row>-->
+                  <!--<el-row>-->
+                    <!--<el-col class="small-font">· 购买金额会直接算到会员卡余额当中</el-col>-->
+                  <!--</el-row>-->
+                <!--</el-col>-->
+              <!--</el-row>-->
               <el-row class="row">
                 <el-col :span="4">
                   充值金额
@@ -251,11 +276,14 @@
                 <el-col :span="19">
                   <el-row>
                     <el-col>
-                      <input type="text" placeholder="请输入继续充值该会员卡的金额" class="input">
+                      <input type="text"
+                             v-model="buyMoney"
+                             placeholder="请输入继续充值该会员卡的金额"
+                             class="input">
                     </el-col>
                   </el-row>
                   <el-row>
-                    <el-col>· 继续充值的金额大于等于购买金额</el-col>
+                    <el-col class="small-font">· 继续充值的金额大于等于购买金额</el-col>
                   </el-row>
                 </el-col>
               </el-row>
@@ -390,7 +418,7 @@
       data(){
         return {
           activeName:'first',
-
+          value123:'',
           opc:{//开发弹窗
             showModal:false,
             pWidth:760,
@@ -407,6 +435,7 @@
             height:748,
           },
           placeholder:'搜索对应标签',
+          value5:'',
           options: [{
             value: '选项1',
             label: '黄金糕'
@@ -414,6 +443,65 @@
             value: '选项2',
             label: '双皮奶'
           }],
+          GameusersName:'',//会员名称
+          PhoneNum:'',//会员电话
+          buyMoney:'',//购买金额
+          Frequency:'',//次数
+          Discount:'',//折扣价
+          carlType:0,//充值卡类型
+          cardList:[
+            {
+              value:0,
+              label: '充值卡'
+            },{
+              value:1,
+              label: '定制卡'
+            },{
+              value:2,
+              label: '次卡'
+            }
+          ],
+          typeNum:'2',
+          typeList:[],
+          yearNum:1,
+          year:[
+            {
+              value: 1,
+              label: '一年'
+            },
+            {
+              value: 2,
+              label: '两年'
+            },
+            {
+              value: 3,
+              label: '三年'
+            },
+            {
+              value: -1,
+              label: '永久'
+            },
+
+          ],
+          tips:[//提示文字
+            {
+              name1:'享受折扣0',
+              placeholder1:'请输入会员卡的折扣',
+
+            },
+            {
+              name1:'享受折扣1',
+              placeholder1:'请输入会员卡的具体折扣',
+
+            },
+            {
+              name1:'使用次数2',
+              placeholder1:'请输入该会员卡的可用次数',
+              // name2:'最低充值次数',
+              // placeholder2:'继续充值的次数',
+              // placeholder3:'该次数的金额'
+            },
+          ],
           tableData: [{
             date: '2016-05-02',
             name: '王小虎',
@@ -435,6 +523,7 @@
             address: '上海市普陀区金沙江路 1516 弄',
             tag:'待服务'
           }],
+          vipList:[],//会员列表
         }
       },
       methods:{
@@ -452,8 +541,52 @@
           //     break;
           // }
         },
+        filterTag(){
+
+        },
+        change(){},
         handleEdit(tab,event){
-            this.code.showModal=true
+            // this.opc.showModal=true;
+            let obj={ model:
+                { GameusersName:this.GameusersName,
+                  PhoneNum :this.PhoneNum,
+                  MembershipName :'',
+                  MembershipType :this.carlType,
+                  Effective :this.yearNum>0?this.yearNum*12:-1,
+                  Frequency :this.Frequency?this.Frequency:0,
+                  Type:2,
+                  BuyAmount :this.buyMoney?this.buyMoney:0,
+                  Minimum :2,
+                  Discount :this.Discount?this.Discount:0,
+                  Content:'123',
+                  GoodsType:[{ GoodsTypeId:1}]
+                }
+        }
+        if(this.carlType===0){
+          obj.model.MembershipName='充值卡'
+        }else if(this.carlType=1){
+          obj.model.MembershipName='定制卡'
+        }else{
+          obj.model.MembershipName='次卡'
+        }
+        try{
+          let arr=[];
+            this.typeNum.forEach(item=>{
+                arr.push({GoodsTypeId:item})
+            })
+          obj.model.GoodsType=arr;
+        }catch (err) {
+          console.log(err);
+        }
+          // console.log(obj);
+          // console.log('执行到这里');
+          // return
+        this.$http.post(this.$api.openVipCard,obj).then(json=>{
+          let data=json.data
+          if(data==true){
+            alert('成功')
+          }
+        })
         },
         //查询消费记录
         handleHistory(){
@@ -478,7 +611,32 @@
           // this.code.showModal=e;
           this.opc.showModal=e;
           this.history.showModal=e;
+        },
+        //获取分类(服务范围)
+        getTypeList(){
+          this.$http.post(this.$api.typeList,{type:2}).then(json=>{
+            let data=json.data
+            console.log(data);
+            if(data.isSuc=true){
+                this.typeList=data.result
+            }
+          })
+        },
+        //获取会员列表
+        getVipList(){
+          this.$http.post(this.$api.getVipList,{ pageIndex:1,pageSize:10,isvip:1,key:''}).then(json=>{
+            let data=json.data
+            console.log(data);
+            if(data.isSuc=true){
+              this.vipList=data.result
+            }
+          })
         }
+
+      },
+      mounted(){
+          this.getTypeList();//获取分组列表
+          this.getVipList();//获取会员列表
       }
     }
 </script>
@@ -558,7 +716,7 @@
   /*开卡弹窗*/
   .table-box{
     width: 100%;
-    padding: 50px 0 50px 50px;
+    padding: 50px 0 50px 30px;
     box-sizing: border-box;
     >.row{
       /*border: 1px solid red;*/
@@ -646,5 +804,11 @@
     height: 100%;
 
   }
+/deep/ .el-select--small{
+  width: 100%;
+}
+/deep/ input{
+  text-align: center;
+}
 
 </style>
