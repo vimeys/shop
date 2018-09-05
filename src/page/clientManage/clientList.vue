@@ -50,14 +50,15 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="账户余额"
+              label="已消费金额"
               width="130">
               <template slot-scope="scope">
                 <el-popover trigger="hover" placement="top">
                   <p>姓名: {{ scope.row.name }}</p>
                   <p>住址: {{ scope.row.address }}</p>
                   <div slot="reference" class="name-wrapper">
-                    <el-tag size="medium">{{ scope.row.name }}</el-tag>
+                    <!--<el-tag size="medium">{{ scope.row.name }}</el-tag>-->
+                    {{scope.row.name}}
                   </div>
                 </el-popover>
               </template>
@@ -75,22 +76,22 @@
                 </el-popover>
               </template>
             </el-table-column>
-            <el-table-column
-              label="等级"
-              prop="tap"
-              :filters="[{ text: '待服务', value: '待服务' }, { text: '已服务', value: '已服务' }]"
-              :filter-method="filterTag"
-              width="180">
-              <template slot-scope="scope">
-                <el-popover trigger="hover" placement="top">
-                  <p>姓名: {{ scope.row.name }}</p>
-                  <p>住址: {{ scope.row.address }}</p>
-                  <div slot="reference" class="name-wrapper">
-                    <el-tag size="medium">{{ scope.row.name }}</el-tag>
-                  </div>
-                </el-popover>
-              </template>
-            </el-table-column>
+            <!--<el-table-column-->
+              <!--label="等级"-->
+              <!--prop="tap"-->
+              <!--:filters="[{ text: '待服务', value: '待服务' }, { text: '已服务', value: '已服务' }]"-->
+              <!--:filter-method="filterTag"-->
+              <!--width="180">-->
+              <!--<template slot-scope="scope">-->
+                <!--<el-popover trigger="hover" placement="top">-->
+                  <!--<p>姓名: {{ scope.row.name }}</p>-->
+                  <!--<p>住址: {{ scope.row.address }}</p>-->
+                  <!--<div slot="reference" class="name-wrapper">-->
+                    <!--<el-tag size="medium">{{ scope.row.name }}</el-tag>-->
+                  <!--</div>-->
+                <!--</el-popover>-->
+              <!--</template>-->
+            <!--</el-table-column>-->
             <el-table-column label="充值记录">
               <template slot-scope="scope">
                 <el-button
@@ -351,37 +352,37 @@
               <el-table :data="tableData" style="width: 100%">
                 <el-table-column
                   label="姓名"
-                  width="130">
+                  width="220">
                   <template slot-scope="scope">
                     <!--<i class="el-icon-time"></i>-->
                     <span style="margin-left: 10px">{{ scope.row.date }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column
-                  label="姓名"
-                  width="130">
+                  label="手机号"
+                  width="220">
                   <template slot-scope="scope">
                     <!--<i class="el-icon-time"></i>-->
                     <span style="margin-left: 10px">{{ scope.row.date }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column
-                  label="姓名"
-                  width="130">
+                  label="累积消费金额"
+                  width="220">
                   <template slot-scope="scope">
                     <!--<i class="el-icon-time"></i>-->
                     <span style="margin-left: 10px">{{ scope.row.date }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column
-                  label="姓名"
-                  width="130">
+                  label="消费次数"
+                  width="220">
                   <template slot-scope="scope">
                     <!--<i class="el-icon-time"></i>-->
                     <span style="margin-left: 10px">{{ scope.row.date }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="消费信息">
+                <el-table-column label="消费记录">
                   <template slot-scope="scope">
                     <el-button
                       size="mini"
@@ -395,6 +396,9 @@
               <el-pagination
                 prev-text="上一页"
                 next-text="下一页"
+                @size-change="changeSize"
+                @prev-click="prev"
+                @current-change="current"
                 layout="prev, pager, next"
                 class="page"
                 :total="1000">
@@ -422,7 +426,7 @@
           opc:{//开发弹窗
             showModal:false,
             pWidth:760,
-            pHeight:808,
+            pHeight:608,
           },
           history:{//消费记录
             showModal:false,
@@ -545,21 +549,34 @@
 
         },
         change(){},
+
+        //分页器切换
+
+        prev(e){
+          console.log(e);
+        },
+        current(val){
+          console.log(val);
+        },
+
+        //todo 开通会员卡报错
+        //开卡
         handleEdit(tab,event){
             // this.opc.showModal=true;
             let obj={ model:
                 { GameusersName:this.GameusersName,
                   PhoneNum :this.PhoneNum,
                   MembershipName :'',
-                  MembershipType :this.carlType,
+                  MembershipType :this.carlType+1,
                   Effective :this.yearNum>0?this.yearNum*12:-1,
                   Frequency :this.Frequency?this.Frequency:0,
                   Type:2,
                   BuyAmount :this.buyMoney?this.buyMoney:0,
+                  // BuyAmount :1000,
                   Minimum :2,
                   Discount :this.Discount?this.Discount:0,
                   Content:'123',
-                  GoodsType:[{ GoodsTypeId:1}]
+                  GoodsType:this.typeNum
                 }
         }
         if(this.carlType===0){
@@ -569,22 +586,22 @@
         }else{
           obj.model.MembershipName='次卡'
         }
-        try{
-          let arr=[];
-            this.typeNum.forEach(item=>{
-                arr.push({GoodsTypeId:item})
-            })
-          obj.model.GoodsType=arr;
-        }catch (err) {
-          console.log(err);
-        }
+        // try{
+        //   let arr=[];
+        //     this.typeNum.forEach(item=>{
+        //         arr.push({GoodsTypeId:item})
+        //     })
+        //   obj.model.GoodsType=arr;
+        // }catch (err) {
+        //   console.log(err);
+        // }
           // console.log(obj);
           // console.log('执行到这里');
           // return
         this.$http.post(this.$api.openVipCard,obj).then(json=>{
           let data=json.data
-          if(data==true){
-            alert('成功')
+          if(data.isSuc==true){
+
           }
         })
         },
@@ -685,6 +702,10 @@
     }
     /deep/ .base-btn:hover{
       color:#222;
+    }
+    /deep/ th > .cell{
+      padding: 10px 0;
+      background: #F5F5F5;
     }
     .table-btns{
       width: 100%;
@@ -804,11 +825,45 @@
     height: 100%;
 
   }
+//todo  修改按钮样式
 /deep/ .el-select--small{
   width: 100%;
 }
 /deep/ input{
   text-align: center;
 }
+
+  //todo 修改分页器样式
+  /deep/ .el-pager li{
+    height: 31px;
+    width: 31px;
+    line-height: 31px;
+    color:#282828;
+    margin: 0 7px;
+    background: #d8d8d8;
+    border-radius: 2px;
+}
+  /deep/ .el-pager li.active{
+    background: #FFD736;
+  }
+  /deep/.el-pagination button{
+    width:72px;
+    padding: 0 6px;
+    height:31px !important;
+    text-align: center;
+    background:rgba(216,216,216,1);
+    border-radius:2px;;
+  }
+  /deep/ .el-pagination .btn-next{
+    background: #FFD736;
+    color: #282828;
+    margin-left: 10px;
+  }
+  /deep/ .el-pagination .btn-prev{
+    background: #FFD736;
+    color: #282828;
+    margin-right: 10px;
+  }
+
 
 </style>

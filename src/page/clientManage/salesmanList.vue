@@ -45,6 +45,15 @@
           </template>
         </el-table-column>
       </el-table>
+      <div class="page-size-box">
+        <el-pagination
+          prev-text="上一页"
+          next-text="下一页"
+          layout="prev, pager, next"
+          class="page"
+          :total="total">
+        </el-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -56,7 +65,7 @@
         name: "salesmanList",
       components:{
         ysSearch,
-        ysPopup
+        ysPopup,
       },
       data(){
           return {
@@ -64,6 +73,7 @@
             pHeight:800,
             zIndex:1000,
             showModal2:false,
+            total:100,
             placeholder:'输入名称、电话',
             tableData: [{
               date: '2016-05-02',
@@ -86,6 +96,7 @@
               address: '上海市普陀区金沙江路 1516 弄',
               tag:'待服务'
             }],
+            list:[],//分销人员列表
           }
       },
       methods:{
@@ -100,8 +111,12 @@
                 pageIndex:1, pageSize:10, key:''
               }
             };
-            this.$http.post(this.$api.getSalesman,obj).then(json=>{
+            this.$http.post('https://easy-mock.com/mock/5b63f303d70ada1c637be6bc/example/gameusershop/list',{}).then(json=>{
               console.log(json);
+              // let data=json.data;
+              // if(data.isSuc==true){
+              //   this.list=data.result.Items
+              // }
             })
         }
       },
