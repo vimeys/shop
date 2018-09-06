@@ -7,7 +7,8 @@
     <el-container>
       <el-header height="100px">
         <div class="active-header">
-          <div :class="{'disabled':manageState}" @click="addCard" style="width: 111px"><span class="el-icon-circle-plus" ></span>&nbsp;&nbsp;新建活动</div>
+          <div :class="{'disabled':manageState}" @click="addCard" style="width: 111px">
+            <span class="el-icon-circle-plus" ></span>&nbsp;&nbsp;新建活动</div>
           <div @click="manage">管理</div>
           <ys-search class="del"></ys-search>
           <!--<div class="del">删除</div>-->
@@ -196,6 +197,7 @@
         EndTime: '',
         newTime: '2018-8-12',
         newTime1: '2018-8-20',
+        loading:true,//loading组件
         options: [{
           value: '1',
           label: '满减劵'
@@ -278,6 +280,12 @@
       getCouponList() {
         this.$http.post( api.couponList, {query: {PageIndex: 1, PageSize: 10, Key: ''}}).then(json => {
           // console.log(json);
+          const loading = this.$loading({
+            lock: true,
+            text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          });
           let data = json.data
           if (data.isSuc == true) {
             let res = data.result.Items
@@ -289,6 +297,8 @@
             })
             console.log(res);
             this.couponList = res
+            loading.close();
+            console.log("执行");
           }
         })
       },
@@ -336,7 +346,6 @@
               }
             })
           }
-        console.log(delArr);
         this.$http.post(api.delCoupon,{couponBookId:delArr}).then(json=>{
               let data=json.data;
             if(data.isSuc==true){
@@ -350,6 +359,7 @@
     },
     mounted() {
       console.log('执行created');
+
       this.getCouponList()
     },
     watch: {

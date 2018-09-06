@@ -19,8 +19,8 @@ import * as util from './assets/script/util'
 // 引入样式
 
 Vue.config.productionTip = false
-Vue.prototype.$api=url;
-Vue.prototype.$util=util;
+Vue.prototype.$api=url;//全局注册api
+Vue.prototype.$util=util;//全局注册工具
 Vue.use(ElementUI);
 Vue.use(Vant);
 // Vue.use(axios);

@@ -111,8 +111,13 @@
                 pageIndex:1, pageSize:10, key:''
               }
             };
-            this.$http.post('https://easy-mock.com/mock/5b63f303d70ada1c637be6bc/example/gameusershop/list',{}).then(json=>{
+            this.$http.post('http://rap2api.taobao.org/app/mock/84341/gameusershop/list',{}).then(json=>{
               console.log(json);
+              let data=json.data;
+              if(data.isSuc==true){
+                this.list=data.result.Items
+                console.log(this.list);
+              }
               // let data=json.data;
               // if(data.isSuc==true){
               //   this.list=data.result.Items

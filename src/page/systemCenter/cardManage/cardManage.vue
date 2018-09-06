@@ -6,10 +6,10 @@
   <div class="card-box">
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="优惠券" name="first">
-        <router-view></router-view>
+        <router-view ></router-view>
       </el-tab-pane>
       <el-tab-pane label="会员卡" name="second">
-        <router-view></router-view>
+        <router-view> </router-view>
       </el-tab-pane>
     </el-tabs>
     <!--<div @click="push">123</div>-->
