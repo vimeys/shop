@@ -98,12 +98,12 @@
               <el-container>
                 <el-aside width="200px">Aside</el-aside>
                 <el-main style="padding-right: 50px">
-                  <el-row>
+                  <el-row style="margin-top: 30px" v-for="item in orderServerList">
                     <el-col style="background: #e1e1e1">
                       <el-row>
                         <el-col :span="4">服务</el-col>
                         <el-col :span="17">
-                          <el-select v-model="value8"
+                          <el-select v-model="item.goods"
                                      filterable
                                      size="small"
                                      placeholder="请选择">
@@ -116,12 +116,50 @@
                           </el-select>
                         </el-col>
                       </el-row>
+                      <el-row>
+                        <el-col :span="4">规格</el-col>
+                        <el-col :span="17">
+                          <el-select v-model="item.size"
+                                     filterable
+                                     size="small"
+                                     placeholder="请选择">
+                            <el-option
+                              v-for="item in options"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value">
+                            </el-option>
+                          </el-select>
+                        </el-col>
+                      </el-row>
+                      <el-row>
+                        <el-col :span="4">人员</el-col>
+                        <el-col :span="17">
+                          <el-select v-model="item.goods"
+                                     size="small"
+                                     placeholder="请选择">
+                            <el-option
+                              v-for="item in options"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value">
+                            </el-option>
+                          </el-select>
+                        </el-col>
+                      </el-row>
+                      <el-row v-if="item.hasPlus">
+                        <el-col>
+                            <span @click="addOrderServer" class="plus-btn">+</span>
+                        </el-col>
+                      </el-row>
                     </el-col>
                   </el-row>
                 </el-main>
               </el-container>
-
             </el-col>
+          </el-row>
+          <el-row>
+            <el-col></el-col>
           </el-row>
         </el-srcollbar>
       </div>
@@ -132,6 +170,8 @@
 <script>
   import ysSearch from '@/components/search'
   import  ysPopup from '@/components/popup'
+
+
   export default {
     name: "orderManage",
     components: {
@@ -178,7 +218,9 @@
           date: '2016-05-03',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1516 弄'
-        }]
+        }],
+        orderServerList:[{goods:'',size:'',people:'',hasPlus:true}]
+
       }
     }, methods: {
       handleEdit(index, row) {
@@ -194,6 +236,12 @@
       //关闭order弹窗
       closeOrder(){
           this.order.showModal=false;
+      },
+      addOrderServer(){
+          this.orderServerList.forEach(item=>{
+            item.hasPlus=false
+          })
+          this.orderServerList.push({goods:'',size:'',people:'',hasPlus:true})
       }
     }
   }
@@ -226,6 +274,9 @@
   /*挂单弹窗样式*/
   .open-order-box{
     width: 100%;
+  }
+  .order-scroll{
+    height: 500px;
   }
 
 </style>

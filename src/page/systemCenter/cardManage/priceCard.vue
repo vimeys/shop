@@ -280,12 +280,12 @@
       getCouponList() {
         this.$http.post( api.couponList, {query: {PageIndex: 1, PageSize: 10, Key: ''}}).then(json => {
           // console.log(json);
-          const loading = this.$loading({
-            lock: true,
-            text: 'Loading',
-            spinner: 'el-icon-loading',
-            background: 'rgba(0, 0, 0, 0.7)'
-          });
+          // const loading = this.$loading({
+          //   lock: true,
+          //   text: 'Loading',
+          //   spinner: 'el-icon-loading',
+          //   background: 'rgba(0, 0, 0, 0.7)'
+          // });
           let data = json.data
           if (data.isSuc == true) {
             let res = data.result.Items
@@ -297,7 +297,7 @@
             })
             console.log(res);
             this.couponList = res
-            loading.close();
+            // loading.close();
             console.log("执行");
           }
         })

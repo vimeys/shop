@@ -13,6 +13,7 @@ module.exports = {
     proxyTable: {
       '/shop':{//此处并非一定和url一致。
         // target:'https://sslapi.yilianchuang.cn//services/',
+        // target:'http://192.168.0.135:8073/services/',
         target:'http://test.csmen.cc/services/',
         changeOrigin:true,//允许跨域
         pathRewrite:{

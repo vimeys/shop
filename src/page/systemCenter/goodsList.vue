@@ -50,7 +50,7 @@
         </el-row>
         <div class="goods-list">
           <template v-for="(item,index) in goodsList">
-            <goods-card :detail="item" :index="index" @del="delGOods"></goods-card>
+            <goods-card :detail="item" :index="index" @delGoods="delGOods"></goods-card>
           </template>
 
           <!--<goods-card></goods-card>-->
@@ -181,26 +181,26 @@
               <el-row class="base-row">
                 <el-col :span="4">原价</el-col>
                 <el-col :span="19" >
-                  <input type="text" class="base-input" placeholder="请输入服务原价">
+                  <input type="text" v-model="Price" class="base-input" placeholder="请输入服务原价">
                 </el-col>
                 <el-col :span="1" class="before"></el-col>
               </el-row>
               <el-row>
                 <el-col :span="4">规格</el-col>
                 <el-col :span="19">
-                  <el-row class="small-row" v-for="item in [3]">
+                  <el-row class="small-row" v-for="item in aSize">
                       <el-col :span="14">
-                        <el-select v-model="valueGroup" @change="chooseGroup" placeholder="员工分类" size="small">
+                        <el-select v-model="item.valueGroup"  placeholder="员工分类" size="small">
                           <el-option
-                            v-for="(item,index) in groupList"
-                            :key="item.GroupId"
-                            :label="item.GroupName"
-                            :value="index">
+                            v-for="(itemSon,index) in item.groupList"
+                            :key="itemSon.GroupId"
+                            :label="itemSon.GroupName"
+                            :value="itemSon.GroupId">
                           </el-option>
                         </el-select>
                       </el-col>
                     <el-col :span="8" :offset="2">
-                      <input type="text"  class="base-input" placeholder="请输入商品原价" v-model="item.price">
+                      <input type="text"  class="base-input" placeholder="请输入价格" v-model="item.newPrice">
                     </el-col>
                   </el-row>
                   <el-row>
@@ -208,7 +208,7 @@
                       · 根据不同岗位输入不同佣金
                     </el-col>
                     <el-col :span="8" :offset="2">
-                      <span class="plus">+</span>
+                      <span class="plus" @click="addSize">+</span>
                     </el-col>
                   </el-row>
                 </el-col>
@@ -217,19 +217,19 @@
               <el-row class="mt15">
                 <el-col :span="4">服务佣金</el-col>
                 <el-col :span="19">
-                  <el-row class="small-row" v-for="item in [3]">
+                  <el-row class="small-row" v-for="item in aSize">
                       <el-col :span="14">
-                        <el-select v-model="valuePerson" placeholder="选择人员" size="small">
+                        <el-select v-model="item.valuePerson" placeholder="选择人员" size="small">
                           <el-option
-                            v-for="item in personList"
-                            :key="item.UserId"
-                            :label="item.TrueName"
-                            :value="item.UserId">
+                            v-for="(itemSon,index) in item.groupList"
+                            :key="itemSon.GroupId"
+                            :label="itemSon.GroupName"
+                            :value="itemSon.GroupId">
                           </el-option>
                         </el-select>
                       </el-col>
                     <el-col :span="8" :offset="2">
-                      <input type="text" v-model="item.price" class="base-input" placeholder="请输入价格">
+                      <input type="text" v-model="item.fenPreic" class="base-input" placeholder="请输入佣金">
                     </el-col>
                   </el-row>
                   <el-row>
@@ -388,7 +388,7 @@
     data() {
       return {
         goods: {
-          showModal: true,
+          showModal: false,
           width: 900,
           height: 800
         },
@@ -471,6 +471,8 @@
         ReceiveGuestCharge:'',//获客佣金
         sizeList:[],//规格列表
         moneyList:[],//人员佣金列表
+        aSize:[],
+        aMoney:[],
         goodsItemClass1:'goods-active',//分类class
         goodsItemClass2:'',//分类class
         goodsList:[],//商品列表
@@ -561,9 +563,18 @@
       },
 
         //删除单个商品
-      delGOods(id){
+      delGOods(id,index){
         this.$util.confirm(this).then(()=>{
-          console.log(id);
+          this.$http.post(this.$api.delGoods,{goodsId:id}).then(json=>{
+              let data=json.data;
+              if(data.isSuc==true){
+                this.goodsList.splice(index,1)
+                  this.$message({
+                    message:'删除成功',
+                    icon:'success'
+                  })
+              }
+          })
         })
 
       },
@@ -571,11 +582,11 @@
       //生成新的服务
       addGoods(){
           let obj={
-            Name:'测试商品',
+            Name:this.Name,
             Pic:this.aPics[0],
             Pics:this.aPics.join(','),
-            Price:'39',
-            OriginalPrice:'39',
+            Price:this.Price,
+            OriginalPrice:this.Price,
             TuwenArticleId:23,
             Description:'描述',
             Tags:'',
@@ -583,7 +594,7 @@
             CommissionCharge:this.CommissionCharge,
             ReceiveGuestCharge:this.ReceiveGuestCharge,
             FlagId:this.valueTips,
-            SecKillHour:this.hours[this.hoursValue],
+            SecKillHour:12,
             Type:2,
 
       };
@@ -591,24 +602,41 @@
             obj.GoodsTypeId=this.valueSecondType;
             obj.GoodsTypeParentId=this.valueFirstType;
           }
-
-        let   goodsSpecList= [
-            {
-
-              Name: "名称",
-              GroupId: 1,
-              Price: 2.3
-            }
-            ];
-         let  goodsGroup=[
-            {
-              GroupId: 1,
-              Charge: 10.2,
-              Name: ''
-            }
-            ];
+          let goodsSpecList=[];
+          let goodsGroup=[];
+          this.aSize.forEach((item,index)=>{
+            let a={}
+            a.Name=''
+            a.GroupId=item.valueGroup;
+            a.Price=item.newPrice
+            let b={}
+            b.Name='';
+            b.GroupId=item.valuePerson;
+            b.Price=item.fenPreic;
+            goodsSpecList.push(a)
+            goodsGroup.push(b)
+          })
+        // let   goodsSpecList= [
+        //     {
+        //       Name: "名称",
+        //       GroupId: 1,
+        //       Price: 2.3
+        //     }
+        //     ];
+        //  let  goodsGroup=[
+        //     {
+        //       GroupId: 1,
+        //       Charge: 10.2,
+        //       Name: ''
+        //     }
+        //     ];
           this.$http.post(this.$api.addGoods,{goods:obj,goodsSpecList,goodsGroup}).then(json=>{
             console.log(json);
+            let data=json.data;
+            if(data.isSuc==true){
+                this.goods.showModal=false;
+                this.getGoodsList();
+            }
           })
           // this.$http
       },
@@ -738,15 +766,23 @@
         }
 
       },
+      // 添加一个新的规格
+      addSize(){
+        let a=JSON.parse(JSON.stringify(this.groupList))
+        let obj={groupList:a,newPrice:'',valueGroup:'',fenPreic:'',valuePerson:''};
+
+        // a.newPrice='';
+        this.aSize.push(obj);
+      },
 
       // 选择分组
-      chooseGroup(e){
-          this.groupList[e].price=''
-          this.personList=this.groupList[e].UsersList.Items;
-          this.personList.forEach(item=>{
-            item.price=''
-          })
-      },
+      // chooseGroup(e){
+      //     this.groupList[e].price=''
+      //     this.personList=this.groupList[e].UsersList.Items;
+      //     this.personList.forEach(item=>{
+      //       item.price=''
+      //     })
+      // },
 
       //获取分类列表
        getTypeList :async function() {
@@ -774,12 +810,20 @@
           console.log(err);
         })
       },
+      //获取分组列表
       getGroupList(shopId){
         this.$http.post(this.$api.waterGroupList,
           {pageindex:1,pagesize:10,userShopId:shopId}).then(json=>{
           console.log(json);
           if(json.data.isSuc==true){
             this.groupList=json.data.result.Items;
+            let a=JSON.parse(JSON.stringify(this.groupList))
+            let obj={groupList:a,newPrice:'',valueGroup:'',fenPreic:'',valuePerson:''};
+            // a.newPrice='';
+            this.aSize.push(obj);
+            // let b=JSON.parse(JSON.stringify(this.groupList))
+            // let objb={groupList:b,fenPreic:'',valuePerson:''};
+            // this.aMoney.push(objb)
           }
         })
       },

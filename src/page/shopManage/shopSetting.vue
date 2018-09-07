@@ -4,7 +4,7 @@
 */
 <template>
   <div class="box">
-      <div class="btn" @click="addShop"><img src="@/assets/images/icon/addBtn.png" alt="">新建门店</div>
+      <div class="btn" @click="addShop"><img src="@/assets/images/icon/addBtn.png" alt="">新建门店 {{Role}}</div>
     <div class="shop" v-for="(item,index) in shopList" :key="item.UserShopId">
         <el-row>
            <el-col class="col" :span="7" :offset="5">
@@ -358,6 +358,7 @@
       },
       // 获取列表
       getShopList(){
+        console.log(api.shopList);
         this.$http.post(api.shopList,{}).then(json=>{
           let data=json.data
           if(data.isSuc==true){
@@ -373,6 +374,11 @@
       }
 
 
+    },
+    computed:{
+        Role(){
+            return this.$store.state.Role
+        }
     },
     mounted(){
       this.getShopList()

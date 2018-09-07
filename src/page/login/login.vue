@@ -25,11 +25,12 @@
         }
       },methods:{
         login(){
+          debugger
           this.$emit('login',true)
           this.$http.post(api.logincom,{username:'18981736266',password:'123456'}).then(this.log)
         },
         log(){
-          this.$http.post(api.login,{companyname:"luozhi666",password:'e10adc3949ba59abbe56e057f20f883e'}).then(()=>{
+          this.$http.post(api.login,{companyname:"luozhi666",password:'123456'}).then(()=>{
 
           })
         }

@@ -9,6 +9,7 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import './assets/style/base.scss'
 import Vant from 'vant';
+import  store from './store'
 import 'vant/lib/vant-css/index.css';
 // 导入 table 和 分页组件
 import 'vue-easytable/libs/themes-base/index.css'
@@ -30,6 +31,7 @@ Vue.component(VPagination.name, VPagination)
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

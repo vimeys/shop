@@ -70,11 +70,11 @@
 
           },
         del(){
-
+          this.$emit('delGoods',this.detail.GoodsId,this.index)
         },
         //查看详情
         check(){
-            this.$emit('check',index)
+            this.$emit('check',index,)
         },
 
       },
