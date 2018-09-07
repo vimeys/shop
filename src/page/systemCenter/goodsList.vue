@@ -50,7 +50,7 @@
         </el-row>
         <div class="goods-list">
           <template v-for="(item,index) in goodsList">
-            <goods-card :detail="item" :index="index"></goods-card>
+            <goods-card :detail="item" :index="index" @del="delGOods"></goods-card>
           </template>
 
           <!--<goods-card></goods-card>-->
@@ -560,6 +560,13 @@
         }
       },
 
+        //删除单个商品
+      delGOods(id){
+        this.$util.confirm(this).then(()=>{
+          console.log(id);
+        })
+
+      },
 
       //生成新的服务
       addGoods(){
