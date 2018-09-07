@@ -8,7 +8,9 @@
       <el-main class="goods-main">
         <div class="goods-btns">
           <div class="header">
-            <div class="new" :class="{'disable':disable}" @click="openGoods"><img src="@/assets/images/icon/addBtn.png" alt="">新建服务</div>
+            <div class="new" :class="{'disable':disable}" @click="openGoods">
+              <img src="@/assets/images/icon/addBtn.png" alt="">新建服务
+            </div>
             <div class="manage" @click="manage">批量管理</div>
             <div class="del" :class="{'disable':disable}">排序</div>
           </div>
@@ -79,7 +81,7 @@
       v-show="goods.showModal"
     >
       <div class="popup-slide-left">
-        <div class="list-title">新建优惠券</div>
+        <div class="list-title">新建服务</div>
         <div class="list-btns">
           <ul>
             <li :class="[goodsItemClass1]" @click="chooseGoodsItem(1)">
@@ -116,12 +118,12 @@
               <el-row class="base-row">
                 <el-col :span="4">上传到</el-col>
                 <el-col :span="19">
-                  <el-select v-model="value" placeholder="分类" size="small">
+                  <el-select v-model="valueFirstType"  @change="chooseFirstType" placeholder="分类" size="small">
                     <el-option
-                      v-for="item in options"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
+                      v-for="item in typeList"
+                      :key="item.GoodsTypeId"
+                      :label="item.Name"
+                      :value="item.GoodsTypeId">
                     </el-option>
                   </el-select>
                 </el-col>
@@ -130,12 +132,12 @@
               <el-row class="base-row">
                 <el-col :span="4"></el-col>
                 <el-col :span="19" :offset="4">
-                  <el-select v-model="value" placeholder="二级分类" size="small">
+                  <el-select v-model="valueSecondType" placeholder="二级分类" size="small">
                     <el-option
-                      v-for="item in options"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
+                      v-for="item in secondType"
+                      :key="item.GoodsTypeId"
+                      :label="item.Name"
+                      :value="item.GoodsTypeId">
                     </el-option>
                   </el-select>
                 </el-col>
@@ -144,19 +146,33 @@
               <el-row class="base-row">
                 <el-col :span="4">服务名称</el-col>
                 <el-col :span="19" >
-                  <input type="text" class="base-input" placeholder="请输入服务名称，最多20字">
+                  <input type="text" class="base-input" v-model="Name" placeholder="请输入服务名称，最多20字">
                 </el-col>
                 <el-col :span="1" class="before"></el-col>
               </el-row>
               <el-row class="base-row">
                 <el-col :span="4">服务标签</el-col>
                 <el-col :span="19" >
-                  <el-select v-model="value" placeholder="二级分类" size="small">
+                  <el-select v-model="valueTips" placeholder="服务标签" size="small">
                     <el-option
-                      v-for="item in options"
+                      v-for="item in goodsTips"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-col>
+                </el-row>
+              <el-row class="base-row" v-if="valueTips==3">
+                <el-col :span="4">秒杀时长</el-col>
+                <el-col :span="19" >
+                  <el-select v-model="hoursValue"
+                             placeholder="秒杀时长" size="small">
+                    <el-option
+                      v-for="(item,index) in hours"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="index">
                     </el-option>
                   </el-select>
                 </el-col>
@@ -172,19 +188,19 @@
               <el-row>
                 <el-col :span="4">规格</el-col>
                 <el-col :span="19">
-                  <el-row class="small-row" v-for="item in [1,2,3]">
+                  <el-row class="small-row" v-for="item in [3]">
                       <el-col :span="14">
-                        <el-select v-model="value" placeholder="二级分类" size="small">
+                        <el-select v-model="valueGroup" @change="chooseGroup" placeholder="员工分类" size="small">
                           <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
+                            v-for="(item,index) in groupList"
+                            :key="item.GroupId"
+                            :label="item.GroupName"
+                            :value="index">
                           </el-option>
                         </el-select>
                       </el-col>
                     <el-col :span="8" :offset="2">
-                      <input type="text" class="base-input" placeholder="请输入价格">
+                      <input type="text"  class="base-input" placeholder="请输入商品原价" v-model="item.price">
                     </el-col>
                   </el-row>
                   <el-row>
@@ -201,19 +217,19 @@
               <el-row class="mt15">
                 <el-col :span="4">服务佣金</el-col>
                 <el-col :span="19">
-                  <el-row class="small-row" v-for="item in [1,2,3]">
+                  <el-row class="small-row" v-for="item in [3]">
                       <el-col :span="14">
-                        <el-select v-model="value" placeholder="二级分类" size="small">
+                        <el-select v-model="valuePerson" placeholder="选择人员" size="small">
                           <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
+                            v-for="item in personList"
+                            :key="item.UserId"
+                            :label="item.TrueName"
+                            :value="item.UserId">
                           </el-option>
                         </el-select>
                       </el-col>
                     <el-col :span="8" :offset="2">
-                      <input type="text" class="base-input" placeholder="请输入价格">
+                      <input type="text" v-model="item.price" class="base-input" placeholder="请输入价格">
                     </el-col>
                   </el-row>
                   <el-row>
@@ -232,10 +248,10 @@
                 <el-col :span="19">
                   <el-row>
                     <el-col :span="11">
-                      <input type="text " class="base-input" placeholder="请输入分享佣金">
+                      <input type="text " class="base-input" v-model.number="CommissionCharge" placeholder="请输入分享佣金">
                     </el-col>
                     <el-col :span="11" :offset="2">
-                      <input type="text" class="base-input" placeholder="请输入获客佣金">
+                      <input type="text" class="base-input" v-model.number="ReceiveGuestCharge" placeholder="请输入获客佣金">
                     </el-col>
                   </el-row>
                 </el-col>
@@ -416,6 +432,7 @@
 
           }]
         }],
+        valueTips:'',//特价商品
         goodsTips:[//商品标签
           {value:1,label:'特价'},
           {value:2,label:'爆款'},
@@ -424,11 +441,11 @@
         ],
         hoursValue:1,
         hours:[
-          {value:1,label:'6小时'},
-          {value:2,label:'12小时'},
-          {value:4,label:'24小时'},
-          {value:8,label:'48小时'},
-          {value:12,label:'72小时'},
+          {num:6 ,value:1,label:'6小时' },
+          {num:12 ,value:2,label:'12小时'},
+          {num:24 ,value:4,label:'24小时'},
+          {num:48 ,value:8,label:'48小时'},
+          {num:72 ,value:12,label:'72小时'},
         ],
         defaultProps: {
           children: 'ChildGoodsType',
@@ -436,10 +453,24 @@
         },
         isEditType:false,//是否是修改
         isEditTypeNum:0,
+        valueFirstType:'',//
+        valueSecondType:'',
         secondType: [],//二级分类
         firstType: '',//一级分类
         typeList:'',//获取分类列表
+        Name:'',//名称
+        Price:'',//原价
         aPics:[],//图片数组
+        shopList:[],//店铺列表
+        currentShopId:'',//当前店铺
+        groupList:'',//分组列表
+        valueGroup:'',//员工分类'
+        personList:'',//员工列表
+        valuePerson:'',//单个员工
+        CommissionCharge:'',//分享佣金
+        ReceiveGuestCharge:'',//获客佣金
+        sizeList:[],//规格列表
+        moneyList:[],//人员佣金列表
         goodsItemClass1:'goods-active',//分类class
         goodsItemClass2:'',//分类class
         goodsList:[],//商品列表
@@ -499,26 +530,61 @@
       confirmGoodsDetail(){
 
       },
+      // handleAvatarSuccess(res, file){
+      //   console.log(file);
+      //   // this.form.Pics=URL.createObjectURL(file.raw);
+      //   if(this.Pic){
+      //     this.Pic=file.response.url;
+      //   }
+      //   this.Pics=this.Pics.push(file.response.url);
+      //
+      // },
+      //选择一级分类
+      chooseFirstType(e ){
+        let index1='';
+        this.typeList.forEach((item,index)=>{
+          console.log(item.GoodsTypeId);
+          console.log(e);
+          if(item.GoodsTypeId==e){
+              index1=index
+          }
+        })
+        let arr=this.typeList[index1].ChildGoodsType
+        if(arr.length){
+            this.secondType=arr
+        }else{
+          this.secondType=[{
+            GoodsTypeId:0,
+            Name:'无'
+          }]
+        }
+      },
+
 
       //生成新的服务
       addGoods(){
           let obj={
             Name:'测试商品',
-            Pic:'http://mendian.yilianchuang.cn/@/attached/0/20180831/E062140CDD1325C17B6B1D4DFFC9A1C1_md5_201808311744431591-640_512.jpg',
-            Pics:'http://mendian.yilianchuang.cn/@/attached/0/20180831/E062140CDD1325C17B6B1D4DFFC9A1C1_md5_201808311744431591-640_512.jpg,http://mendian.yilianchuang.cn/@/attached/0/20180831/E062140CDD1325C17B6B1D4DFFC9A1C1_md5_201808311744431591-640_512.jpg',
+            Pic:this.aPics[0],
+            Pics:this.aPics.join(','),
             Price:'39',
             OriginalPrice:'39',
             TuwenArticleId:23,
             Description:'描述',
             Tags:'',
             Link:'',
-            CommissionCharge:'3',
-            ReceiveGuestCharge:'1',
-            FlagId:1,
-            SecKillHour:1*6,
+            CommissionCharge:this.CommissionCharge,
+            ReceiveGuestCharge:this.ReceiveGuestCharge,
+            FlagId:this.valueTips,
+            SecKillHour:this.hours[this.hoursValue],
             Type:2,
 
       };
+          if(this.valueSecondType!=0){
+            obj.GoodsTypeId=this.valueSecondType;
+            obj.GoodsTypeParentId=this.valueFirstType;
+          }
+
         let   goodsSpecList= [
             {
 
@@ -608,7 +674,7 @@
       },
       //添加图片
       handlePictureSuccess(res,file){
-        this.aPics.push(URL.createObjectURL(file.raw));
+        this.aPics.push(file.response.url);
       },
       //移除图片
       handleRemove(file,fileList){
@@ -666,6 +732,15 @@
 
       },
 
+      // 选择分组
+      chooseGroup(e){
+          this.groupList[e].price=''
+          this.personList=this.groupList[e].UsersList.Items;
+          this.personList.forEach(item=>{
+            item.price=''
+          })
+      },
+
       //获取分类列表
        getTypeList :async function() {
         let json= await this.$http.post(this.$api.typeList, {type: 2});
@@ -674,11 +749,38 @@
             this.typeList=data.result
         }
        },
-
+      // 获取店铺列表
+      getShopList(){
+        this.$http.post(api.shopList,{}).then(json=>{
+          let data=json.data
+          if(data.isSuc==true){
+            this.shopList=data.result;
+            let firstShopId=data.result[0].UserShopId;
+            this.currentShopId=firstShopId
+            this.getGroupList(this.currentShopId)
+            this.$message({
+              message: '恭喜你，这是一条成功消息',
+              type: 'warning'
+            })
+          }
+        }).catch(err=>{
+          console.log(err);
+        })
+      },
+      getGroupList(shopId){
+        this.$http.post(this.$api.waterGroupList,
+          {pageindex:1,pagesize:10,userShopId:shopId}).then(json=>{
+          console.log(json);
+          if(json.data.isSuc==true){
+            this.groupList=json.data.result.Items;
+          }
+        })
+      },
     },
     created() {
       this.getTypeList();
-      this.getGoodsList()
+      this.getGoodsList();
+      this.getShopList();
     }
   }
 </script>
