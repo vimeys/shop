@@ -12,7 +12,7 @@
           <el-tab-pane label="自定义图片" name="third">
             <router-view></router-view>
           </el-tab-pane>
-          <el-tab-pane label="促销活动" name="fourth">
+          <el-tab-pane label="拓客营销" name="fourth">
             <router-view></router-view>
           </el-tab-pane>
           <el-tab-pane label="精选商品" name="fifth">

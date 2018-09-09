@@ -1,53 +1,77 @@
 <template>
   <div>
     <div v-show="show" @back="back">
-      <el-container>
+      <el-container v-if="isCardList">
         <el-header>
           <div class="active-header">
             <div :class="{disabled:isEdit}" @click="addCard">
               <span class="el-icon-circle-plus"></span>&nbsp;&nbsp;新建活动
             </div>
             <div @click="editCards">管理</div>
-            <div class="del" v-show="showDel">删除</div>
+            <div class="del" v-show="showDel" @click="delActive">删除</div>
           </div>
         </el-header>
-        <el-main class="main">
-          <!--一元买券-->
-          <div class="active-items-one" @click="hrefCard(1)" :data="0">
-            <img src="../../../../assets/images/oneBg.png" alt="">
-            <div class="active-text"> 12:00-13:00 限／时／抢／购</div>
-            <div class="active-radio" @click.stop="choose" v-show="isChecke">
-              <div class="active-radio-point" v-show="chosed"></div>
+        <el-main class="main" >
+          <template v-for="(item,index) in activeCardList" >
+            <!--一元买券-->
+            <div class="active-items-one"
+                 v-if="item.type==1"
+                 @click="hrefCard(1)"
+                 :data="0">
+              <img src="../../../../assets/images/oneBg.png" alt="">
+              <div class="active-text"> 12:00-13:00 限／时／抢／购</div>
+              <div class="active-radio" @click.stop="choose(1)" v-show="item.hasChoose">
+                <div class="active-radio-point" v-show="item.isChoose"></div>
+              </div>
             </div>
-          </div>
-          <!--拼团-->
-          <div class="active-items-team" @click="hrefCard(1)" :data="1">
-            <img src="../../../../assets/images/teamBg.png" alt="">
-            <div class="active-text">3人即享拼团价</div>
-            <div class="active-radio" @click.stop="choose" v-show="isChecke">
-              <div class="active-radio-point" v-show="chosed"></div>
+            <!--拼团-->
+            <div class="active-items-team"
+                 v-else-if="item.type==2"
+                 @click="hrefCard(2)"
+                 :data="1">
+              <img src="../../../../assets/images/teamBg.png" alt="">
+              <div class="active-text">3人即享拼团价</div>
+              <div class="active-radio" @click.stop="choose(2)" v-show="item.hasChoose">
+                <div class="active-radio-point" v-show="item.isChoose"></div>
+              </div>
             </div>
-          </div>
-          <!--秒杀-->
-          <div class="active-items-s" @click="hrefCard(2)" :data="2">
-            <img src="../../../../assets/images/secondBg.png" alt="">
-            <div class="active-text"> 测试文字爱的范fas</div>
-            <div class="active-radio" @click.stop="choose" v-show="isChecke">
-              <div class="active-radio-point" v-show="chosed"></div>
+            <!--秒杀-->
+            <div class="active-items-s"
+                 v-else-if="item.type==3"
+                 @click="hrefCard(3)"
+                 :data="2">
+              <img src="../../../../assets/images/secondBg.png" alt="">
+              <div class="active-text"> 测试文字爱的范fas</div>
+              <div class="active-radio" @click.stop="choose(3)" v-show="item.hasChoose">
+                <div class="active-radio-point" v-show="item.isChoose"></div>
+              </div>
             </div>
-          </div>
-          <!--抽奖-->
-          <div class="active-items-l" @click="hrefCard(3)" :data="3">
-            <img src="../../../../assets/images/luckBg.png" alt="">
-            <div class="active-text"> 测试文字sfas</div>
-            <div class="active-radio" @click.stop="choose" v-show="isChecke">
-              <div class="active-radio-point" v-show="chosed"></div>
+            <!--抽奖-->
+            <div class="active-items-l"
+                 v-else="item.type==4"
+                 @click="hrefCard(4)"
+                 :data="3">
+              <img src="../../../../assets/images/luckBg.png" alt="">
+              <div class="active-text"> 测试文字sfas</div>
+              <div class="active-radio" @click.stop="choose(4)" v-show="item.hasChoose">
+                <div class="active-radio-point" v-show="item.isChoose"></div>
+              </div>
             </div>
-          </div>
+          </template>
+
         </el-main>
+
       </el-container>
-      <div class="coupons-items">
+      <div class="coupons-items" v-else>
+        <div
+                class="coupons-header"
+        >
+          <div class="block-btn" @click="goBack"> 返回</div>
+          <div class="base-btn-111" > 新建优惠券</div>
+          <div class="base-btn-111"> 管理</div>
+        </div>
         <div class="coupons-item">
+            <ys-coupon></ys-coupon>
         </div>
       </div>
     </div>
@@ -56,7 +80,7 @@
               @close="close"
     >
       <div class="popup-slide-left">
-        <div class="list-title">新建优惠券</div>
+        <div class="list-title">活动</div>
         <div class="list-btns">
           <ul>
             <li><i class="el-icon-document"></i>活动详情<i class="el-icon-arrow-right"></i> </li>
@@ -128,8 +152,48 @@
         <!--<el-button type="text" @click="open5">点击打开 Message Box</el-button>-->
       </div>
     </ys-popup>
-    <ys-vip-card></ys-vip-card>
-    <router-view></router-view>
+    <ys-popup
+      :width="popup.width"
+      :height="popup.height"
+      v-show="popup.showModal"
+    >
+      <div class="popup-slide-left">
+        <div class="list-title">活动</div>
+        <div class="list-btns">
+          <ul>
+            <li><i class="el-icon-document"></i>活动详情<i class="el-icon-arrow-right"></i> </li>
+          </ul>
+        </div>
+      </div>
+      <div class="popup-slide-right">
+        <div class="content">
+          <div class="card-select">
+            <div>优惠券分类</div>
+            <div>
+              <el-select v-model="value" @change="change" placeholder="满减券" class="select">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </div>
+          </div>
+          <el-srcollbar>
+            <div v-for="item in [1,2,3,3,4]">
+              <ys-coupon></ys-coupon>
+            </div>
+          </el-srcollbar>
+          <div>
+            <div class="btn">确认</div>
+          </div>
+        </div>
+        <!--<el-button type="text" @click="open5">点击打开 Message Box</el-button>-->
+      </div>
+    </ys-popup>
+    <!--<ys-vip-card></ys-vip-card>-->
+    <!--<router-view></router-view>-->
   </div>
 
 </template>
@@ -152,6 +216,13 @@
           chosed:false,
           isChecke:false,
           value:'',
+          popup:{
+            width:1024,
+            height:796,
+            showModal:true
+          },
+          isCardList:false,//是否显示卡片信息
+          activeCardList:[],
           isEdit:false,//是否可以添加
           showDel:false,//是否有删除
           options: [{
@@ -180,14 +251,21 @@
         }
       },
       methods:{
-        choose(){
+        choose(index){
           this.chosed=!this.chosed
         },
         back(e){
           console.log(e);
         },
+        goBack(){
+            this.isCardList=true
+        },
         change(){
           console.log(123);
+        },
+        //删除活动
+        delActive(){
+
         },
         //去到卡券列表
         hrefCard(e){
@@ -196,6 +274,7 @@
               path:'/abc'
             })
         },
+
         //关闭模态框
         close(e){
           console.log(e);
@@ -226,8 +305,19 @@
         handlePictureCardPreview(file) {
           this.dialogImageUrl = file.url;
           this.dialogVisible = true;
+        },
+        //获取活动列表
+        getActiveCardList(){
+            // this.$http.post(this.$api)
+          let data=[{item:123,type:3},{item:1235,type:2},{item:1234,type:1},{item:12346,type:4},];
+          data.forEach(item=>{
+            item.hasChoose=false;
+            item.isChoose=false;
+          })
+          this.activeCardList=data;
         }
-      }
+      },
+
     }
 </script>
 
@@ -532,10 +622,37 @@
     }
   }
 
+
+
   .btn{
     .base-btn-111;
     margin-top: 30px;
   }
+
+  //优惠券页面
+  .coupons-header{
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    .block-btn{
+      width: 111px;
+      height: 38px;
+      border-radius: 4px;
+      line-height: 38px;
+      font-size:14px;
+      text-align: center;
+      display: inline-block;
+      background: #282828;
+      color:#FFFFFF;
+      margin-right: 100px;
+    }
+    .base-btn-111{
+      margin-right: 30px;
+    }
+  }
+
 
 
 </style>
