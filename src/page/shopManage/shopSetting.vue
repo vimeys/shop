@@ -4,7 +4,7 @@
 */
 <template>
   <div class="box">
-      <div class="btn" @click="addShop"><img src="@/assets/images/icon/addBtn.png" alt="">新建门店 {{Role}}</div>
+      <div class="btn" @click="addShop"><img src="@/assets/images/icon/addBtn.png" alt="">新建门店</div>
     <div class="shop" v-for="(item,index) in shopList" :key="item.UserShopId">
         <el-row>
            <el-col class="col" :span="7" :offset="5">
@@ -276,7 +276,7 @@
               LunchStartDate: this.value5[0].toString().substr(16, 5),
               LunchEndDate: this.value5[1].toString().substr(16, 5),
               //todo死数据
-              Position: '12312313',
+              Position: '116.381847,39.98109',
               TuwenUrl: 'http://mdimg.yilianchuang.cn/uploadimage3.ashx',
               EmployeesNumber: form.EmployeesNumber
             }
@@ -311,7 +311,7 @@
               LunchStartDate: this.value5[0].toString().substr(16, 5),
               LunchEndDate: this.value5[1].toString().substr(16, 5),
               //todo死数据
-              Position: '12312313',
+              Position: '116.381847,39.98109',
               TuwenUrl: 'http://mdimg.yilianchuang.cn/uploadimage3.ashx',
               EmployeesNumber: form.EmployeesNumber
             }

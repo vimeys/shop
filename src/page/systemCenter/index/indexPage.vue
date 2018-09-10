@@ -4,20 +4,21 @@
       <div class="right">
         <el-tabs v-model="activeName" @tab-click="handleClick" value="first">
           <el-tab-pane label="背景图" name="first">
-            <router-view></router-view>
+            <!--<router-view></router-view>-->
           </el-tab-pane>
           <el-tab-pane label="Logo" name="second">
-            <router-view></router-view>
+            <!--<router-view></router-view>-->
           </el-tab-pane>
           <el-tab-pane label="自定义图片" name="third">
-            <router-view></router-view>
+            <!--<router-view></router-view>-->
           </el-tab-pane>
           <el-tab-pane label="拓客营销" name="fourth">
-            <router-view></router-view>
+            <!--<router-view></router-view>-->
           </el-tab-pane>
           <el-tab-pane label="精选商品" name="fifth">
-            <router-view></router-view>
+            <!--<router-view></router-view>-->
           </el-tab-pane>
+          <router-view></router-view>
         </el-tabs>
         <div>
         </div>

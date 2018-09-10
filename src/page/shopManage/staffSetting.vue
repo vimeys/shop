@@ -11,7 +11,7 @@
                 v-for="item in shopList"
                 :key="item.value"
                 :label="item.Name"
-                :value="item.UserShopId">
+                :value="item.UserId">
               </el-option>
             </el-select>
           </el-col>
@@ -125,6 +125,15 @@
           <el-col>
             <input type="text" v-model="groupName" placeholder="请输入员工分类名称" class="base-input">
           </el-col>
+        </el-row>
+        <el-row class="group-input2" :gutter="30">
+          <el-col :span="4">
+            提成比例
+          </el-col>
+          <el-col :span="18">
+            <input type="text" v-model="Charge" placeholder="请输入员工分类名称" class="base-input">
+          </el-col>
+          <el-col :span="2">%</el-col>
         </el-row>
         <el-row>
           <el-col :span="4" :offset="10">
@@ -330,7 +339,7 @@
             },
             group:{//添加分组
               width:645 ,
-              height:327,
+              height:387,
               showModal:false
             },
             edit:{//编辑资料
@@ -339,6 +348,7 @@
               showModal:false,
             },
             groupName:'',
+            Charge:'',//折扣比例
             move:{
               width:645,
               height:445,
@@ -409,6 +419,7 @@
         chooseShop(e){
           console.log(e);
           this.currentShopId=e
+          this.getGroupList(this.currentShopId)
           // alert(e)
         },
       //往分组下添加新的成员
@@ -528,7 +539,9 @@
             let obj={
               group:{
                 GroupName:this.groupName,
-                UserShopId:this.currentShopId
+                UserId:this.currentShopId,
+                // UserId:1547,
+                Charge:this.Charge
               }
             }
           console.log(obj);
@@ -572,7 +585,7 @@
         // 获取当前店铺分组的列表
         getGroupList(shopId){
             this.$http.post(this.$api.waterGroupList,
-              {pageindex:1,pagesize:10,userShopId:shopId}).then(json=>{
+              {pageindex:1,pagesize:10,userId:shopId}).then(json=>{
               console.log(json);
                   if(json.data.isSuc==true){
                     this.groupList=json.data.result.Items;
@@ -620,7 +633,7 @@
             let data=json.data
             if(data.isSuc==true){
               this.shopList=data.result;
-              let firstShopId=data.result[0].UserShopId;
+              let firstShopId=data.result[0].UserId;
               this.currentShopId=firstShopId
               this.getGroupList(this.currentShopId)
               this.$message({
@@ -721,6 +734,8 @@
         box-sizing: border-box;
         margin: 0 10px;
         background: #fff;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
       }
     }
     .tables:first-child{
@@ -776,7 +791,10 @@
       margin-top: 10px;
     }
     .group-input{
-      margin: 40px 0 55px;
+      margin: 40px 0 35px;
+    }
+    .group-input2{
+      margin: 0px 0 35px;
     }
   }
 

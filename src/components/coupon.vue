@@ -1,5 +1,5 @@
 <template>
-  <div class="card" :style="{marginBottom: marginBottom+'px'}">
+  <div class="card" :style="[{marginBottom: marginBottom+'px'},{marginTop:marginTop+'px'}]">
     <div class="coupon-item-left">
       <img v-if="CardType==1" src="@/assets/images/Coupons-bgimg.png" alt="">
       <img v-else-if="CardType==2" src="@/assets/images/card02.png" alt="">
@@ -81,6 +81,12 @@
         }
       },
       marginBottom: {
+        type: Number,
+        default() {
+          return 0
+        }
+      },
+      marginTop: {
         type: Number,
         default() {
           return 0

@@ -74,6 +74,12 @@
     serverPeopleList:head+'settleAccounts/version3/userList',//获取服务员列表
 
 
+    //添加活动
+    activeList:head+'usergame/list',//新建活动列表
+      //一元买卷
+    addOne:head+'usergame/version3/addtype3'
+
+
   };
 
 
