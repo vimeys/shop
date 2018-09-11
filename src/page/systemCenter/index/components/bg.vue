@@ -21,7 +21,6 @@
         <!--action="https://jsonplaceholder.typicode.com/posts/"-->
         <el-upload
           action="http://mdimg.yilianchuang.cn/uploadimage3.ashx"
-
           list-type="picture-card"
           :on-preview="handlePictureCardPreview"
           :on-success="getFile"
@@ -95,6 +94,8 @@
       .swiper{
         width: 100%;
         height: 609px;
+        background: #fff;
+        border-top: 1px solid #E9E9E9;
         img{
           width: 100%;
           height: 609px;

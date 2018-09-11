@@ -236,7 +236,8 @@
                 label: '蚵仔煎'
               }
             ],
-            cardListType:[]
+            cardListType:[],
+            typeList:''
           }
       },
       methods:{
@@ -264,7 +265,7 @@
           }else{
             obj.MembershipName='次卡'
           }
-          obj.MembershipName='定制卡';
+          // obj.MembershipName='定制卡';
           obj.MembershipType=this.carlType;
           obj.EffectiveTime= this.yearNum>0?this.yearNum*12:-1;
           obj.Frequency=this.Frequency?this.Frequency:0;
@@ -324,14 +325,23 @@
                 data.result.Items.forEach(item=>{
                   item.hasChecked=true;
                   item.isChecked=false;
-                })
+                });
                     this.cardListType=data.result.Items
               }
             })
         },
+        //获取分类列表
+        getTypeList :async function() {
+          let json= await this.$http.post(this.$api.typeList, {type: 2});
+          let data=json.data;
+          if(data.isSuc==true){
+            this.typeList=data.result
+          }
+        },
       },
       created(){
-          this.getCardList()
+        this.getCardList();
+        this.getTypeList();
       }
     }
 </script>

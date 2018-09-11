@@ -121,6 +121,7 @@
                   <el-select v-model="valueFirstType"  @change="chooseFirstType" placeholder="分类" size="small">
                     <el-option
                       v-for="item in typeList"
+                      :highlight-current="true"
                       :key="item.GoodsTypeId"
                       :label="item.Name"
                       :value="item.GoodsTypeId">
@@ -484,7 +485,7 @@
         goodsItemClass1:'goods-active',//分类class
         goodsItemClass2:'',//分类class
         goodsList:[],//商品列表
-        UserId:''
+        UserId:'',
       }
     }, methods: {
       choose() {
@@ -605,25 +606,65 @@
             FlagId:this.valueTips,
             SecKillHour:12,
             Type:2,
-
       };
           if(this.valueSecondType!=0){
             obj.GoodsTypeId=this.valueSecondType;
             obj.GoodsTypeParentId=this.valueFirstType;
           }
-          obj.Addgoodsspec=o;
+          let id=[]
+          this.aPeople.forEach(item=>{
+            id.push(item.valuePerson)
+          })
+        let sId=id.join(',');
+        let Addgoodsspec=[]
+        this.aSize.forEach(item=>{
+          Addgoodsspec.push({
+            UserId:this.UserId,
+            Name:item.sizeName,
+            Price:item.sizePrice,
+            Pic:''
+          })
+        })
+
+          // this.aS
+        obj.CommissionGroupId=sId;
+          obj.Goodsspec=Addgoodsspec;
           this.$http.post(this.$api.addGoods,{goods:obj}).then(json=>{
             console.log(json);
             let data=json.data;
             if(data.isSuc==true){
-                this.goods.showModal=false;
-                this.getGoodsList();
+              this.$message({
+                message:'发布成功',
+                icon:'success'
+              })
+              this.Name = '';
+              this.Pic = '';
+              this.Pics = '';
+              this.OriginalPrice = '';
+              this.CommissionCharge = ""
+              this.ReceiveGuestCharge = ""
+              this.FlagId = ''
+              this.aSize = [];
+              this.aPeople = [];
+              let obj = {sizeName: '', sizePrice: ''};
+              let a=JSON.parse(JSON.stringify(this.groupList));
+              let obj2 = {valuePerson: '', groupList: a};
+              this.aSize.push(obj);
+              this.aPeople.push(obj2)
+              this.goods.showModal = false;
+              this.getGoodsList();
+            }else{
+              this.$message({
+                message:'发布失败+'+data.message,
+                icon:'error'
+              })
             }
           })
           // this.$http
       },
 
       //获取商品列表
+      // @param
       getGoodsList(p=0,c=0){
           this.$http.post(this.$api.goodsList,{ pageIndex:1, pageSize:100, goodTypeParentId:p, goodsTypeId:c}).then(json=>{
             console.log(json);
@@ -718,7 +759,6 @@
             let obj={};
             obj.Name=item.Name;
             let child=this.typeList[this.isEditTypeNum].ChildGoodsType
-            debugger
             if(index<child.length){
               goodsTypeSecond.push(Object.assign({Pic: '12312',GoodsTypeId:child[index].GoodsTypeId}, obj))
             }else{
@@ -747,7 +787,7 @@
             obj.Name=item.Name;
             goodsTypeSecond.push(Object.assign({Pic: '12312', Type: 2}, obj))
           })
-          this.$http.post('/shop/' + api.addType, {goodsType, goodsTypeSecond}).then(json => {
+          this.$http.post(this.$api.addType, {goodsType, goodsTypeSecond}).then(json => {
             console.log(json);
           })
         }
@@ -783,6 +823,10 @@
         if(data.isSuc==true){
             this.typeList=data.result
         }
+        this.typeList.unshift({
+          ChildGoodsType:[],
+          Name:"所有分类"
+        })
        },
       // 获取店铺列表
       getShopList(){
@@ -790,7 +834,7 @@
           let data=json.data
           if(data.isSuc==true){
             this.shopList=data.result;
-            let firstShopId=data.result[1].UserId;
+            let firstShopId=data.result[0].UserId;
             this.currentShopId=firstShopId
             this.getGroupList(this.currentShopId)
             this.$message({
@@ -810,15 +854,17 @@
           if(json.data.isSuc==true){
             this.groupList=json.data.result.Items;
             this.UserId=this.groupList[0].UserId;
-            let a=JSON.parse(JSON.stringify(this.groupList))
+            let a=JSON.parse(JSON.stringify(this.groupList));
             let obj={sizeName:'',sizePrice:''};
-            let obj2={valuePerson:'',groupList:a}
+            let obj2={valuePerson:'',groupList:a};
             // a.newPrice='';
             this.aSize.push(obj);
             this.aPeople.push(obj2)
-            // let b=JSON.parse(JSON.stringify(this.groupList))
-            // let objb={groupList:b,fenPreic:'',valuePerson:''};
-            // this.aMoney.push(objb)
+          }else{
+            this.$message({
+              message:'获取失败',
+              icon:'error'
+            })
           }
         })
       },
@@ -1074,6 +1120,7 @@
     }
 
     .scroll {
+      margin-right: 20px;
       width: 100%;
       height: 700px;
       margin-top: 30px;
@@ -1145,5 +1192,18 @@
 
   .type-btn-save {
     .base-btn(445px)
+  }
+
+  /deep/ .el-tree-node__content:hover{
+    color:#282828;
+    background: #ccc;
+  }
+  /deep/ .el-tree-node:focus>.el-tree-node__content{
+    background: #FFD736;
+    color:#282828;
+  }
+  /deep/ .el-tree-node__content{
+    height: 30px;
+    line-height: 30px;
   }
 </style>

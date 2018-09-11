@@ -25,34 +25,38 @@
       <!--<div class="setting" @click="openJob">职位设置</div>-->
       <!--<div class="project">管理员工服务项目</div>-->
     </div>
-    <div class="tables"v-for="(item,index) in groupList" >
-        <div class="title">{{item.GroupName}}({{item.UsersList.Items.length}}人)
+    <div class="tables" v-for="(item,index) in groupList" >
+        <div class="title">{{item.GroupName}}({{item.UsersList.Items.length}}人  提成比例：{{item.Charge}}%)
           <i class="el-icon-delete"
              @click="delGroup(index)"
-             style="position: relative; right: -500px"></i>
+             style="position: relative; right: -440px"></i>
         </div>
         <el-row class="table-title">
           <!--<el-col></el-col>-->
-          <el-col :span="3">姓名</el-col>
-          <el-col :span="2">手机号</el-col>
-          <el-col :span="2">权限</el-col>
+          <el-col :span="4">姓名</el-col>
+          <el-col :span="3">手机号</el-col>
+          <!--<el-col :span="2">权限</el-col>-->
           <el-col :span="2">职位</el-col>
           <el-col :span="2">状态</el-col>
           <el-col :span="2">密码</el-col>
           <el-col :span="11">管理</el-col>
         </el-row>
       <el-row class="row" v-for="(itemSon,indexSon ) in item.UsersList.Items" :key="itemSon.GroupId">
-        <el-col :span="3">
+        <el-col :span="4">
           <el-row>
-            <el-col :span="8">.</el-col>
+            <el-col :span="8" class="row-radio">
+              <div class="circle">
+                <div class="point" ></div>
+              </div>
+            </el-col>
             <el-col :span="16">{{itemSon.TrueName||'无'}}</el-col>
           </el-row>
         </el-col>
-        <el-col :span="2">{{itemSon.PhoneNum||'无'}}</el-col>
-        <el-col :span="2">{{itemSon.UserRoleName||'无'}}</el-col>
+        <el-col :span="3">{{itemSon.PhoneNum||'无'}}</el-col>
+        <!--<el-col :span="2">{{itemSon.UserRoleName||'无'}}</el-col>-->
         <el-col :span="2">{{itemSon.JobTitle||'无'}}</el-col>
-        <el-col :span="2">{{激活|capitalize}}</el-col>
-        <el-col :span="2">{{itemSon.AlbumPass||'无'}}</el-col>
+        <el-col :span="2">{{itemSon.State|capitalize}}</el-col>
+        <el-col :span="2">{{itemSon.Remark||'无'}}</el-col>
         <el-col :span="11">
             <el-row :gutter="10">
               <el-col :span="4">
@@ -63,7 +67,6 @@
                 <!--todo  冻结接口没有做-->
                 <div class="table-btn"
                      :class="{'disable':!itemSon.disable}"
-
                      @click="freeze(index,indexSon)">{{itemSon.disable?'冻结':'取消冻结'}}</div>
               </el-col>
               <el-col :span="4">
@@ -73,11 +76,13 @@
                 <div class="table-btn" @click="del(index,indexSon)">删除</div>
               </el-col>
               <el-col :span="7">
-                <el-select v-model="itemSon.job" placeholder="请选择" size="small">
+                <el-select v-model="itemSon.job"
+                           @change="changeLimit(itemSon.job,index,indexSon)"
+                           placeholder="请选择"
+                           size="small">
                   <el-option
                     v-for="(itemGrandson,indexGrandson) in itemSon.jobList"
                     :key="itemGrandson.value"
-
                     :label="itemGrandson.label"
                     :value="itemGrandson.value">
                   </el-option>
@@ -151,7 +156,7 @@
     >
       <div class="group-box">
           <el-row class="group-title">
-            <el-col  :span="6"><h3>新建员工分类</h3></el-col>
+            <el-col  :span="6"><h3>编辑</h3></el-col>
           </el-row>
         <el-row class="group-input">
           <el-col>
@@ -402,12 +407,14 @@
           }else{
             return this.moveGroupPerson.join('')
           }
+        },
+        disable(){
 
         }
       },
       filters:{
         capitalize: function (value) {
-          if (value==1) {
+          if (value==0) {
             return '已冻结'
           }else{
             return '激活'
@@ -437,7 +444,7 @@
                 GroupId:this.currentGroupId,
                 UserShopId:this.currentShopId,
                 JobTitle:this.JobTitle,
-                RefUserId:123
+                RefUserId:this.currentShopId
               }
             }
           this.$http.post(this.$api.addWaiter,obj).then(json=>{
@@ -528,10 +535,18 @@
         },
         // 冻结账号
         freeze(index,indexSon){
-          console.log(index, indexSon);
-
-
-
+          let item=JSON.parse(JSON.stringify(this.groupList[index].UsersList.Items[indexSon]))
+          this.$http.post(this.$api.freeze,{userId:item.UserId})
+            .then(json=>{
+              console.log(json.data);
+              if(json.data.isSuc==true){
+                console.log(item);
+                // this.
+                item.disable=!item.disable;
+                console.log(item);
+                this.groupList[index].UsersList.Items[indexSon]=item
+              }
+            })
         },
 
         //添加分组
@@ -578,12 +593,32 @@
 
         //关闭分组
         closeGroup(){
-          this.group.showModal=false;
+          this.edit.showModal=false;
           this.groupName=''
         },
-
+        //改变权限
+        changeLimit(e,i,is){
+          console.log(e);
+          console.log(i);
+          console.log(is);
+          let item=this.groupList[i].UsersList.Items[is];
+          this.$http.post(this.$api.updataPerson,{user:{ShopRole:e,UserId:item.UserId,TrueName:item.TrueName,JobTitle:item.JobTitle}})
+            .then(json=>{
+                console.log(json.data)
+            })
+        },
         // 获取当前店铺分组的列表
         getGroupList(shopId){
+          let obj1=Object.assign({},{value:1,label:'管理员'})
+          let obj2=Object.assign({},{value:2,label:'店长'})
+          let obj3=Object.assign({},{value:3,label:'店员'})
+          let obj4=Object.assign({},{value:4,label:'收银'})
+          let arr=[];
+
+          arr.push(obj1)
+          arr.push(obj2)
+          arr.push(obj3)
+          arr.push(obj4)
             this.$http.post(this.$api.waterGroupList,
               {pageindex:1,pagesize:10,userId:shopId}).then(json=>{
               console.log(json);
@@ -595,13 +630,9 @@
                           console.log(indexSon);
                           let a=Math.floor(Math.random()*100)
                           console.log(a);
-                          itemSon.jobList=[
-                            {value:'管理员'+a,label:'管理员'},
-                            {value:'店长'+a,label:'店长'},
-                            {value:'总监'+a,label:'总监'},
-                            {value:'收银'+a,label:'收银'},
-                          ]
-                          itemSon.job=[];
+                          // let
+                          itemSon.jobList=arr;
+                          itemSon.job=itemSon.ShopRole;
                           if(itemSon.State==1){
                             itemSon.disable=true
                           }else {
@@ -626,6 +657,7 @@
 
         closeMove(e){
           this.move.showModal=e
+          this.moveGroupPerson=[]
         },
         // 获取店铺列表
         getShopList(){
@@ -658,6 +690,14 @@
         //     this.jobList.push({value:'1',label:'2'})
         // }
       },
+      watch:{
+        groupList(v,ov){
+          console.log(v);
+          console.log(ov);
+          console.log(123)
+        }
+      },
+
       created(){
         this.getShopList();
         // if(this.currentShopId){
@@ -710,6 +750,29 @@
         line-height: 48px;
         background: #F5F5F5;
       }
+      .row-radio{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 47.5px;
+        .circle{
+          width: 21px;
+          height: 21px;
+          border-radius: 50%;
+          border: 2px solid @bs-color;
+          background: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .point{
+            width: 14px;
+            height: 14px;
+            background: @bs-color;
+            border-radius: 50%;
+          }
+        }
+      }
+
       .row{
         width: 100%;
         height: 48px;
@@ -797,5 +860,6 @@
       margin: 0px 0 35px;
     }
   }
+
 
 </style>

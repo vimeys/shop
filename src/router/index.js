@@ -154,7 +154,7 @@ export default new Router({
           component:activeSale
         }
       ],
-      // redirect:'/centerIndex/indexPage'
+      redirect:'/centerIndex/indexPage'
     },
 
     //客户中心

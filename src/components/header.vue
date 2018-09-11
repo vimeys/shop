@@ -43,7 +43,7 @@
 <style lang='less' scoped>
   .header{
       width: 100%;
-    height: 40px;
+    height: 62px;
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -53,9 +53,10 @@
       color: #fff;
     }
     .active{
-      font-size: 18px;
-      color:#D0021B;
+      font-size: 20px;
+      color:#FFD736;
     }
+
   }
 
 </style>

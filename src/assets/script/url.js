@@ -6,6 +6,8 @@
     // 登录
     logincom:head+'user/loginbyphonenum',//登录企业
     login:head+'user/login',//登录个人
+
+
     //添加店铺
     addUserShop:head+'usershop/addUserShop',//添加店铺post
     shopList:head+'usershop/list4web',//1.1	实体店信息列表接口
@@ -16,7 +18,8 @@
     addWaiter:head+'user/reg2',//添加成员
     groupList:head+'group/list',//获取分组列表
     waterGroupList:head+'group/list2',//分组下面的列表
-    freeze:head+'user/updateinfo',//冻结成员
+    freeze:head+'user/stop',//冻结成员
+    active:head+'user/active',//冻结成员
     moveGroup:head+'user/movebatch',//移动人员
     delPerson:head+'user/deletebatch',//删除人员
     updataPerson:head+'user/updateusername',//更新权限名字职位
@@ -26,8 +29,6 @@
     addGroup:head+'group/add',//添加分组
     updateGroup:head+'group/update',//修改分组
     delGroup:head+'group/delete',//删除分组
-
-
 
 
     //管理分类
