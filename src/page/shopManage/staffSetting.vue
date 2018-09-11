@@ -544,7 +544,7 @@
                 // this.
                 item.disable=!item.disable;
                 console.log(item);
-                this.groupList[index].UsersList.Items[indexSon]=item
+                this.groupList[index].UsersList.Items.splice(indexSon,1,item)
               }
             })
         },
