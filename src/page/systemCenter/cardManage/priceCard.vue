@@ -37,12 +37,8 @@
             >
             </ys-coupon>
           </template>
-
-
           <!--<ys-coupon></ys-coupon>-->
-
         </div>
-
       </el-main>
     </el-container>
     <!--<ys-goods-card></ys-goods-card>-->
@@ -165,6 +161,7 @@
 
       </div>
     </ys-popup>
+
   </div>
 </template>
 
@@ -176,6 +173,7 @@
   import * as util from '@/assets/script/util'
   import YsSearch from '@/components/search'
   import YsChooseAll from '@/components/chooseAll'
+  import  ysPay from '@/components/pay'
   export default {
     name: "priceCard",
     components: {
@@ -183,7 +181,8 @@
       ysGoodsCard,
       ysPopup,
       YsSearch,
-      YsChooseAll
+      YsChooseAll,
+      ysPay
     },
     data() {
       return {

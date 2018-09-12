@@ -10,16 +10,17 @@
         <div class="header">
           <div class="btn">导出EXCEL</div>
           <ys-search :placeholder="placeholder"></ys-search>
+          <ys-select-shop></ys-select-shop>
         </div>
         <div class="select-bar">
-          <el-select v-model="value123" @change="change" placeholder="满减券" class="select">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
+          <!--<el-select v-model="value123" @change="change" placeholder="满减券" class="select">-->
+            <!--<el-option-->
+              <!--v-for="item in options"-->
+              <!--:key="item.value"-->
+              <!--:label="item.label"-->
+              <!--:value="item.value">-->
+            <!--</el-option>-->
+          <!--</el-select>-->
         </div>
         <div class="table">
           <el-table
@@ -300,13 +301,13 @@
         <!--消费记录-->
         <ys-popup  :showModal="history.showModal"
                    v-show="history.showModal"
-                   @close="close"
+                   @close="closeHistory"
                    :width='history.pWidth'
                    :height="history.pHeight"
         >
           <div class="history">
             <el-row class="history-word">
-              <el-col>消费信息</el-col>
+              <el-col><h3>消费信息</h3></el-col>
             </el-row>
             <el-row>
               <el-col>
@@ -316,21 +317,24 @@
                     总消费：￥281813
                   </div>
                 </div>
-                <el-table class="history-table" :data="tableData">
+
+                <el-table class="history-table"
+                          :height="500"
+                          :data="vipPriceTable">
                   <el-table-column
-                    label="姓名"
+                    label="消费项目"
                     width="200">
                     <template slot-scope="scope">
                       <!--<i class="el-icon-time"></i>-->
-                      <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                      <span style="margin-left: 10px">{{ scope.row.project }}</span>
                     </template>
                   </el-table-column>
                   <el-table-column
-                    label="姓名"
+                    label="消费金额"
                     width="203">
                     <template slot-scope="scope">
                       <!--<i class="el-icon-time"></i>-->
-                      <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                      <span style="margin-left: 10px">{{ scope.row.price }}</span>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -338,6 +342,50 @@
             </el-row>
           </div>
         </ys-popup>
+        <!--充值记录-->
+      <ys-popup
+        v-show="payHistory.showModal"
+        @close="closePayHistory"
+        :width='payHistory.pWidth'
+        :height="payHistory.pHeight"
+      >
+        <div class="history">
+          <el-row class="history-word">
+            <el-col><h3>消费信息</h3></el-col>
+          </el-row>
+          <el-row>
+            <el-col>
+              <div class="payhistory-title">
+                <div>Mact消费记录</div>
+              </div>
+
+              <el-table class="history-table"
+                        :height="500"
+                        :data="vipPriceTable">
+                <el-table-column
+                  label="消费项目"
+                  width="300">
+                  <template slot-scope="scope">
+                    <!--<i class="el-icon-time"></i>-->
+                    <span style="margin-left: 10px">{{ scope.row.project }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  label="消费金额"
+                  width="300">
+                  <template slot-scope="scope">
+                    <!--<i class="el-icon-time"></i>-->
+                    <span style="margin-left: 10px">{{ scope.row.price }}</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-col>
+          </el-row>
+        </div>
+
+
+      </ys-popup>
+
       </el-tab-pane>
       <el-tab-pane label="普通用户" name="second">
           <div class="box">
@@ -393,31 +441,38 @@
               </el-table>
             </div>
             <div class="block">
-              <el-pagination
-                prev-text="上一页"
-                next-text="下一页"
-                @size-change="changeSize"
-                @prev-click="prev"
-                @current-change="current"
-                layout="prev, pager, next"
-                class="page"
-                :total="1000">
-              </el-pagination>
+              <!--<el-pagination-->
+                <!--prev-text="上一页"-->
+                <!--next-text="下一页"-->
+                <!--@size-change="changeSize"-->
+                <!--@prev-click="prev"-->
+                <!--@current-change="current"-->
+                <!--layout="prev, pager, next"-->
+                <!--class="page"-->
+                <!--:total="1000">-->
+              <!--</el-pagination>-->
             </div>
           </div>
       </el-tab-pane>
+      <ys-pay @close="closePay" :showModel="payShowModel">
+      </ys-pay>
     </el-tabs>
+
   </div>
 </template>
 
 <script>
   import ysSearch from '@/components/search';
+  import  ysPay from '@/components/pay'
+  import  ysSelectShop from '@/components/selectShop'
   import  ysPopup from '@/components/popup'
     export default {
       name: "clientList",
-      components:{
-          ysSearch,
-          ysPopup
+      components: {
+        ysSearch,
+        ysPopup,
+        ysSelectShop,
+        ysPay
       },
       data(){
         return {
@@ -433,6 +488,11 @@
             pWidth:504,
             pHeight:708,
           },
+          payHistory:{
+            showModal:true,
+            pWidth:700,
+            pHeight:812,
+          },
           pay:{//付费页面
             showModel:false,
             width:759,
@@ -447,6 +507,7 @@
             value: '选项2',
             label: '双皮奶'
           }],
+          payShowModel:false,
           GameusersName:'',//会员名称
           PhoneNum:'',//会员电话
           buyMoney:'',//购买金额
@@ -527,6 +588,7 @@
             address: '上海市普陀区金沙江路 1516 弄',
             tag:'待服务'
           }],
+          vipPriceTable:[],//会员消费记录
           vipList:[],//会员列表
         }
       },
@@ -558,7 +620,17 @@
         current(val){
           console.log(val);
         },
+        closePay(){
 
+        },
+        closePayHistory(){
+          this.payHistory.showModal=false
+        },
+
+        //关闭消费记录
+        closeHistory(){
+            this.history.showModal=false
+        },
         //todo 开通会员卡报错
         //开卡
         handleEdit(tab,event){
@@ -607,7 +679,11 @@
         },
         //查询消费记录
         handleHistory(){
-            this.history.showModal=true
+            this.history.showModal=true;
+            this.$http.post('http://rap2api.taobao.org/app/mock/84341/vipPriceList',{})
+              .then(json=>{
+                this.vipPriceTable=json.data.table;
+              })
         },
 
         // pay(){
@@ -662,6 +738,9 @@
 @import "~@/assets/style/mixin";
   /deep/ .el-scrollbar__wrap{
     overflow-x: hidden;
+  }
+  /deep/ .el-table__body-wrapper::-webkit-scrollbar{
+      display: none;
   }
   .box{
     width:1200px;
@@ -799,19 +878,21 @@
       text-align: left;
       font-size: 20px;
       color:#282828;
+
     }
     &-title{
       display: flex;
       width:403px;
       height:47px;
+      border-top-right-radius: 4px;
+      border-top-left-radius: 4px;
       background:rgba(255,215,54,1);
-
-
       >div{
         flex: 1;
         text-align: center;
         line-height: 47px;
       }
+
     }
     &-table{
       /deep/ .cell{
@@ -819,6 +900,18 @@
       }
     }
   }
+.payhistory-title{
+  width: 600px;
+  height:47px;
+  background:rgba(255,215,54,1);
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
+  >div{
+    flex: 1;
+    text-align: center;
+    line-height: 47px;
+  }
+}
     //支付页面弹窗
   .pay{
     width: 100%;

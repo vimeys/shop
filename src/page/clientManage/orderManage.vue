@@ -45,125 +45,145 @@
         <template slot-scope="scope">
           <el-button
             size="mini"
-            @click="handleEdit(scope.$index, scope.row)">编辑
+            class="bs-btn"
+            @click="openDetailPopup(scope.$index, scope.row)">
+            详情
           </el-button>
           <el-button
             size="mini"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)">删除
+            class="bs-btn"
+            :class="{'disable':scope.row.disable}"
+            @click="handleEdit(scope.$index, scope.row)">收款
+          </el-button>
+          <el-button
+            size="mini"
+            class="bs-btn"
+            @click="handleDelete(scope.$index, scope.row)">接单
           </el-button>
         </template>
       </el-table-column>
     </el-table>
-    <el-row class="order-btn">
-      <el-col :span="4">
-        <div class="base-btn-111" @click="openOrder">挂单</div>
-      </el-col>
-    </el-row>
+    <!--<el-row class="order-btn">-->
+      <!--<el-col :span="4">-->
+        <!--<div class="base-btn-111" @click="openOrder">挂单</div>-->
+      <!--</el-col>-->
+    <!--</el-row>-->
 
-    <el-pagination
-      prev-text="上一页"
-      next-text="下一页"
-      @size-change="changeSize"
-      @prev-click="prev"
-      @current-change="current"
-      layout="prev, pager, next"
-      class="page"
-      style="margin-top: 30px"
-      :total="1000">
-    </el-pagination>
-    <!--//**********挂单*********-->
+    <!--<el-pagination-->
+      <!--prev-text="上一页"-->
+      <!--next-text="下一页"-->
+      <!--@size-change="changeSize"-->
+      <!--@prev-click="prev"-->
+      <!--@current-change="current"-->
+      <!--layout="prev, pager, next"-->
+      <!--class="page"-->
+      <!--style="margin-top: 30px"-->
+      <!--:total="1000">-->
+    <!--</el-pagination>-->
+    <!--*******查看订单详情********-->
     <ys-popup
-      :width="order.width"
-      :height="order.height"
-      v-show="order.showModal"
-      @close="closeOrder"
+      :width="detail.width"
+      :height="detail.height"
+      v-show="detail.showModal"
+      @click="closeDetailPopup"
     >
-      <div class="open-order-box">
-        <el-row>
-          <el-col :span="6"><h3>挂单</h3></el-col>
 
-        </el-row>
-        <el-srcollbar class="order-scroll">
-          <el-row class="row">
-            <el-col :span="4">顾客姓名</el-col>
-            <el-col :span="17"><input type="text" class="base-input" placeholder="请输入顾客的姓名"></el-col>
-          </el-row>
-          <el-row class="row">
-            <el-col :span="4">顾客姓名</el-col>
-            <el-col :span="17"><input type="text" class="base-input" placeholder="请输入顾客的姓名"></el-col>
-          </el-row>
-          <el-row>
-            <el-col>
-              <el-container>
-                <el-aside width="200px">Aside</el-aside>
-                <el-main style="padding-right: 50px">
-                  <el-row style="margin-top: 30px" v-for="item in orderServerList">
-                    <el-col style="background: #e1e1e1">
-                      <el-row>
-                        <el-col :span="4">服务</el-col>
-                        <el-col :span="17">
-                          <el-select v-model="item.goods"
-                                     filterable
-                                     size="small"
-                                     placeholder="请选择">
-                            <el-option
-                              v-for="item in options"
-                              :key="item.value"
-                              :label="item.label"
-                              :value="item.value">
-                            </el-option>
-                          </el-select>
-                        </el-col>
-                      </el-row>
-                      <el-row>
-                        <el-col :span="4">规格</el-col>
-                        <el-col :span="17">
-                          <el-select v-model="item.size"
-                                     filterable
-                                     size="small"
-                                     placeholder="请选择">
-                            <el-option
-                              v-for="item in options"
-                              :key="item.value"
-                              :label="item.label"
-                              :value="item.value">
-                            </el-option>
-                          </el-select>
-                        </el-col>
-                      </el-row>
-                      <el-row>
-                        <el-col :span="4">人员</el-col>
-                        <el-col :span="17">
-                          <el-select v-model="item.goods"
-                                     size="small"
-                                     placeholder="请选择">
-                            <el-option
-                              v-for="item in options"
-                              :key="item.value"
-                              :label="item.label"
-                              :value="item.value">
-                            </el-option>
-                          </el-select>
-                        </el-col>
-                      </el-row>
-                      <el-row v-if="item.hasPlus">
-                        <el-col>
-                            <span @click="addOrderServer" class="plus-btn">+</span>
-                        </el-col>
-                      </el-row>
-                    </el-col>
-                  </el-row>
-                </el-main>
-              </el-container>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col></el-col>
-          </el-row>
-        </el-srcollbar>
-      </div>
     </ys-popup>
+
+
+
+    <!--//**********挂单*********-->
+    <!--<ys-popup-->
+      <!--:width="order.width"-->
+      <!--:height="order.height"-->
+      <!--v-show="order.showModal"-->
+      <!--@close="closeOrder"-->
+    <!--&gt;-->
+      <!--<div class="open-order-box">-->
+        <!--<el-row>-->
+          <!--<el-col :span="6"><h3>挂单</h3></el-col>-->
+
+        <!--</el-row>-->
+        <!--<el-srcollbar class="order-scroll">-->
+          <!--<el-row class="row">-->
+            <!--<el-col :span="4">顾客姓名</el-col>-->
+            <!--<el-col :span="17"><input type="text" class="base-input" placeholder="请输入顾客的姓名"></el-col>-->
+          <!--</el-row>-->
+          <!--<el-row class="row">-->
+            <!--<el-col :span="4">顾客姓名</el-col>-->
+            <!--<el-col :span="17"><input type="text" class="base-input" placeholder="请输入顾客的姓名"></el-col>-->
+          <!--</el-row>-->
+          <!--<el-row>-->
+            <!--<el-col>-->
+              <!--<el-container>-->
+                <!--<el-aside width="200px">Aside</el-aside>-->
+                <!--<el-main style="padding-right: 50px">-->
+                  <!--<el-row style="margin-top: 30px" v-for="item in orderServerList">-->
+                    <!--<el-col style="background: #e1e1e1">-->
+                      <!--<el-row>-->
+                        <!--<el-col :span="4">服务</el-col>-->
+                        <!--<el-col :span="17">-->
+                          <!--<el-select v-model="item.goods"-->
+                                     <!--filterable-->
+                                     <!--size="small"-->
+                                     <!--placeholder="请选择">-->
+                            <!--<el-option-->
+                              <!--v-for="item in options"-->
+                              <!--:key="item.value"-->
+                              <!--:label="item.label"-->
+                              <!--:value="item.value">-->
+                            <!--</el-option>-->
+                          <!--</el-select>-->
+                        <!--</el-col>-->
+                      <!--</el-row>-->
+                      <!--<el-row>-->
+                        <!--<el-col :span="4">规格</el-col>-->
+                        <!--<el-col :span="17">-->
+                          <!--<el-select v-model="item.size"-->
+                                     <!--filterable-->
+                                     <!--size="small"-->
+                                     <!--placeholder="请选择">-->
+                            <!--<el-option-->
+                              <!--v-for="item in options"-->
+                              <!--:key="item.value"-->
+                              <!--:label="item.label"-->
+                              <!--:value="item.value">-->
+                            <!--</el-option>-->
+                          <!--</el-select>-->
+                        <!--</el-col>-->
+                      <!--</el-row>-->
+                      <!--<el-row>-->
+                        <!--<el-col :span="4">人员</el-col>-->
+                        <!--<el-col :span="17">-->
+                          <!--<el-select v-model="item.goods"-->
+                                     <!--size="small"-->
+                                     <!--placeholder="请选择">-->
+                            <!--<el-option-->
+                              <!--v-for="item in options"-->
+                              <!--:key="item.value"-->
+                              <!--:label="item.label"-->
+                              <!--:value="item.value">-->
+                            <!--</el-option>-->
+                          <!--</el-select>-->
+                        <!--</el-col>-->
+                      <!--</el-row>-->
+                      <!--<el-row v-if="item.hasPlus">-->
+                        <!--<el-col>-->
+                            <!--<span @click="addOrderServer" class="plus-btn">+</span>-->
+                        <!--</el-col>-->
+                      <!--</el-row>-->
+                    <!--</el-col>-->
+                  <!--</el-row>-->
+                <!--</el-main>-->
+              <!--</el-container>-->
+            <!--</el-col>-->
+          <!--</el-row>-->
+          <!--<el-row>-->
+            <!--<el-col></el-col>-->
+          <!--</el-row>-->
+        <!--</el-srcollbar>-->
+      <!--</div>-->
+    <!--</ys-popup>-->
   </div>
 </template>
 
@@ -180,10 +200,15 @@
     },
     data() {
       return {
-        order:{
-           width:670,
-          height:723,
-          showModal:true
+        // order:{//挂单
+        //    width:670,
+        //   height:723,
+        //   showModal:false
+        // },
+        detail:{//订单详情
+          width:900,
+          height:880,
+          showModal:false
         },
         value8:'',
         options: [{
@@ -205,18 +230,22 @@
         tableData: [{
           date: '2016-05-02',
           name: '王小虎',
+          disable:false,
           address: '上海市普陀区金沙江路 1518 弄'
         }, {
           date: '2016-05-04',
           name: '王小虎',
+          disable:false,
           address: '上海市普陀区金沙江路 1517 弄'
         }, {
           date: '2016-05-01',
           name: '王小虎',
+          disable:false,
           address: '上海市普陀区金沙江路 1519 弄'
         }, {
           date: '2016-05-03',
           name: '王小虎',
+          disable:true,
           address: '上海市普陀区金沙江路 1516 弄'
         }],
         orderServerList:[{goods:'',size:'',people:'',hasPlus:true}]
@@ -229,13 +258,23 @@
       handleDelete(index, row) {
         console.log(index, row);
       },
-      //打开order弹窗
-      openOrder(){
-          this.order.showModal=true
+      // //打开order弹窗
+      // openOrder(){
+      //     this.order.showModal=true
+      // },
+      // //关闭order弹窗
+      // closeOrder(){
+      //     this.order.showModal=false;
+      // },
+      //打开详情弹窗
+      openDetailPopup(i,row){
+        console.log(row);
+        this.detail.showModal=true;
       },
-      //关闭order弹窗
-      closeOrder(){
-          this.order.showModal=false;
+
+      //关闭详情弹窗
+      closeDetailPopup(){
+        this.detail.showModal=false;
       },
       addOrderServer(){
           this.orderServerList.forEach(item=>{
@@ -277,6 +316,15 @@
   }
   .order-scroll{
     height: 500px;
+  }
+  //按钮颜色
+  .bs-btn{
+    background: @bs-color;
+    border:none
+  }
+
+  .disable{
+    background: #d8d8d8 !important;
   }
 
 </style>

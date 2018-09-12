@@ -3,17 +3,11 @@
 */
 <template>
   <div class="box">
+    <div id="demo">12312312312</div>
       <div class="choose-title">
         <el-row>
           <el-col :span="4">
-            <el-select v-model="value" placeholder="请选择" size="small" @change="chooseShop" v-if="shopList.length">
-              <el-option
-                v-for="item in shopList"
-                :key="item.value"
-                :label="item.Name"
-                :value="item.UserId">
-              </el-option>
-            </el-select>
+
           </el-col>
           <el-col :span="2" class="base-col">总数：2人</el-col>
           <el-col :span="6" :offset="12"> <div><ys-search></ys-search></div></el-col>
@@ -119,7 +113,7 @@
     <ys-popup
       v-show="group.showModal"
       :width="group.width"
-      @close="closeGroup"
+      @close="closeGroupList"
       :height="group.height"
     >
       <div class="group-box">
@@ -227,7 +221,9 @@
           <el-col>如果您需要更快速地添加多个成员，我们推荐您下载excel模板，填写完成后直接上传</el-col>
         </el-row>
         <el-row class="add-btn">
-          <el-col><div class="base-btn-111">上传excel</div></el-col>
+          <el-col style="position: relative"><div class="base-btn-111" >上传excel</div>
+            <input type="file" class="importFile" @change="importf">
+          </el-col>
         </el-row>
       </div>
     </ys-popup>
@@ -325,6 +321,7 @@
     import ysSearch from '@/components/search';
     import  YsPopup from '@/components/popup'
     import api from "@/assets/script/url"
+    import XLSX from 'xlsx'
     export default {
         name: "staffSetting",
         components:{
@@ -397,7 +394,9 @@
               {value:1,label:'店长'},
               {value:2,label:'总监'},
               {value:3,label:'高级'},
-            ]
+            ],
+            wb:"",
+            rABS:false,
           }
       },
       computed:{
@@ -408,9 +407,6 @@
             return this.moveGroupPerson.join('')
           }
         },
-        disable(){
-
-        }
       },
       filters:{
         capitalize: function (value) {
@@ -527,7 +523,7 @@
           })
         },
         closeAdd(e){
-          this.add.showModal=e
+          this.add.showModal=false
         },
         //打开分组
         openGroup(){
@@ -535,20 +531,67 @@
         },
         // 冻结账号
         freeze(index,indexSon){
-          let item=JSON.parse(JSON.stringify(this.groupList[index].UsersList.Items[indexSon]))
-          this.$http.post(this.$api.freeze,{userId:item.UserId})
-            .then(json=>{
-              console.log(json.data);
-              if(json.data.isSuc==true){
-                console.log(item);
-                // this.
-                item.disable=!item.disable;
-                console.log(item);
-                this.groupList[index].UsersList.Items.splice(indexSon,1,item)
-              }
-            })
-        },
+          let item=JSON.parse(JSON.stringify(this.groupList[index].UsersList.Items[indexSon]));
+          if(item.disable){
+            this.$http.post(this.$api.freeze,{userId:item.UserId})
+              .then(json=>{
+                console.log(json.data);
+                if(json.data.isSuc==true){
+                  item.State=0
 
+                  item.disable=!item.disable;
+                  this.groupList[index].UsersList.Items.splice(indexSon,1,item)
+                }
+              })
+          }else {
+            this.$http.post(this.$api.active,{userId:item.UserId})
+              .then(json=>{
+                if(json.data.isSuc==true){
+                  item.State=1
+                  item.disable=!item.disable;
+                  this.groupList[index].UsersList.Items.splice(indexSon,1,item)
+                }
+              })
+          }
+
+        },
+        //导入excel
+        importf(event) {
+          let obj=event.target;
+          if(!obj.files) {
+            return;
+          }
+          var f = obj.files[0];
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            var data = e.target.result;
+            if(this.rABS) {
+              this.wb = XLSX.read(btoa(fixdata(data)), {//手动转化
+                type: 'base64'
+              });
+            } else {
+              this.wb = XLSX.read(data, {
+                type: 'binary'
+              });
+            }
+            //this.wb.SheetNames[0]是获取Sheets中第一个Sheet的名字
+            //this.wb.Sheets[Sheet名]获取第一个Sheet的数据
+            document.getElementById("demo").innerHTML= JSON.stringify( XLSX.utils.sheet_to_json(this.wb.Sheets[this.wb.SheetNames[0]]) );
+          };
+          if(this.rABS) {
+            reader.readAsArrayBuffer(f);
+          } else {
+            reader.readAsBinaryString(f);
+          }
+        },
+        fixdata(data) { //文件流转BinaryString
+          var o = "",
+            l = 0,
+            w = 10240;
+          for(; l < data.byteLength / w; ++l) o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w, l * w + w)));
+          o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w)));
+          return o;
+        },
         //添加分组
         addGroup(){
             let obj={
@@ -596,15 +639,25 @@
           this.edit.showModal=false;
           this.groupName=''
         },
+        closeGroupList(){
+          this.group.showModal=false;
+          this.groupName=''
+        },
         //改变权限
         changeLimit(e,i,is){
           console.log(e);
           console.log(i);
           console.log(is);
           let item=this.groupList[i].UsersList.Items[is];
-          this.$http.post(this.$api.updataPerson,{user:{ShopRole:e,UserId:item.UserId,TrueName:item.TrueName,JobTitle:item.JobTitle}})
+          this.$http.post(this.$api.updataPerson,
+            {user:{ShopRole:e,
+              UserId:item.UserId,
+              TrueName:item.TrueName,
+              JobTitle:item.JobTitle}})
             .then(json=>{
-                console.log(json.data)
+              if(json.data.isSuc==true){
+                this.groupList[i].UsersList.Items.splice(is,1,item)
+              }
             })
         },
         // 获取当前店铺分组的列表
@@ -860,6 +913,15 @@
       margin: 0px 0 35px;
     }
   }
-
+.importFile{
+  background: #fff;
+  opacity:0;
+  width: 111px;
+  height: 38px;
+  z-index: 100;
+  position: absolute;
+  top:0;
+  left: 350px;
+}
 
 </style>

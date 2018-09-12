@@ -5,27 +5,41 @@
 <template>
   <div class="box">
     <div class="header">
-      <div class="btn">导出EXCEL</div>
+      <div class="btn" @click="exportExcel">导出EXCEL</div>
       <ys-search :isLeft="isLeft" :placeholder="placeholder"></ys-search>
+      <!--<el-select v-model="value"-->
+                 <!--style="margin-left: 500px"-->
+                 <!--placeholder="请选择"-->
+                 <!--@change="chooseShop"-->
+                 <!--v-if="shopList.length">-->
+        <!--<el-option-->
+          <!--v-for="item in shopList"-->
+          <!--:key="item.value"-->
+          <!--:label="item.Name"-->
+          <!--:value="item.UserId">-->
+        <!--</el-option>-->
+      <!--</el-select>-->
+      <ys-select-shop :marginLeft="500" @selectShop="selectShop"></ys-select-shop>
     </div>
     <div class="table">
       <el-table
-        :data="tableData"
+        :data="table"
+        id="test-table"
         style="width: 100%">
         <el-table-column
           label="顾客名称"
-          width="180">
+          width="120">
           <template slot-scope="scope">
             <!--<i class="el-icon-time"></i>-->
-            <span style="margin-left: 10px">{{ scope.row.date }}</span>
+            <span style="margin-left: 10px">{{ scope.row.Name }}</span>
           </template>
         </el-table-column>
         <el-table-column
           label="联系方式"
-          width="180">
+          width="140">
           <template slot-scope="scope">
             <!--<i class="el-icon-time"></i>-->
-            <span style="margin-left: 10px">{{ scope.row.date }}</span>
+            <span style="margin-left: 10px">{{ scope.row.Phone }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -33,33 +47,36 @@
           width="180">
           <template slot-scope="scope">
             <!--<i class="el-icon-time"></i>-->
-            <span style="margin-left: 10px">{{ scope.row.date }}</span>
+            <span style="margin-left: 10px">{{ scope.row.OrderNum }}</span>
           </template>
         </el-table-column>
         <el-table-column
           label="预约时间"
           width="180">
+
           <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
-              <p>姓名: {{ scope.row.name }}</p>
-              <p>住址: {{ scope.row.address }}</p>
-              <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">{{ scope.row.name }}</el-tag>
-              </div>
-            </el-popover>
+            <span style="margin-left: 10px">{{ scope.row.OrderTime }}</span>
+            <!--<el-popover trigger="hover" placement="top">-->
+              <!--<p>姓名: {{ scope.row.name }}</p>-->
+              <!--<p>住址: {{ scope.row.address }}</p>-->
+              <!--<div slot="reference" class="name-wrapper">-->
+                <!--<el-tag size="medium">{{ scope.row.OrderTime }}</el-tag>-->
+              <!--</div>-->
+            <!--</el-popover>-->
           </template>
         </el-table-column>
         <el-table-column
           label="价格"
-          width="80">
+          width="120">
           <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
-              <p>姓名: {{ scope.row.name }}</p>
-              <p>住址: {{ scope.row.address }}</p>
-              <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">{{ scope.row.name }}</el-tag>
-              </div>
-            </el-popover>
+            <!--<el-popover trigger="hover" placement="top">-->
+              <!--<p>姓名: {{ scope.row.name }}</p>-->
+              <!--<p>住址: {{ scope.row.address }}</p>-->
+              <!--<div slot="reference" class="name-wrapper">-->
+                <!--<el-tag size="medium">{{ scope.row.Price }}</el-tag>-->
+              <!--</div>-->
+            <!--</el-popover>-->
+            <span style="margin-left: 10px">{{ scope.row.Price }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -67,15 +84,16 @@
           prop="tap"
           :filters="[{ text: '待服务', value: '待服务' }, { text: '已服务', value: '已服务' }]"
           :filter-method="filterTag"
-          width="180">
+          width="140">
           <template slot-scope="scope">
-            <el-popover trigger="hover" placement="top">
-              <p>姓名: {{ scope.row.name }}</p>
-              <p>住址: {{ scope.row.address }}</p>
-              <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">{{ scope.row.name }}</el-tag>
-              </div>
-            </el-popover>
+            <span style="margin-left: 10px;color:red;" >{{ scope.row.State }}</span>
+            <!--<el-popover trigger="hover" placement="top">-->
+              <!--<p>姓名: {{ scope.row.name }}</p>-->
+              <!--<p>住址: {{ scope.row.address }}</p>-->
+              <!--<div slot="reference" class="name-wrapper">-->
+                <!--<el-tag size="medium">{{ scope.row.State }}</el-tag>-->
+              <!--</div>-->
+            <!--</el-popover>-->
           </template>
         </el-table-column>
 
@@ -91,6 +109,8 @@
         </el-table-column>
       </el-table>
     </div>
+
+    <!--详情-->
     <ys-popup
       :showModal="showModal"
       v-show="showModal"
@@ -104,49 +124,52 @@
         </el-row>
         <el-row class="row">
           <el-col :span="2" :offset="1">顾客名称</el-col>
-          <el-col :offset="12" :span="8">123123123123</el-col>
+          <el-col :offset="12" :span="8">{{currentDetail.Name}}</el-col>
         </el-row>
         <el-row class="row">
           <el-col :span="2" :offset="1">联系方式</el-col>
-          <el-col :offset="12" :span="8">123123123123</el-col>
+          <el-col :offset="12" :span="8">{{currentDetail.Phone}}</el-col>
         </el-row>
         <el-row class="row">
           <el-col :span="2" :offset="1">服务单号</el-col>
-          <el-col :offset="12" :span="8">123123123123</el-col>
+          <el-col :offset="12" :span="8">{{currentDetail.OrderNum}}</el-col>
         </el-row>
         <el-row class="row">
           <el-col :span="2" :offset="1">预约时间</el-col>
-          <el-col :offset="12" :span="8">123123123123</el-col>
+          <el-col :offset="12" :span="8">{{currentDetail.OrderTime}}</el-col>
         </el-row>
         <el-row class="row">
           <el-col :span="2" :offset="1">价格</el-col>
-          <el-col :offset="12" :span="8">123123123123</el-col>
+          <el-col :offset="12" :span="8">{{currentDetail.Price}}</el-col>
         </el-row>
         <el-row class="row">
           <el-col :span="2" :offset="1">状态</el-col>
-          <el-col :offset="12" :span="8">123123123123</el-col>
+          <el-col :offset="12" :span="8">{{currentDetail.State}}</el-col>
         </el-row>
         <el-row class="row">
           <el-col :span="2" :offset="1">服务名称</el-col>
-          <el-col :offset="12" :span="8">123123123123</el-col>
+          <el-col :offset="12" :span="8">{{currentDetail.serviceName}}</el-col>
+        </el-row>
+        <el-row class="row">
+          <el-col :span="2" :offset="1">规格</el-col>
+          <el-col :offset="12" :span="8">{{currentDetail.Size}}</el-col>
         </el-row>
         <el-row class="row">
           <el-col :span="2" :offset="1">服务人员</el-col>
-          <el-col :offset="12" :span="8">123123123123</el-col>
+          <el-col :offset="12" :span="8">{{currentDetail.servicePeople}}</el-col>
         </el-row>
         <el-row class="row">
           <el-col :span="2" :offset="1">备注</el-col>
           <el-col :offset="12" :span="8">
-            我希望tony老师帮我剪一个帅气的头发！！我希望tony老师帮我剪一个帅气的头我希望tony老师帮我剪一个帅气的头发！！
+            {{currentDetail.remark}}
           </el-col>
         </el-row>
         <el-row class="row">
           <el-col :span="2" :offset="1" class="none">.</el-col>
           <el-col :offset="12" :span="8">
-            <img src="@/assets/images/goods.jpg"
+            <img :src="currentDetail.remarkImage"
                  alt=""
                  @click="openImage"
-                 v-for="item in list"
                  class="image">
           </el-col>
         </el-row>
@@ -167,11 +190,15 @@
 <script>
   import ysSearch from '@/components/search';
   import  ysPopup from '@/components/popup'
+  import  ysSelectShop from '@/components/selectShop'
+  import FileSaver from 'file-saver'
+  import XLSX from 'xlsx'
     export default {
       name: "appointmentList",
       components:{
         ysSearch,
-        ysPopup
+        ysPopup,
+        ysSelectShop
       },
       data(){
           return {
@@ -206,7 +233,10 @@
               address: '上海市普陀区金沙江路 1516 弄',
               tag:'待服务'
             }],
-            list:[1,2,3]
+            table:[],
+            list:[1,2,3],
+            currentDetail:"",
+            shopList:''
           }
       },
       methods:{
@@ -216,8 +246,15 @@
         handleDelete(index, row) {
           console.log(index, row);
           this.showModal=true
+          this.currentDetail=row;
         },
-        filterTag(){
+
+        //选择店铺
+        selectShop(e){
+          console.log(e);
+        },
+        filterTag(val,row){
+          return row.State === val;
         },
         //打开图片
         openImage(){
@@ -226,17 +263,66 @@
         //关闭模态框
         close(e){
           console.log(e);
-          this.showModal=e
+          this.showModal=e;
+
         },
         close2(e){
             this.showModal2=e
-        }
+        },
+        getAppList(){
+            this.$http.post('http://rap2api.taobao.org/app/mock/84341/appList',{})
+              .then(json=>{
+                console.log(json);
+                this.table=json.data.table;
+              })
+        },
+        //导出excel
+        exportExcel () {
+          /* generate workbook object from table */
+          var wb = XLSX.utils.table_to_book(document.querySelector('#test-table'))
+          /* get binary string as output */
+          var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
+          try {
+            FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '预约客户.xlsx')
+          } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
+          return wbout
+        },
+        // 获取店铺列表
+        getShopList(){
+          this.$http.post(this.$api.shopList,{}).then(json=>{
+            let data=json.data
+            if(data.isSuc==true){
+              this.shopList=data.result;
+              // let firstShopId=data.result[0].UserId;
+              // this.currentShopId=firstShopId
+              // this.getGroupList(this.currentShopId)
+              this.$message({
+                message: '恭喜你，这是一条成功消息',
+                type: 'warning'
+              })
+            }
+          }).catch(err=>{
+            console.log(err);
+          })}
+      },
+      mounted(){
+        this.getAppList();
+        this.getShopList()
       }
     }
 </script>
 
 <style lang='less' scoped>
   @import "~@/assets/style/mixin";
+  /deep/ .el-table th > .cell.highlight{
+    color:#282828;
+  }
+  /deep/ .el-col-offset-12{
+    text-align: right;
+  }
+  /deep/ .el-col-offset-1{
+    text-align: left;
+  }
   .box{
     width: 1200px;
   }

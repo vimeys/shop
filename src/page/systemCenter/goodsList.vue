@@ -28,7 +28,6 @@
                 全选
               </el-col>
             </el-row>
-
           </el-col>
           <el-col :span="10">
             移动至
@@ -52,11 +51,6 @@
           <template v-for="(item,index) in goodsList">
             <goods-card :detail="item" :index="index" @delGoods="delGOods"></goods-card>
           </template>
-
-          <!--<goods-card></goods-card>-->
-          <!--<goods-card></goods-card>-->
-          <!--<goods-card></goods-card>-->
-          <!--<goods-card></goods-card>-->
         </div>
       </el-main>
       <el-aside width="289px" class="aside">
@@ -116,7 +110,7 @@
             <div class="page-size">{{aPics.length}}/5</div>
             <div content="goods-form">
               <el-row class="base-row">
-                <el-col :span="4">上传到</el-col>
+                <el-col :span="4" class="base-col">上传到</el-col>
                 <el-col :span="19">
                   <el-select v-model="valueFirstType"  @change="chooseFirstType" placeholder="分类" size="small">
                     <el-option
@@ -128,7 +122,7 @@
                     </el-option>
                   </el-select>
                 </el-col>
-                <el-col :span="1" class="before"></el-col>
+                <el-col :span="1" class="before base-col"></el-col>
               </el-row>
               <el-row class="base-row">
                 <el-col :span="4"></el-col>
@@ -142,17 +136,17 @@
                     </el-option>
                   </el-select>
                 </el-col>
-                <el-col :span="1" class="before"></el-col>
+                <el-col :span="1" class="before base-col"></el-col>
               </el-row>
               <el-row class="base-row">
-                <el-col :span="4">服务名称</el-col>
+                <el-col :span="4" class="base-col">服务名称</el-col>
                 <el-col :span="19" >
                   <input type="text" class="base-input" v-model="Name" placeholder="请输入服务名称，最多20字">
                 </el-col>
-                <el-col :span="1" class="before"></el-col>
+                <el-col :span="1" class="before base-col"></el-col>
               </el-row>
               <el-row class="base-row">
-                <el-col :span="4">服务标签</el-col>
+                <el-col :span="4" class="base-col ">服务标签</el-col>
                 <el-col :span="19" >
                   <el-select v-model="valueTips" placeholder="服务标签" size="small">
                     <el-option
@@ -165,7 +159,7 @@
                 </el-col>
                 </el-row>
               <el-row class="base-row" v-if="valueTips==3">
-                <el-col :span="4">秒杀时长</el-col>
+                <el-col :span="4" class="base-col base-col">秒杀时长</el-col>
                 <el-col :span="19" >
                   <el-select v-model="hoursValue"
                              placeholder="秒杀时长" size="small">
@@ -180,14 +174,14 @@
                 <el-col :span="1" class="before"></el-col>
               </el-row>
               <el-row class="base-row">
-                <el-col :span="4">原价</el-col>
+                <el-col :span="4" class="base-col">原价</el-col>
                 <el-col :span="19" >
                   <input type="text" v-model="Price" class="base-input" placeholder="请输入服务原价">
                 </el-col>
-                <el-col :span="1" class="before"></el-col>
+                <el-col :span="1" class="before base-col"></el-col>
               </el-row>
               <el-row>
-                <el-col :span="4">规格</el-col>
+                <el-col :span="4" class="base-col">规格</el-col>
                 <el-col :span="19">
                   <el-row class="small-row" v-for="item in aSize">
                       <el-col :span="14">
@@ -213,7 +207,7 @@
                     </el-col>
                   </el-row>
                   <el-row>
-                    <el-col :span="14">
+                    <el-col :span="14" >
                        · 根据不同规格输入不同价格
                     </el-col>
                     <el-col :span="8" :offset="2">
@@ -221,13 +215,13 @@
                     </el-col>
                   </el-row>
                 </el-col>
-                <el-col :span="1" class="before"></el-col>
+                <el-col :span="1" class="before base-col"></el-col>
               </el-row>
               <el-row class="mt15">
-                <el-col :span="4">参与员工</el-col>
+                <el-col :span="4" class="base-col">参与员工</el-col>
                 <el-col :span="19">
                   <el-row class="small-row" >
-                      <el-col :span="24" v-for="itemSon in aPeople" style="margin-bottom: 5px"  >
+                      <el-col :span="10" v-for="itemSon in aPeople" style="margin-bottom: 5px"  >
                         <el-select v-model="itemSon.valuePerson" placeholder="选择人员" size="small" >
                           <el-option
                             v-for="(itemGrand,index) in itemSon.groupList"
@@ -237,20 +231,28 @@
                           </el-option>
                         </el-select>
                       </el-col>
-                    <!--<el-col :span="8" :offset="2">-->
-                      <!--<input type="text" v-model="item.fenPreic" class="base-input" placeholder="请输入佣金">-->
-                    <!--</el-col>-->
+                      <el-col :span="12" :offset="2" v-for="itemSon in aPeople" style="margin-bottom: 5px"  >
+                        <el-select v-model="itemSon.valuePerson"
+                                   multiple
+                                   collapse-tags
+                                   placeholder="选择人员"
+                                   size="small" >
+                          <el-option
+                            v-for="(itemGrand,index) in itemSon.groupList"
+                            :key="itemGrand.GroupId"
+                            :label="itemGrand.GroupName"
+                            :value="itemGrand.GroupId">
+                          </el-option>
+                        </el-select>
+                      </el-col>
                   </el-row>
                   <el-row>
-                    <!--<el-col :span="14">-->
-                      <!--· 根据不同岗位输入不同佣金-->
-                    <!--</el-col>-->
                     <el-col :span="18" :offset="2">
                       <span class="plus" @click="addPeople">+</span>
                     </el-col>
                   </el-row>
                 </el-col>
-                <el-col :span="1" class="before"></el-col>
+                <el-col :span="1" class="before base-col"></el-col>
               </el-row>
               <el-row class="mt15">
                 <el-col :span="4">分销佣金</el-col>
@@ -271,7 +273,7 @@
         </el-scrollbar>
         <div class="goods-detail" v-else>
             <el-row class="base-row">
-              <el-col :span="4" :offset="1">商品详情</el-col>
+              <el-col :span="4" :offset="1" class="base-col">商品详情</el-col>
               <el-col :span="16" :offset="1"><input type="text " class="base-input" placeholder="请填写文章链接"></el-col>
             </el-row>
           <el-row class="base-row">
@@ -314,46 +316,55 @@
         <el-row>
           <el-col :span="24">
             <el-scrollbar class="type-scroll">
-              <el-row class="type-row-col" v-for="(item,index) in typeList">
-                <el-col :span="10">
+              <el-row class="type-row-col" v-for="(item,index) in typeList" v-if="index!=0">
+                <el-col :span="10" >
                   {{item.Name}}
                 </el-col>
-                <el-col :span="12" :offset="2">
+                <el-col :span="12" :offset="2" >
                   <div class="base-btn-111" @click="editType(index)">修改</div>
                   <div class="base-btn-111" @click="delType(index)">删除</div>
                 </el-col>
               </el-row>
-              <el-row>
+              <el-row v-if="!hasAddBtn">
                 <el-col>
-                  <el-container>
-                    <el-aside width="100px">
+                  <el-container style="background: #eee; padding-bottom: 20px">
+                    <el-aside width="100px" >
                       <div class="type-title">
                         一级分类
                       </div>
-
                     </el-aside>
                     <el-main>
                       <el-row>
-                        <el-col class="type-input">
+                        <el-col class="type-input" :span="22">
                           <input v-model="firstType"
                                  type="text"
                                  placeholder="请输入一级分类的名称"
                                  class="base-input">
                         </el-col>
 
-                        <el-col class="type-input" v-for="item in secondType">
-                          <input type="text"
-                                 class="base-input"
-                                 v-model="item.Name"
-                                 placeholder="请输入二级分类的名称">
+                        <el-col class="type-input" v-for="(item,index) in secondType" :span="24">
+                          <el-row>
+                            <el-col :span="20">
+                              <input type="text"
+                                     class="base-input"
+                                     v-model="item.Name"
+                                     placeholder="请输入二级分类的名称">
+                            </el-col>
+                            <el-col class="base-col" :offset="1" :span="1">
+                              <i class="el-icon-delete" @click="delSecondType(index)"></i>
+                            </el-col>
+                          </el-row>
                         </el-col>
                         <el-col>
-                          <div class="base-btn type-input" @click="addSecondType">增加二级分类</div>
+                          <div class="base-btn type-input"
+                               @click="addSecondType">
+                            增加二级分类
+                          </div>
                         </el-col>
                       </el-row>
-                      <el-row>
-                        <el-col>
-                          <div class="type-btn-save" @click="saveType">保存</div>
+                      <el-row >
+                        <el-col :span="22">
+                          <div class="type-btn-save" @click="saveType ">保存</div>
                         </el-col>
                       </el-row>
                     </el-main>
@@ -362,7 +373,7 @@
               </el-row>
               <el-row>
                 <el-col :span="6" :offset="9">
-                  <!--<div class="type-add" @click="addFirstType">添加分类</div>-->
+                  <div v-if="hasAddBtn" class="type-add" @click="addFirstType">添加分类</div>
                 </el-col>
               </el-row>
             </el-scrollbar>
@@ -370,7 +381,7 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <div class="type-btn-confirm">确定</div>
+            <div class="type-btn-confirm" @click="closeTypePopup">关闭</div>
           </el-col>
         </el-row>
       </div>
@@ -486,6 +497,7 @@
         goodsItemClass2:'',//分类class
         goodsList:[],//商品列表
         UserId:'',
+        hasAddBtn:true,//是否有添加按钮
       }
     }, methods: {
       choose() {
@@ -707,19 +719,27 @@
       },
       //关闭添加分类
       closeTypePopup() {
-        this.type.showModal = false
-        this.isEditType=false
+        this.type.showModal = false;
+        this.isEditType=false;
+        this.hasAddBtn=true;
+
       },
       //点击添加二级分类框
       addSecondType() {
         this.secondType.push({Name: ''})
       },
+      //删除新增二级分类
+      delSecondType(index){
+          this.secondType.splice(index,1)
+      },
       //点击添加一级分类框
       addFirstType() {
-
+          this.hasAddBtn=false;
       },
-      //点击修改
+
+      //修改分类
       editType(index){
+        this.hasAddBtn=false;
           let data=this.typeList[index];
           this.firstType=data.Name;
           this.secondType=JSON.parse(JSON.stringify(data.ChildGoodsType));
@@ -748,32 +768,32 @@
       },
       //保存分类
       saveType() {
-        if(this.isEditType){
+        //  @param   isEditType   是否是修改
+        if (this.isEditType) {//修改
           let goodsType = {
-            GoodsTypeId:this.typeList[this.isEditTypeNum].GoodsTypeId,
+            GoodsTypeId: this.typeList[this.isEditTypeNum].GoodsTypeId,
             Name: this.firstType,
             Pic: '',
           };
           let goodsTypeSecond = [];
-          this.secondType.forEach((item,index) => {
-            let obj={};
-            obj.Name=item.Name;
-            let child=this.typeList[this.isEditTypeNum].ChildGoodsType
-            if(index<child.length){
-              goodsTypeSecond.push(Object.assign({Pic: '12312',GoodsTypeId:child[index].GoodsTypeId}, obj))
-            }else{
-              goodsTypeSecond.push(Object.assign({Pic: '12312',GoodsTypeId:0}, obj))
+          this.secondType.forEach((item, index) => {
+            let obj = {};
+            obj.Name = item.Name;
+            let child = this.typeList[this.isEditTypeNum].ChildGoodsType
+            if (index < child.length) {//判断是否有新增的二级分类
+              goodsTypeSecond.push(Object.assign({Pic: '12312', GoodsTypeId: child[index].GoodsTypeId}, obj))
+            } else {
+              goodsTypeSecond.push(Object.assign({Pic: '12312', GoodsTypeId: 0}, obj))
             }
 
           })
-          console.log(goodsTypeSecond);
           this.$http.post(api.updataType, {goodsType, goodsTypeSecond}).then(json => {
-            console.log(json);
-            if(json.data.isSuc==true){
-              this.getTypeList()
+            if (json.data.isSuc == true) {
+              this.getTypeList();
+              this.hasAddBtn = true;
             }
           })
-        }else{
+        } else {//新增
           let goodsType = {
             Name: this.firstType,
             Pic: '123213',
@@ -782,16 +802,17 @@
           };
           let goodsTypeSecond = [];
           this.secondType.forEach((item) => {
-            // let obj = Object.assign({Pic: '12312', Type: 2}, item)
-            let obj={};
-            obj.Name=item.Name;
+            let obj = {};
+            obj.Name = item.Name;
             goodsTypeSecond.push(Object.assign({Pic: '12312', Type: 2}, obj))
-          })
+          });
           this.$http.post(this.$api.addType, {goodsType, goodsTypeSecond}).then(json => {
-            console.log(json);
+            if (json.data.isSuc == true) {
+              this.getTypeList();
+              this.hasAddBtn = true;
+            }
           })
         }
-
       },
       // 添加一个新的规格
       addSize(){
@@ -882,6 +903,9 @@
   /deep/ .el-scrollbar__wrap{
     overflow-x: hidden;
   }
+  /deep/ .el-scrollbar__wrap::-webkit-scrollbar{
+    display: none;
+  }
   .box {
     width: 1200px;
     box-sizing: border-box;
@@ -968,8 +992,14 @@
   .goods-list {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: flex-start;
     /*column-count: 4;*/
+    >div{
+      margin-right: 60px;
+    }
+    >div:nth-child(4n+0){
+      margin-right: 0;
+    }
   }
 
   .goods-main {
@@ -1054,7 +1084,13 @@
       }
     }
   }
-
+  .el-scrollbar__view::-webkit-scrollbar{
+    display: none;
+  }
+  .el-scrollbar__view{
+    overflow-y: hidden;
+    overflow-x: hidden;
+  }
   .popup-slide-right {
     /*.card-select{*/
     /*width: 500px;*/
@@ -1158,6 +1194,7 @@
   }
 
   .type-btn-confirm {
+    margin-top: 20px;
     .base-btn(570px)
   }
 
