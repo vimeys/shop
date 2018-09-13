@@ -221,17 +221,18 @@
                 <el-col :span="4" class="base-col">参与员工</el-col>
                 <el-col :span="19">
                   <el-row class="small-row" >
-                      <el-col :span="10" v-for="itemSon in aPeople" style="margin-bottom: 5px"  >
-                        <el-select v-model="itemSon.valuePerson" placeholder="选择人员" size="small" >
+                    <template v-for="(itemSon,index) in aPeople">
+                      <el-col :span="10"  style="margin-bottom: 5px"  >
+                        <el-select v-model="itemSon.shopValue" @change="chooseShop(index,itemSon.shopValue)" placeholder="选择店铺" size="small" >
                           <el-option
-                            v-for="(itemGrand,index) in itemSon.groupList"
-                            :key="itemGrand.GroupId"
-                            :label="itemGrand.GroupName"
-                            :value="itemGrand.GroupId">
+                            v-for="(itemGrand,index) in shopList"
+                            :key="itemGrand.UserId"
+                            :label="itemGrand.Name"
+                            :value="itemGrand.UserId">
                           </el-option>
                         </el-select>
                       </el-col>
-                      <el-col :span="12" :offset="2" v-for="itemSon in aPeople" style="margin-bottom: 5px"  >
+                      <el-col :span="12" :offset="2" style="margin-bottom: 5px"  >
                         <el-select v-model="itemSon.valuePerson"
                                    multiple
                                    collapse-tags
@@ -245,6 +246,8 @@
                           </el-option>
                         </el-select>
                       </el-col>
+                    </template>
+
                   </el-row>
                   <el-row>
                     <el-col :span="18" :offset="2">
@@ -498,6 +501,7 @@
         goodsList:[],//商品列表
         UserId:'',
         hasAddBtn:true,//是否有添加按钮
+        allTypeList:'',//所有的分类
       }
     }, methods: {
       choose() {
@@ -625,7 +629,7 @@
           }
           let id=[]
           this.aPeople.forEach(item=>{
-            id.push(item.valuePerson)
+            id.push(item.valuePerson.join(','))
           })
         let sId=id.join(',');
         let Addgoodsspec=[]
@@ -641,7 +645,8 @@
           // this.aS
         obj.CommissionGroupId=sId;
           obj.Goodsspec=Addgoodsspec;
-          this.$http.post(this.$api.addGoods,{goods:obj}).then(json=>{
+        console.log(obj);
+        this.$http.post(this.$api.addGoods,{goods:obj}).then(json=>{
             console.log(json);
             let data=json.data;
             if(data.isSuc==true){
@@ -681,7 +686,9 @@
           this.$http.post(this.$api.goodsList,{ pageIndex:1, pageSize:100, goodTypeParentId:p, goodsTypeId:c}).then(json=>{
             console.log(json);
             let data=json.data;
+
             if(data.isSuc==true){
+              let arr=[];
               data.result.Items.forEach(item=>{
                 item.hasChecked=false;
                 item.isChecked=false
@@ -770,16 +777,30 @@
       saveType() {
         //  @param   isEditType   是否是修改
         if (this.isEditType) {//修改
-          let goodsType = {
-            GoodsTypeId: this.typeList[this.isEditTypeNum].GoodsTypeId,
-            Name: this.firstType,
-            Pic: '',
-          };
+          // let aType=[]
+          // this.allTypeList.forEach(item=>{
+          //
+          // })let goodsType = {
+          //     GoodsTypeId: this.typeList[this.isEditTypeNum].GoodsTypeId,
+          //     Name: this.firstType,
+          //     Pic: '',
+          //   }
+          let shopLength=this.shopList.length;
+          let aType=[];
+          for(let  i=0;i<shopLength;i++){
+            let goodsType = {
+              GoodsTypeId: this.allTypeList[this.isEditTypeNum*shopLength+i].GoodsTypeId,
+              Name: this.firstType,
+              Pic: '',
+            };
+            aType.push(goodsType)
+          }
+
           let goodsTypeSecond = [];
           this.secondType.forEach((item, index) => {
             let obj = {};
             obj.Name = item.Name;
-            let child = this.typeList[this.isEditTypeNum].ChildGoodsType
+            let child = this.typeList[this.isEditTypeNum].ChildGoodsType;
             if (index < child.length) {//判断是否有新增的二级分类
               goodsTypeSecond.push(Object.assign({Pic: '12312', GoodsTypeId: child[index].GoodsTypeId}, obj))
             } else {
@@ -787,7 +808,7 @@
             }
 
           })
-          this.$http.post(api.updataType, {goodsType, goodsTypeSecond}).then(json => {
+          this.$http.post(api.updataType, {goodsTypes:aType, goodsTypeSecond}).then(json => {
             if (json.data.isSuc == true) {
               this.getTypeList();
               this.hasAddBtn = true;
@@ -824,10 +845,21 @@
       //添加一个人员
       addPeople(){
         let a=JSON.parse(JSON.stringify(this.groupList))
-        let obj2={valuePerson:'',groupList:a}
+        let obj2={valuePerson:'',groupList:a,shopValue:this.currentShopId};
         this.aPeople.push(obj2)
       },
+      //服务选择店铺筛选
+      chooseShop(e,value){
+        console.log(e,value);
+          this.$http.post(this.$api.waterGroupList,
+            {pageindex:1,pagesize:10,userId:value}).then(json=>{
+            if(json.data.isSuc==true){
+                let a=JSON.parse(JSON.stringify(json.data.result.Items));
+                this.aPeople[e].groupList=a
+              }
 
+          })
+      },
       // 选择分组
       // chooseGroup(e){
       //     this.groupList[e].price=''
@@ -842,7 +874,15 @@
         let json= await this.$http.post(this.$api.typeList, {type: 2});
         let data=json.data;
         if(data.isSuc==true){
-            this.typeList=data.result
+            this.allTypeList=data.result;
+            let shopId=data.result[0].UserId;
+            let arr=[]
+            data.result.forEach((item)=>{
+                if(item.UserId==shopId){
+                  arr.push(item)
+                }
+            })
+            this.typeList=arr
         }
         this.typeList.unshift({
           ChildGoodsType:[],
@@ -857,7 +897,7 @@
             this.shopList=data.result;
             let firstShopId=data.result[0].UserId;
             this.currentShopId=firstShopId
-            this.getGroupList(this.currentShopId)
+            this.getGroupList(this.currentShopId,true)
             this.$message({
               message: '恭喜你，这是一条成功消息',
               type: 'warning'
@@ -868,19 +908,21 @@
         })
       },
       //获取分组列表
-      getGroupList(shopId){
+      getGroupList(shopId,re){
         this.$http.post(this.$api.waterGroupList,
           {pageindex:1,pagesize:10,userId:shopId}).then(json=>{
-          console.log(json);
           if(json.data.isSuc==true){
             this.groupList=json.data.result.Items;
-            this.UserId=this.groupList[0].UserId;
-            let a=JSON.parse(JSON.stringify(this.groupList));
-            let obj={sizeName:'',sizePrice:''};
-            let obj2={valuePerson:'',groupList:a};
-            // a.newPrice='';
-            this.aSize.push(obj);
-            this.aPeople.push(obj2)
+            if(re){
+              console.log('re');
+              this.UserId=this.groupList[0].UserId;
+              let a=JSON.parse(JSON.stringify(this.groupList));
+              let obj={sizeName:'',sizePrice:''};
+              let obj2={valuePerson:'',groupList:a,shopValue:shopId,};
+              // a.newPrice='';
+              this.aSize.push(obj);
+              this.aPeople.push(obj2)
+            }
           }else{
             this.$message({
               message:'获取失败',
