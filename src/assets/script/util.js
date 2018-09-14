@@ -35,3 +35,40 @@ export function confirm(that,type='warning',info='您确定要删除吗?',title=
     type: type
   })
 }
+
+
+//分装的ajax
+// class ajax {
+//   constructor(){
+//
+//   }
+//   post(that,url,params,suc,err ){
+//     that.$http.post(url,params).then((json)=>{
+//       (suc&&suc(data))
+//     }).catch(error=>{
+//       (err&&err(error))
+//     })
+//   }
+// }
+//分装的ajax
+export  function post(that,url,params,suc,err) {
+    that.$http.post(url,params).then(json=>{
+      const h = that.$createElement;
+      if(json.data.isSuc==true){
+        that.$notify({
+          title:'成功',
+          message: h('i', { style: 'color: green'},'数据操作成功'),
+          duration:1000,
+          position: 'bottom-right'
+        })
+        suc(json.data.result)
+      }else{
+        that.$notify({
+            title:'接口报错',
+          message: h('i', { style: 'color: red'},json.data.message)
+        })
+      }
+    }).catch(error=>{
+        console.log(error)
+    })
+}

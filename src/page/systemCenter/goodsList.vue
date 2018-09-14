@@ -17,39 +17,54 @@
           <ys-search></ys-search>
         </div>
         <el-row class="edit-btns" v-if="disable">
-          <el-col :span="6">
+          <el-col :span="4">
             <el-row>
               <el-col :span="4" :offset="8">
                 <div class="coupon-radio" @click="chooseAll">
                   <div class="coupon-radio-point" v-show="allChoosed"></div>
                 </div>
               </el-col>
-              <el-col :span="4" class="choose-word" >
+              <el-col :span="6" class="choose-word" >
                 全选
               </el-col>
             </el-row>
           </el-col>
-          <el-col :span="10">
+          <el-col :span="2">
             移动至
-            <el-select v-model="value" placeholder="请选择" size="mini">
+          </el-col>
+          <el-col :span="5">
+            <el-select v-model="typeValue"   @change="moveType" placeholder="请选择" size="mini">
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                v-for="(item,index) in typeList"
+                :key="item.GoodsTypeId"
+                :label="item.Name"
+                :value="item.GoodsTypeId">
+              </el-option>
+            </el-select>
+          </el-col>
+          <el-col :span="5">
+            <el-select v-model="SecondTypeValue" placeholder="请选择" size="mini">
+              <el-option
+                v-for="item in SecondTypeList"
+                :key="item.GoodsTypeId"
+                :label="item.Name"
+                :value="item.GoodsTypeId">
               </el-option>
             </el-select>
           </el-col>
           <el-col :span="4" class="edit-move">
-            <div>移动</div>
+            <div @click="move">移动</div>
           </el-col>
-          <el-col :span="4" class="edit-del" @click="delGoods">
-            <div>删除</div>
+          <el-col :span="4" class="edit-del" >
+            <div @click="delGoods">删除</div>
           </el-col>
         </el-row>
         <div class="goods-list">
           <template v-for="(item,index) in goodsList">
-            <goods-card :detail="item" :index="index" @delGoods="delGOods"></goods-card>
+            <goods-card :detail="item"
+                        :index="index"
+                        @chooseCurrent="chooseCurrent1"
+                        @delGoods="delGOods"></goods-card>
           </template>
         </div>
       </el-main>
@@ -223,7 +238,10 @@
                   <el-row class="small-row" >
                     <template v-for="(itemSon,index) in aPeople">
                       <el-col :span="10"  style="margin-bottom: 5px"  >
-                        <el-select v-model="itemSon.shopValue" @change="chooseShop(index,itemSon.shopValue)" placeholder="选择店铺" size="small" >
+                        <el-select v-model="itemSon.shopValue"
+                                   @change="chooseShop(index,itemSon.shopValue)"
+                                   placeholder="选择店铺"
+                                   size="small" >
                           <el-option
                             v-for="(itemGrand,index) in shopList"
                             :key="itemGrand.UserId"
@@ -481,6 +499,9 @@
         secondType: [],//二级分类
         firstType: '',//一级分类
         typeList:'',//获取分类列表
+        typeValue:'',//一级分类的只
+        SecondTypeList:[],//二级分类
+        SecondTypeValue:'',//二级分类的只
         Name:'',//名称
         Price:'',//原价
         aPics:[],//图片数组
@@ -535,6 +556,38 @@
             })
           }
       },
+      //移动选择一级分类
+      moveType(value){
+        console.log(value);
+        let  i
+        this.typeList.forEach((item,index)=>{
+          if(item.GoodsTypeId==value){
+            i=index
+          }
+        })
+        // debugger
+        if(this.typeList[i].ChildGoodsType){
+          this.SecondTypeList=this.typeList[i].ChildGoodsType
+        }else{
+          this.SecondTypeList=[{Name:'无',GoodsTypeId:0}]
+        }
+      },
+      move(){
+        let moveArr=[];
+          this.goodsList.forEach(item=>{
+            if(item.isChecked){
+              moveArr.push(item.GoodsId)
+            }
+          });
+        this.$http.post(this.$api.moveGoods,{goodsIds:moveArr,goodsTypeParentId:this.typeValue,goodsTypeId:this.SecondTypeValue}).then(json=>{
+              if(json.data.isSuc==true){
+                this.$message({
+                  message:'移动成功'
+                })
+              }
+        })
+      },
+
       //打开商品弹窗
       openGoods(){
           this.goods.showModal=true
@@ -697,19 +750,40 @@
               }
           })
       },
+
+      //选择耽搁商品
+      chooseCurrent1(index,state){
+        console.log(index, state);
+        this.goodsList[index].isChecked=state;
+      },
       // 删除商品
       delGoods(){
         let delArr=[]
-        if(this.ischoseAll){
-          this.couponList.forEach(item=>{
-            delArr.push(item.CouponBookId)
+        console.log(123);
+        if(this.allChoosed){//判断是否是全选
+          this.goodsList.forEach(item=>{
+            delArr.push(item.GoodsId)
           })
+          console.log(delArr);
+          this.$http.post(this.$api.delAllGoods,{goodsIds:delArr})
+            .then(json=>{
+              if(json.data.isSuc==true){
+                console.log("ok");
+              }
+            })
         }else {
-          this.couponList.forEach(item=>{
-            if(item.ischosed){
-              delArr.push(item.CouponBookId)
+          this.goodsList.forEach(item=>{
+            if(item.isChecked){
+              delArr.push(item.GoodsId)
             }
           })
+          console.log(delArr);
+          this.$http.post(this.$api.delAllGoods,{goodsIds:delArr})
+            .then(json=>{
+              if(json.data.isSuc==true){
+                console.log("ok");
+              }
+            })
         }
       },
       handleNodeClick(data,node,self) {
@@ -755,11 +829,15 @@
       },
       //删除一级分类
       delType(index){
-        let id=this.typeList[index].GoodsTypeId
-        this.$util.confirm(this).then(()=>{
-            this.$http.post(this.$api.delType,{goodsTypeId:[id]}).then(json=>{
-              console.log(json.data.isSuc);
-            })
+        let id=this.typeList[index].Guid
+        // this.$util.confirm(this).then(()=>{
+        //     this.$http.post(this.$api.delType,{guid:[`${id}`]}).then(json=>{
+        //       // console.log(json.data.isSuc);
+        //       if(con)
+        //     })
+        // })
+        this.$util.post(this,this.$api.delType,{guids:[`${id}`]},function () {
+          console.log('到我了');
         })
       },
       //添加图片
@@ -780,21 +858,24 @@
           // let aType=[]
           // this.allTypeList.forEach(item=>{
           //
-          // })let goodsType = {
-          //     GoodsTypeId: this.typeList[this.isEditTypeNum].GoodsTypeId,
-          //     Name: this.firstType,
-          //     Pic: '',
-          //   }
-          let shopLength=this.shopList.length;
-          let aType=[];
-          for(let  i=0;i<shopLength;i++){
-            let goodsType = {
-              GoodsTypeId: this.allTypeList[this.isEditTypeNum*shopLength+i].GoodsTypeId,
+          // })
+          let goodsType = {
+              GoodsTypeId: this.typeList[this.isEditTypeNum].GoodsTypeId,
+            Guid:this.typeList[this.isEditTypeNum].Guid,
               Name: this.firstType,
               Pic: '',
-            };
-            aType.push(goodsType)
-          }
+              Type:2
+            }
+          // let shopLength=this.shopList.length;
+          // let aType=[];
+          // for(let  i=0;i<shopLength;i++){
+          //   let goodsType = {
+          //     GoodsTypeId: this.allTypeList[this.isEditTypeNum*shopLength+i].GoodsTypeId,
+          //     Name: this.firstType,
+          //     Pic: '',
+          //   };
+          //   aType.push(goodsType)
+          // }
 
           let goodsTypeSecond = [];
           this.secondType.forEach((item, index) => {
@@ -802,17 +883,21 @@
             obj.Name = item.Name;
             let child = this.typeList[this.isEditTypeNum].ChildGoodsType;
             if (index < child.length) {//判断是否有新增的二级分类
-              goodsTypeSecond.push(Object.assign({Pic: '12312', GoodsTypeId: child[index].GoodsTypeId}, obj))
+              goodsTypeSecond.push(Object.assign({Pic: '12312',Type:2, GoodsTypeId: child[index].GoodsTypeId}, obj))
             } else {
-              goodsTypeSecond.push(Object.assign({Pic: '12312', GoodsTypeId: 0}, obj))
+              goodsTypeSecond.push(Object.assign({Pic: '12312',Type:2, GoodsTypeId: 0}, obj))
             }
 
           })
-          this.$http.post(api.updataType, {goodsTypes:aType, goodsTypeSecond}).then(json => {
-            if (json.data.isSuc == true) {
-              this.getTypeList();
-              this.hasAddBtn = true;
-            }
+          // this.$http.post(api.updataType, {goodsTypes:goodsType, goodsTypeSecond}).then(json => {
+          //   // if (json.data.isSuc == true) {
+          //   //   this.getTypeList();
+          //   //   this.hasAddBtn = true;
+          //   // }
+          // })
+          this.$util.post(this,this.$api.updataType,{goodsType:goodsType, goodsTypeSecond}, (data)=> {
+            // console.log(123);
+            this.getTypeList()
           })
         } else {//新增
           let goodsType = {
@@ -889,6 +974,8 @@
           Name:"所有分类"
         })
        },
+
+
       // 获取店铺列表
       getShopList(){
         this.$http.post(api.shopList,{}).then(json=>{

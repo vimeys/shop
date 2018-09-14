@@ -3,11 +3,17 @@
 */
 <template>
   <div class="box">
-    <div id="demo">12312312312</div>
       <div class="choose-title">
         <el-row>
           <el-col :span="4">
-
+            <el-select v-model="value" placeholder="请选择" size="small" @change="chooseShop" v-if="shopList.length">
+              <el-option
+                v-for="item in shopList"
+                :key="item.value"
+                :label="item.Name"
+                :value="item.UserId">
+              </el-option>
+            </el-select>
           </el-col>
           <el-col :span="2" class="base-col">总数：2人</el-col>
           <el-col :span="6" :offset="12"> <div><ys-search></ys-search></div></el-col>
@@ -58,7 +64,6 @@
                      @click="openMove(index,indexSon)">移动</div>
               </el-col>
               <el-col :span="4">
-                <!--todo  冻结接口没有做-->
                 <div class="table-btn"
                      :class="{'disable':!itemSon.disable}"
                      @click="freeze(index,indexSon)">{{itemSon.disable?'冻结':'取消冻结'}}</div>
@@ -88,11 +93,12 @@
       <el-row class="table-btns" :gutter="20">
         <el-col :span="3">
           <div class="base-btn-111"
+               :class="{'disable':item.isEdit}"
                @click="addNewPeople(index)"
           >添加成员</div>
         </el-col>
         <el-col :span="3">
-          <div class="base-btn-111">批量管理</div>
+          <div class="base-btn-111" >批量管理</div>
         </el-col>
         <el-col :offset="1" :span="8">
           <el-row >
@@ -818,8 +824,8 @@
           align-items: center;
           justify-content: center;
           .point{
-            width: 14px;
-            height: 14px;
+            width: 15px;
+            height: 15px;
             background: @bs-color;
             border-radius: 50%;
           }
@@ -923,5 +929,7 @@
   top:0;
   left: 350px;
 }
-
+.disable{
+    background: #E5E5E5;
+}
 </style>

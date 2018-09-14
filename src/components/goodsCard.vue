@@ -62,8 +62,8 @@
           }
       },
       methods:{
-          choose(){
-
+          choose(index){
+            this.$emit('chooseCurrent',index,!this.detail.isChecked)
           },
 
           edit(){

@@ -1,6 +1,6 @@
   // const head='http://test.csmen.cc/services/';//线上
   const head='/shop/';//跨域
-  // const head='192.168.0.135:8073/services/';//陈林本地
+  // const head='http://192.168.0.135:8073/services/';//陈林本地
 
   const url={
     // 登录
@@ -42,9 +42,10 @@
     addGoods:head+'goods/version3/add',
     updataGoods:head+'goods/version3/update',
     delGoods:head+'goods/delete',
+    delAllGoods:head+'goods/batchdelete',//批量删除
     goodsDetail:head+'goods/version3/detail',
     goodsList:head+'goods/version3/list4web',
-
+    moveGoods:head+'goods/version3/batchmove',//移动
     //添加优惠券
     addCoupon:head+'couponBook/version3/add',//添加优惠券
     updataCoupon:head+'couponBook/version3/update',//跟新优惠券
