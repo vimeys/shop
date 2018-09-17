@@ -53,7 +53,7 @@
     couponList:head+'couponBook/version3/list',//优惠券列表
 
     //添加会员卡
-    addMemberCard:head+'membershipCard/addMembershipCard',//添加会员卡
+    addMemberCard:head+'membershipCard/add',//添加会员卡
     updataMemberCard:head+'membershipCard/updateMembershipCard',//修改会员卡
     delMemberCard:head+'membershipCard/delete',//删除会员卡
     memberCardList:head+'membershipCard/listbyshopId',//所有会员卡列表

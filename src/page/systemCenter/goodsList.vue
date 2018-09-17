@@ -12,7 +12,7 @@
               <img src="@/assets/images/icon/addBtn.png" alt="">新建服务
             </div>
             <div class="manage" @click="manage">批量管理</div>
-            <div class="del" :class="{'disable':disable}">排序</div>
+            <div class="del" :class="{'disable':disable}" @click="Sort">排序</div>
           </div>
           <ys-search></ys-search>
         </div>
@@ -63,6 +63,9 @@
           <template v-for="(item,index) in goodsList">
             <goods-card :detail="item"
                         :index="index"
+                        :isSort="isSort"
+                        @up="upSort"
+                        @down="downSort"
                         @chooseCurrent="chooseCurrent1"
                         @delGoods="delGOods"></goods-card>
           </template>
@@ -197,9 +200,9 @@
               </el-row>
               <el-row>
                 <el-col :span="4" class="base-col">规格</el-col>
-                <el-col :span="19">
-                  <el-row class="small-row" v-for="item in aSize">
-                      <el-col :span="14">
+                <el-col :span="20">
+                  <el-row class="small-row" v-for="(item,index) in aSize">
+                      <el-col :span="13">
                         <!--<el-select v-model="item.valueGroup"  placeholder="员工分类" size="small">-->
                           <!--<el-option-->
                             <!--v-for="(itemSon,index) in item.groupList"-->
@@ -220,6 +223,10 @@
                              placeholder="请输入价格"
                              v-model="item.sizePrice">
                     </el-col>
+                    <el-col :span="1">
+                      <span class="before base-col" v-if="index==0"></span>
+                      <span class=" base-col el-icon-delete" v-if="index>0" @click="delGoodsASize(index)"></span>
+                    </el-col>
                   </el-row>
                   <el-row>
                     <el-col :span="14" >
@@ -230,11 +237,11 @@
                     </el-col>
                   </el-row>
                 </el-col>
-                <el-col :span="1" class="before base-col"></el-col>
+                <!--<el-col :span="1" class="before base-col"></el-col>-->
               </el-row>
               <el-row class="mt15">
                 <el-col :span="4" class="base-col">参与员工</el-col>
-                <el-col :span="19">
+                <el-col :span="20">
                   <el-row class="small-row" >
                     <template v-for="(itemSon,index) in aPeople">
                       <el-col :span="10"  style="margin-bottom: 5px"  >
@@ -250,7 +257,7 @@
                           </el-option>
                         </el-select>
                       </el-col>
-                      <el-col :span="12" :offset="2" style="margin-bottom: 5px"  >
+                      <el-col :span="11" :offset="2" style="margin-bottom: 5px"  >
                         <el-select v-model="itemSon.valuePerson"
                                    multiple
                                    collapse-tags
@@ -264,6 +271,10 @@
                           </el-option>
                         </el-select>
                       </el-col>
+                      <el-col :span="1">
+                        <span class="before base-col" v-if="index==0"></span>
+                        <span class=" base-col el-icon-delete" v-if="index>0" @click="delGoodsApeople(index)"></span>
+                      </el-col>
                     </template>
 
                   </el-row>
@@ -273,7 +284,7 @@
                     </el-col>
                   </el-row>
                 </el-col>
-                <el-col :span="1" class="before base-col"></el-col>
+                <!--<el-col :span="1" class="before base-col"></el-col>-->
               </el-row>
               <el-row class="mt15">
                 <el-col :span="4">分销佣金</el-col>
@@ -523,6 +534,7 @@
         UserId:'',
         hasAddBtn:true,//是否有添加按钮
         allTypeList:'',//所有的分类
+        isSort:false,//是否是排序
       }
     }, methods: {
       choose() {
@@ -596,6 +608,23 @@
       //关闭商品弹窗
       closeGoods(){
           this.goods.showModal=false;
+        this.Name = '';
+        this.Pic = '';
+        this.Pics = '';
+        this.OriginalPrice = '';
+        this.CommissionCharge = "";
+        this.ReceiveGuestCharge = ""
+        this.valueTips="";
+        this.valueFirstType=''
+        this.valueSecondType=''
+        this.FlagId = ''
+        this.aSize = [];
+        this.aPeople = [];
+        let obj = {sizeName: '', sizePrice: ''};
+        let a = JSON.parse(JSON.stringify(this.groupList));
+        let obj2 = {valuePerson: [], groupList: a,shopValue:''};
+        this.aSize.push(obj);
+        this.aPeople.push(obj2)
       },
       //选择分类
       chooseGoodsItem(value){
@@ -610,6 +639,29 @@
       //确认文章
       confirmGoodsDetail(){
 
+      },
+      // 开始排序
+      Sort(){
+        this.isSort=!this.isSort
+      },
+      //todo 修改排序请求接口
+      upSort(index){
+        console.log(index);
+        let old1=this.goodsList[index-1]
+        let old2=this.goodsList[index]
+        // old=old.reverse()
+        console.log(old1);
+        this.goodsList.splice(index-1,1,old2)
+        this.goodsList.splice(index,1,old1)
+        // console.log(newArr);
+        // this.goodsList=newArr
+      },
+      //todo修改排序单位请求接口
+      downSort(index){
+        let old1=this.goodsList[index]
+        let old2=this.goodsList[index+1]
+        this.goodsList.splice(index,1,old2)
+        this.goodsList.splice(index+1,1,old1)
       },
       // handleAvatarSuccess(res, file){
       //   console.log(file);
@@ -629,6 +681,7 @@
           if(item.GoodsTypeId==e){
               index1=index
           }
+          this.valueSecondType='';
         })
         let arr=this.typeList[index1].ChildGoodsType
         if(arr.length){
@@ -659,78 +712,84 @@
       },
 
       //生成新的服务
-      addGoods(){
-          let obj={
-            Name:this.Name,
-            Pic:this.aPics[0],
-            Pics:this.aPics.join(','),
-            Price:this.Price,
-            OriginalPrice:this.Price,
-            TuwenArticleId:23,
-            Description:'描述',
-            Tags:'',
-            Link:'',
-            CommissionCharge:this.CommissionCharge,
-            ReceiveGuestCharge:this.ReceiveGuestCharge,
-            FlagId:this.valueTips,
-            SecKillHour:12,
-            Type:2,
-      };
-          if(this.valueSecondType!=0){
-            obj.GoodsTypeId=this.valueSecondType;
-            obj.GoodsTypeParentId=this.valueFirstType;
-          }
-          let id=[]
-          this.aPeople.forEach(item=>{
-            id.push(item.valuePerson.join(','))
-          })
-        let sId=id.join(',');
-        let Addgoodsspec=[]
-        this.aSize.forEach(item=>{
+      addGoods() {
+        let obj = {
+          Name: this.Name,
+          Pic: this.aPics[0],
+          Pics: this.aPics.join(','),
+          Price: this.Price,
+          OriginalPrice: this.Price,
+          TuwenArticleId: 23,
+          Description: '描述',
+          Tags: '',
+          Link: '',
+          CommissionCharge: this.CommissionCharge,
+          ReceiveGuestCharge: this.ReceiveGuestCharge,
+          FlagId: this.valueTips,
+          SecKillHour: 12,
+          Type: 2,
+        };
+        if (this.valueSecondType !== 0) {
+          obj.GoodsTypeId = this.valueSecondType;
+          obj.GoodsTypeParentId = this.valueFirstType;
+        }else{
+          console.log(this.valueSecondType===0);
+        }
+
+        let id = []
+        this.aPeople.forEach(item => {
+          id.push(item.valuePerson.join(','))
+        })
+        let sId = id.join(',');
+        let Addgoodsspec = []
+        this.aSize.forEach(item => {
           Addgoodsspec.push({
-            UserId:this.UserId,
-            Name:item.sizeName,
-            Price:item.sizePrice,
-            Pic:''
+            UserId: this.UserId,
+            Name: item.sizeName,
+            Price: item.sizePrice,
+            Pic: ''
           })
         })
 
-          // this.aS
-        obj.CommissionGroupId=sId;
-          obj.Goodsspec=Addgoodsspec;
+        // this.aS
+        obj.CommissionGroupId = sId;
+        obj.Goodsspec = Addgoodsspec;
         console.log(obj);
-        this.$http.post(this.$api.addGoods,{goods:obj}).then(json=>{
-            console.log(json);
-            let data=json.data;
-            if(data.isSuc==true){
-              this.$message({
-                message:'发布成功',
-                icon:'success'
-              })
-              this.Name = '';
-              this.Pic = '';
-              this.Pics = '';
-              this.OriginalPrice = '';
-              this.CommissionCharge = ""
-              this.ReceiveGuestCharge = ""
-              this.FlagId = ''
-              this.aSize = [];
-              this.aPeople = [];
-              let obj = {sizeName: '', sizePrice: ''};
-              let a=JSON.parse(JSON.stringify(this.groupList));
-              let obj2 = {valuePerson: '', groupList: a};
-              this.aSize.push(obj);
-              this.aPeople.push(obj2)
-              this.goods.showModal = false;
-              this.getGoodsList();
-            }else{
-              this.$message({
-                message:'发布失败+'+data.message,
-                icon:'error'
-              })
-            }
-          })
-          // this.$http
+        this.$http.post(this.$api.addGoods, {goods: obj}).then(json => {
+          console.log(json);
+          let data = json.data;
+          if (data.isSuc == true) {
+            this.$message({
+              message: '发布成功',
+              icon: 'success'
+            })
+            this.Name = '';
+            this.Pic = '';
+            this.Pics = '';
+            this.OriginalPrice = '';
+            this.CommissionCharge = ""
+            this.ReceiveGuestCharge = ""
+            this.valueTips="";
+            this.valueFirstType='';
+            this.valueSecondType='';
+            this.FlagId = ''
+            this.aSize = [];
+            this.aPeople = [];
+            let obj = {sizeName: '', sizePrice: ''};
+            let a = JSON.parse(JSON.stringify(this.groupList));
+            let obj2 = {valuePerson: [], groupList: a,shopValue:[]};
+            this.aSize.push(obj);
+            this.aPeople.push(obj2)
+            this.goods.showModal = false;
+            this.getGoodsList();
+          } else {
+            this.$message({
+              message: '发布失败+' + data.message,
+              icon: 'error'
+            })
+          }
+        })
+        // this.$http
       },
 
       //获取商品列表
@@ -765,12 +824,16 @@
             delArr.push(item.GoodsId)
           })
           console.log(delArr);
-          this.$http.post(this.$api.delAllGoods,{goodsIds:delArr})
-            .then(json=>{
-              if(json.data.isSuc==true){
-                console.log("ok");
-              }
-            })
+          this.$util.confirm(this).then(()=>{
+            this.$http.post(this.$api.delAllGoods,{goodsIds:delArr})
+              .then(json=>{
+                if(json.data.isSuc==true){
+                  console.log("ok");
+                  this.getGoodsList()
+                }
+              })
+          })
+
         }else {
           this.goodsList.forEach(item=>{
             if(item.isChecked){
@@ -778,12 +841,16 @@
             }
           })
           console.log(delArr);
-          this.$http.post(this.$api.delAllGoods,{goodsIds:delArr})
-            .then(json=>{
-              if(json.data.isSuc==true){
-                console.log("ok");
-              }
-            })
+          this.$util.confirm(this).then(()=>{
+            this.$http.post(this.$api.delAllGoods,{goodsIds:delArr})
+              .then(json=>{
+                if(json.data.isSuc==true){
+                  console.log("ok");
+                  this.getGoodsList()
+                }
+              })
+          })
+
         }
       },
       handleNodeClick(data,node,self) {
@@ -829,16 +896,22 @@
       },
       //删除一级分类
       delType(index){
-        let id=this.typeList[index].Guid
+        let id=this.typeList[index].GoodsTypeId
         // this.$util.confirm(this).then(()=>{
         //     this.$http.post(this.$api.delType,{guid:[`${id}`]}).then(json=>{
         //       // console.log(json.data.isSuc);
         //       if(con)
         //     })
         // })
-        this.$util.post(this,this.$api.delType,{guids:[`${id}`]},function () {
-          console.log('到我了');
+        this.$util.confirm(this).then(json=>{
+          this.$util.post(this,this.$api.delType,{goodsTypeId:[`${id}`]},function (that,data) {
+            console.log('到我了');
+            that.getTypeList();
+          })
+        }).catch(error=>{
+          console.log(error);
         })
+
       },
       //添加图片
       handlePictureSuccess(res,file){
@@ -897,7 +970,10 @@
           // })
           this.$util.post(this,this.$api.updataType,{goodsType:goodsType, goodsTypeSecond}, (data)=> {
             // console.log(123);
-            this.getTypeList()
+            this.getTypeList();
+            this.firstType='';
+            this.secondType=[]
+            this.hasAddBtn=true;
           })
         } else {//新增
           let goodsType = {
@@ -916,22 +992,30 @@
             if (json.data.isSuc == true) {
               this.getTypeList();
               this.hasAddBtn = true;
+              this.firstType='';
+              this.secondType=[]
             }
           })
         }
       },
       // 添加一个新的规格
       addSize(){
-
         let obj={sizeName:'',sizePrice:''};
-        // a.newPrice='';
         this.aSize.push(obj);
+      },
+      //删除新规格
+      delGoodsASize(index){
+        this.aSize.splice(index,1)
       },
       //添加一个人员
       addPeople(){
         let a=JSON.parse(JSON.stringify(this.groupList))
         let obj2={valuePerson:'',groupList:a,shopValue:this.currentShopId};
         this.aPeople.push(obj2)
+      },
+      //删除新人员
+      delGoodsApeople(index){
+        this.aPeople.splice(index,1)
       },
       //服务选择店铺筛选
       chooseShop(e,value){
@@ -1005,7 +1089,7 @@
               this.UserId=this.groupList[0].UserId;
               let a=JSON.parse(JSON.stringify(this.groupList));
               let obj={sizeName:'',sizePrice:''};
-              let obj2={valuePerson:'',groupList:a,shopValue:shopId,};
+              let obj2={valuePerson:[],groupList:a,shopValue:shopId,};
               // a.newPrice='';
               this.aSize.push(obj);
               this.aPeople.push(obj2)
@@ -1285,7 +1369,7 @@
     }
 
     .scroll {
-      margin-right: 20px;
+      margin-right: 40px;
       width: 100%;
       height: 700px;
       margin-top: 30px;

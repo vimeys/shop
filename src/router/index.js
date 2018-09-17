@@ -77,7 +77,7 @@ export default new Router({
   routes: [
     {
       path:'/',
-      redirect:'/moneyManage',
+      redirect:'/shop/shopSetting',
     },
     // 运营管理总页面
     {

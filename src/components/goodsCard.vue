@@ -3,36 +3,40 @@
 *   商品卡片
 */
 <template>
-    <div class="item">
-        <div class="box-image">
-          <img class="box-images" :src="detail.Pic" alt="">
-          <div class="box-btns" v-if="one">
-              <div class="box-btns-edit" @click="edit">编辑服务</div>
-              <div class="box-btns-del" @click="del"> 删除服务</div>
-          </div>
-          <div class="box-btns" v-else>
-              <div class="box-btns-edit" @click="check">查看评价</div>
-          </div>
-          <div class="coupon-radio" @click="choose(index)" v-show="detail.hasChecked" >
-            <div class="coupon-radio-point" v-show="detail.isChecked"></div>
-          </div>
+  <div class="item">
+    <div class="box-image">
+      <img class="box-images" :src="detail.Pic" alt="">
+      <div class="box-btns" v-if="one">
+        <div class="box-btns-edit" @click="edit">编辑服务</div>
+        <div class="box-btns-del" @click="del"> 删除服务</div>
+      </div>
+      <div class="box-btns" v-else>
+        <div class="box-btns-edit" @click="check">查看评价</div>
+      </div>
+      <div class="coupon-radio" @click="choose(index)" v-show="detail.hasChecked">
+        <div class="coupon-radio-point" v-show="detail.isChecked"></div>
+      </div>
+    </div>
+    <div class="box-content">
+      <div class="name"> {{detail.Name}}</div>
+      <div class="main">
+        <div class="price">
+          <div class="price-old">原价：￥{{detail.Price}}</div>
+          <div class="price-new">现价：<span>￥{{discountPrice||0}}</span></div>
         </div>
-      <div class="box-content">
-        <div class="name"> {{detail.Name}} </div>
-        <div class="main">
-          <div class="price">
-            <div class="price-old">原价：￥{{detail.Price}}</div>
-            <div class="price-new">现价：<span>￥{{discountPrice||0}}</span></div>
-          </div>
-          <div class="active-image">
-            <img v-if="detail.FlagId==1" src="@/assets/images/icon/activeNum.png" alt="">
-            <img v-else-if="detail.FlagId==2" src="@/assets/images/icon/activePrice.png" alt="">
-            <img v-else-if="detail.FlagId==3" src="@/assets/images/icon/activeTeam.png" alt="">
-            <img  v-else src="@/assets/images/icon/activeTime.png" alt="">
-          </div>
+        <div class="active-image">
+          <img v-if="detail.FlagId==1" src="@/assets/images/icon/activeNum.png" alt="">
+          <img v-else-if="detail.FlagId==2" src="@/assets/images/icon/activePrice.png" alt="">
+          <img v-else-if="detail.FlagId==3" src="@/assets/images/icon/activeTeam.png" alt="">
+          <img v-else src="@/assets/images/icon/activeTime.png" alt="">
         </div>
       </div>
     </div>
+    <div class="move" v-if="isSort">
+      <img @click="up" src="@/assets/images/icon/leftArrow.png" alt="">
+      <img @click="down" src="@/assets/images/icon/rightArrow.png" alt="">
+    </div>
+  </div>
 </template>
 
 <script>
@@ -53,7 +57,13 @@
 
               }
             }
-          }
+          },
+        isSort:{
+            type:Boolean,
+            default(){
+              return false
+            }
+        }
       },
       data(){
           return{
@@ -76,7 +86,13 @@
         check(){
             this.$emit('check',index,)
         },
-
+        up(index){
+          console.log(123);
+          this.$emit('up',this.index)
+        },
+        down(index){
+            this.$emit("down",this.index)
+        }
       },
       computed:{
         discountPrice(){
@@ -123,6 +139,7 @@
       }
     }
     .item{
+      position: relative;
       display: flex;
       flex-direction: column;
       margin-right: 20px;
@@ -164,7 +181,6 @@
           display: flex;
         opacity: 1;
         transition: all .3s ease-in;
-
       }
       .box-content{
         width: 175px;
@@ -215,5 +231,22 @@
           }
         }
       }
+    }
+    .item:hover .move{
+        display: flex;
+    }
+    .move{
+        z-index: 10000;
+      position: absolute;
+      top:0;
+      left: 0;
+      width: 175px;
+      height: 250px;
+      background: rgba(60,60,60,0.5);
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      box-sizing: border-box;
+      padding: 0 10px;
     }
 </style>

@@ -5,11 +5,13 @@
 <template>
   <div class="box">
     <div class="active-header">
-      <div :class="{'disabled':isDisabled}" @click="addCard">
+      <div :class="{'disabled':isDel}" @click="addCard">
         <span class="el-icon-circle-plus"></span>&nbsp;&nbsp;新建会员卡
       </div>
-      <div @click="addCard">删除会员卡</div>
-      <div class="del" @click="delCard">删除</div>
+      <div v-if="isDel" @click="endClick">结束删除</div>
+      <div v-else @click="beginClick">删除会员卡</div>
+
+      <div v-if="isDel" class="del" @click="delCard">删除</div>
     </div>
     <div class="card-list" >
       <template v-for="(item,index) in cardListType">
@@ -66,10 +68,33 @@
               style="margin-left: 1px;"
               placeholder="请选择">
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                v-for="item in typeList"
+                :key="item.GoodsTypeId"
+                :label="item.Name"
+                :value="item.GoodsTypeId">
+              </el-option>
+            </el-select>
+          </el-col>
+          <el-col :span="1" class="before">
+          </el-col>
+        </el-row>
+        <el-row class="row">
+          <el-col :span="4" :offset="1">
+            店铺范围
+          </el-col>
+          <el-col :offset="1" :span="16">
+            <el-select
+              v-model="valueShop"
+              multiple
+              size="small"
+              collapse-tags
+              style="margin-left: 1px;"
+              placeholder="请选择">
+              <el-option
+                v-for="item in shopList"
+                :key="item.UserId"
+                :label="item.Name"
+                :value="item.UserId">
               </el-option>
             </el-select>
           </el-col>
@@ -97,26 +122,40 @@
           </el-col>
         </el-row>
         <el-row class="row">
-          <el-col :span="4" :offset="1">
-            {{tips[carlType].name1}}
+          <el-col :span="4" :offset="1" class="base-col">
+            {{tips[carlType-1].name1}}
           </el-col>
-          <el-col :offset="1" :span="16">
+          <el-col :offset="1" :span="16" v-if="carlType==3">
+            <el-row :gutter="30">
+              <el-col :span="14"><input type="text"
+                                        v-model.number="Frequency"
+                                        class="base-input"
+                                        :placeholder="tips[carlType-1].placeholder1"
+              ></el-col>
+              <el-col :span="10">
+                <div  class="numBtn" :class="{'disable':isWuxian}" @click="wuxian">无限次</div>
+              </el-col>
+            </el-row>
+          </el-col>
+          <el-col v-else :offset="1" :span="16">
+
             <input type="text"
                    v-model.number="Discount"
                    v-if="carlType==1"
                    class="base-input"
-                   :placeholder="tips[carlType].placeholder1">
+                   :placeholder="tips[carlType-1].placeholder1">
             <input type="text"
                    v-model.number="Discount"
                    v-else-if="carlType==2"
                    class="base-input"
-                   :placeholder="tips[carlType].placeholder1">
-            <input type="text"
-                   v-model.number="Frequency"
-                   v-else="carlType==3"
-                   class="base-input"
-                   :placeholder="tips[carlType].placeholder1">
+                   :placeholder="tips[carlType-1].placeholder1">
+            <!--<input type="text"-->
+                   <!--v-model.number="Frequency"-->
+                   <!--v-else="carlType==3"-->
+                   <!--class="base-input"-->
+                   <!--:placeholder="tips[carlType].placeholder1">-->
           </el-col>
+
           <el-col :span="1" class="before">
           </el-col>
         </el-row>
@@ -168,7 +207,7 @@
             pHeight:580,
             showModal:false,
             isDisabled:false,
-            value11:'',
+            value11:[],
             buyMoney:'',//充值金额
             Discount:'',//折扣
             Frequency:'',//次数
@@ -194,13 +233,13 @@
             carlType:1,//充值卡类型
             cardList:[
               {
-                value:0,
+                value:1,
                 label: '充值卡'
               },{
-                value:1,
-                label: '定制卡'
-              },{
                 value:2,
+                label: '定值卡'
+              },{
+                value:3,
                 label: '次卡'
               }
             ],
@@ -237,31 +276,46 @@
               }
             ],
             cardListType:[],
-            typeList:''
+            typeList:'',
+            valueShop:[],
+            shopList:'',
+            isWuxian:true,//是否是无线
+            isDel:false
           }
       },
       methods:{
           // 添加卡片
         addCard(){
+          if(!this.isDel){
             this.showModal=true
+          }
+
         },
         // 关闭
         closePop(){
-          console.log(123);
           this.showModal=false
+          this.carlType=1;
+          this.yearNum=1;
+          this.Frequency='';
+          this.buyMoney='';
+          this.Discount='';
         },
         // 单个会员卡选中
         choose(e){
           console.log(e);
           this.cardListType[e[0]].isChecked=e[1]
         },
+
+        wuxian(){
+            this.isWuxian=false
+        },
         // 开卡
         addCardPost(){
           let obj={};
-          if(this.carlType==0){
+          if(this.carlType==1){
             obj.MembershipName='充值卡';
-          }else if(this.carlType==1){
-            obj.MembershipName='定制卡'
+          }else if(this.carlType==2){
+            obj.MembershipName='定值卡'
           }else{
             obj.MembershipName='次卡'
           }
@@ -269,20 +323,45 @@
           obj.MembershipType=this.carlType;
           obj.EffectiveTime= this.yearNum>0?this.yearNum*12:-1;
           obj.Frequency=this.Frequency?this.Frequency:0;
-          obj.buyMoney=this.buyMoney?this.buyMoney:0;
+          obj.BuyAmount=this.buyMoney?this.buyMoney:0;
           obj.Discount=this.Discount?this.Discount:0;
-            this.$http.post(api.addMemberCard,{goodsTypeIds:[1,2,3],model:obj}).then(json=>{
-              console.log(json);
-              let data=json.data;
-              if(data.isSuc==true){
+          if(!this.isWuxian){
+              this.Frequency=-1
+          }
+            // this.$http.post(api.addMemberCard,{goodsTypeIds:this.value11,model:obj,shopIds:this.valueShop}).then(json=>{
+            //   console.log(json);
+            //   let data=json.data;
+            //   if(data.isSuc==true){
+            //       this.showModal=false;
+            //       this.carlType=1;
+            //       this.yearNum=1;
+            //       this.Frequency='';
+            //       this.buyMoney='';
+            //       this.Discount='';
+            //   }
+            // })
+          this.$util.post(this,this.$api.addMemberCard,{goodsTypeIds:this.value11,model:obj,shopIds:this.valueShop},()=>{
+            this.getCardList();
                   this.showModal=false;
                   this.carlType=1;
                   this.yearNum=1;
                   this.Frequency='';
                   this.buyMoney='';
                   this.Discount='';
-              }
+          })
+        },
+        beginClick(){
+            this.isDel=true;
+            this.cardListType.forEach(item=>{
+              item.hasChecked=true
             })
+        },
+        endClick(){
+          this.isDel=false;
+          this.cardListType.forEach(item=>{
+            item.hasChecked=false
+            item.isChecked=false
+          })
         },
         // 删除卡片
         delCard(){
@@ -293,10 +372,8 @@
               }
             })
           confirm(this).then(() => {
-            console.log(123)
             this.$http.post(api.delMemberCard,{membershipCardId:delArr}).then(json=>{
               let data=json.data;
-
               if(data.isSuc==true){
                 this.getCardList()
               }
@@ -318,17 +395,25 @@
             obj.pageIndex=1;
             obj.pageSize=10;
             obj.isEnable=-1;
-            this.$http.post(api.memberCardList,obj).then(json=>{
-              console.log(json);
-              let data=json.data;
-              if(data.isSuc==true){
-                data.result.Items.forEach(item=>{
-                  item.hasChecked=true;
+            // this.$http.post(api.memberCardList,obj).then(json=>{
+            //   console.log(json);
+            //   let data=json.data;
+            //   if(data.isSuc==true){
+            //     data.result.Items.forEach(item=>{
+            //       item.hasChecked=true;
+            //       item.isChecked=false;
+            //     });
+            //         this.cardListType=data.result.Items
+            //   }
+            // })
+          this.$util.post(this,this.$api.memberCardList,obj,(data)=>{
+            data.Items.forEach(item=>{
+                  item.hasChecked=false;
                   item.isChecked=false;
                 });
-                    this.cardListType=data.result.Items
-              }
-            })
+            this.cardListType=data.Items;
+
+          })
         },
         //获取分类列表
         getTypeList :async function() {
@@ -338,10 +423,29 @@
             this.typeList=data.result
           }
         },
+        // 获取店铺列表
+        getShopList(){
+          this.$http.post(this.$api.shopList,{}).then(json=>{
+            let data=json.data
+            if(data.isSuc==true){
+              this.shopList=data.result;
+              // let firstShopId=data.result[0].UserId;
+              // this.currentShopId=firstShopId
+              // this.getGroupList(this.currentShopId)
+              this.$message({
+                message: '恭喜你，这是一条成功消息',
+                type: 'warning'
+              })
+            }
+          }).catch(err=>{
+            console.log(err);
+          })
+        }
       },
       created(){
         this.getCardList();
         this.getTypeList();
+        this.getShopList();
       }
     }
 </script>
@@ -393,5 +497,18 @@
       font-size: 14px;
     }
   }
-
+  .numBtn{
+    .base-btn(94px)
+  }
+  .disable{
+    width:94px;
+    height:36px;
+    background:rgba(255,255,255,1);
+    border-radius:4px;
+    color:#8C8C8C;
+    border:1px solid rgba(255,215,54,1);
+  }
+  /deep/ .el-select--small{
+    width: 100%;
+  }
 </style>

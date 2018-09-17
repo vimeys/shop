@@ -8,7 +8,8 @@
       <el-header height="100px">
         <div class="active-header">
           <div :class="{'disabled':manageState}" @click="addCard" style="width: 111px">
-            <span class="el-icon-circle-plus" ></span>&nbsp;&nbsp;新建活动</div>
+            <span class="el-icon-circle-plus"></span>&nbsp;&nbsp;新建活动
+          </div>
           <div @click="manage">管理</div>
           <ys-search class="del"></ys-search>
           <!--<div class="del">删除</div>-->
@@ -16,7 +17,11 @@
         <div class="select-side" v-show="manageState">
           <el-row class="select-side-row">
             <el-col :span="1">
-                <ys-choose-all @chooseAll="chooseAll"></ys-choose-all>
+              <ys-choose-all @chooseAll="chooseAll"
+                              :isAllChoose="isAllChoose"
+              >
+
+              </ys-choose-all>
             </el-col>
             <el-col :span="1">全选</el-col>
             <el-col :span="2" :offset="20">
@@ -32,6 +37,7 @@
                        :hasChecke="item.hasChecke"
                        :ischosed="item.ischosed"
                        :index="index"
+                       :marginTop="20"
                        @reMake="reMake"
                        @choose="choose"
             >
@@ -55,10 +61,10 @@
           <el-col :span="6"><h3>修改优惠券</h3></el-col>
         </el-row>
         <el-row>
-          <el-col :span="6" class="base-font">
+          <el-col :span="5" class="base-font">
             优惠券类型
           </el-col>
-          <el-col :span="17">
+          <el-col :span="17" :offset="1">
             <el-select v-model="type" placeholder="请选择" size="small">
               <el-option
                 v-for="item in options"
@@ -72,10 +78,10 @@
           <el-col :span="1" class="before"></el-col>
         </el-row>
         <el-row class="row">
-          <el-col :span="6">
+          <el-col :span="5">
             下放渠道
           </el-col>
-          <el-col :span="17">
+          <el-col :span="17" :offset="1">
             <el-select v-model="type2" placeholder="请选择" size="small">
               <el-option
                 v-for="item in options2"
@@ -91,20 +97,20 @@
           </el-col>
         </el-row>
         <el-row class="row">
-          <el-col :span="6">
+          <el-col :span="5">
             下放数量
           </el-col>
-          <el-col :span="17">
+          <el-col :span="17" :offset="1">
             <input type="text" class="base-input">
           </el-col>
           <el-col :span="1" class="before">
           </el-col>
         </el-row>
         <el-row class="row">
-          <el-col :span="6">
+          <el-col :span="5">
             有效期限
           </el-col>
-          <el-col :span="17">
+          <el-col :span="17" :offset="1">
             <!--<el-time-picker-->
             <!--is-range-->
             <!--v-model="value4"-->
@@ -116,6 +122,7 @@
             <!--</el-time-picker>-->
             <el-date-picker
               v-model="value5"
+              size="small"
               type="daterange"
               range-separator="-"
               start-placeholder="开始日期"
@@ -126,13 +133,13 @@
           </el-col>
         </el-row>
         <el-row class="row">
-          <el-col :span="6">
+          <el-col :span="5">
             优惠券设置
           </el-col>
-          <el-col :span="17" v-if="type==3">
+          <el-col :span="17" :offset="1" v-if="type==3">
             <input type="text" v-model.number="Amount" placeholder="输入金额" class="base-input">
           </el-col>
-          <el-col :span="17" v-else>
+          <el-col :span="17" :offset="1" v-else>
             满 <input type="text" v-model.number="Amount" placeholder="输入金额" class="small-input">
             减 <input type="text" v-model.number="DiscountAmount" placeholder="输入金额" class="small-input" v-if="type==1">
             <input type="text" v-model.number="DiscountAmount" placeholder="输入1-10折" class="small-input"
@@ -142,10 +149,10 @@
           </el-col>
         </el-row>
         <el-row class="row">
-          <el-col :span="6">
+          <el-col :span="5">
             详细信息
           </el-col>
-          <el-col :span="17">
+          <el-col :span="17" :offset="1">
             <textarea name="" v-model="Details" id="" class="textarea" placeholder="请输入优惠券的详细信息"></textarea>
           </el-col>
           <el-col :span="1" class="before">
@@ -173,7 +180,8 @@
   import * as util from '@/assets/script/util'
   import YsSearch from '@/components/search'
   import YsChooseAll from '@/components/chooseAll'
-  import  ysPay from '@/components/pay'
+  import ysPay from '@/components/pay'
+
   export default {
     name: "priceCard",
     components: {
@@ -189,39 +197,39 @@
         pWidth: 550,
         pHeight: 680,
         showModal: false,
-        manageState:false,//管理状态
-        type: '1',//优惠券类型
+        manageState: false,//管理状态
+        type: 1,//优惠券类型
         value5: [new Date(2018, 9, 10, 8, 40), new Date(2018, 9, 10, 9, 40)],
         StartTime: '',
         EndTime: '',
         newTime: '2018-8-12',
         newTime1: '2018-8-20',
-        loading:true,//loading组件
+        loading: true,//loading组件
         options: [{
-          value: '1',
+          value: 1,
           label: '满减劵'
         }, {
-          value: '2',
+          value: 2,
           label: '折扣券'
         }, {
-          value: '3',
+          value: 3,
           label: '现金券'
         }
         ],
-        type2: '3',//下放渠道
+        type2: 3,//下放渠道
         options2: [
           {
-            value: '3',
+            value: 3,
             label: '一元买券'
           }, {
-            value: '4',
+            value: 4,
             label: '刮卡'
           }, {
-            value: '6',
+            value: 6,
             label: '集赞'
           },
           {
-            value: '7',
+            value: 7,
             label: '幸运大抽奖'
           }
         ],
@@ -230,7 +238,9 @@
         Details: '',//详细介绍
         couponList: [{}, {}],//店铺列表
         isEdit: false,//是否修改
-        ischoseAll:false,//是否全选
+        ischoseAll: false,//是否全选
+        currentIndex:'',//当前修改的index
+        isAllChoose:false,//是否全选
       }
     },
     methods: {
@@ -238,14 +248,15 @@
         this.showModal = true
       },
       //管理卡片
-      manage(){
-        this.manageState=!this.manageState;
-        this.couponList.forEach( (item)=>{
-          item.hasChecke=this.manageState
+      manage() {
+        this.manageState = !this.manageState;
+        this.couponList.forEach((item) => {
+          item.hasChecke = this.manageState
         })
       },
       close() {
-        this.showModal = false
+        this.showModal = false;
+        this.isEdit=false
       },
       //上传表单
       postForm() {
@@ -255,7 +266,7 @@
         obj.EndTime = this.EndTime;
         obj.Type = this.type;
         obj.Amount = this.Amount;
-        obj.DiscountAmount = this.DiscountAmount?this.DiscountAmount:0;
+        obj.DiscountAmount = this.DiscountAmount ? this.DiscountAmount : 0;
         obj.Details = this.Details;
         obj.SourceType = 2;
         obj.ServiceType = 2;
@@ -263,21 +274,49 @@
         obj.Name = 'ATH眼镜店铺';
         // console.log(StartTime);
         // return
-        this.$http.post(api.addCoupon, {couponBook: obj}).then(json => {
-          let data = json.data;
-          if (data.isSuc == true) {
-            // this
-            this.$message({
-              message: '店铺添加成功',
-              type: 'success'
+        if(this.isEdit){//是否是修改
+          obj.CouponBookId=this.couponList[this.currentIndex].CouponBookId;
+          obj.Guid=this.couponList[this.currentIndex].Guid;
+          this.$util.post(this,this.$api.updataCoupon,obj,function (that) {
+            that.showModal=false;
+            that.isEdit=false;
+            this.getCouponList()
+            that.$notify({
+              title:'修改成功',
+              message:""
             })
-          }
-        })
+            this.type=1;
+            this.Amount=''
+            this.DiscountAmount=''
+            this.Details=''
+            this.type2=3
+          })
+        }else{
+          this.$http.post(api.addCoupon, {couponBook: obj}).then(json => {
+            let data = json.data;
+            if (data.isSuc == true) {
+              // this
+              this.showModal=false;
+              this.isEdit=false
+              this.getCouponList()
+              this.$message({
+                message: '优惠券添加成功',
+                type: 'success'
+              })
+              this.type=1;
+              this.Amount=''
+              this.DiscountAmount=''
+              this.Details=''
+              this.type2=3
+            }
+          })
+        }
+
       },
 
       //获取优惠券列表
       getCouponList() {
-        this.$http.post( api.couponList, {query: {PageIndex: 1, PageSize: 10, Key: ''}}).then(json => {
+        this.$http.post(api.couponList, {query: {PageIndex: 1, PageSize: 10, Key: ''}}).then(json => {
           // console.log(json);
           // const loading = this.$loading({
           //   lock: true,
@@ -292,12 +331,9 @@
               item.StartTime = util.getTime(item.StartTime)
               item.EndTime = util.getTime(item.EndTime)
               item.hasChecke = false;
-              item.ischosed=true
+              item.ischosed = false
             })
-            console.log(res);
             this.couponList = res
-            // loading.close();
-            console.log("执行");
           }
         })
       },
@@ -306,7 +342,9 @@
       reMake(index) {
         // console.log(index);
         this.showModal = true;
-        let data = this.couponList[index]
+        let data = this.couponList[index];
+        this.isEdit=true;
+        this.currentIndex=index;
         // this.StartTime;
         // obj.EndTime=this.EndTime;
         this.type = data.Type;
@@ -321,39 +359,50 @@
       // 单个选择
       choose(e) {
         console.log(e);
-        this.couponList[e[0]].ischosed=e[1]
+        this.couponList[e[0]].ischosed = e[1]
       },
       // 全选
-      chooseAll(e){
+      chooseAll(e) {
         console.log(e);
-        this.ischoseAll=e;
-        this.couponList.forEach(function (item,index) {
-            item.ischosed=e
+        this.isAllChoose = e;
+        this.couponList.forEach(function (item, index) {
+          item.ischosed = e
         })
       },
       // 删除卡片
-      del(){
-        let delArr=[]
-          if(this.ischoseAll){
-              this.couponList.forEach(item=>{
-                delArr.push(item.CouponBookId)
-              })
-          }else {
-            this.couponList.forEach(item=>{
-              if(item.ischosed){
-                delArr.push(item.CouponBookId)
-              }
-            })
-          }
-        this.$http.post(api.delCoupon,{couponBookId:delArr}).then(json=>{
-              let data=json.data;
-            if(data.isSuc==true){
-              this.$message({
-                message:'删除成功',
-                icon:'success'
-              })
+      del() {
+        let delArr = []
+        if (this.ischoseAll) {
+          this.couponList.forEach(item => {
+            delArr.push(item.CouponBookId)
+          })
+        } else {
+          this.couponList.forEach(item => {
+            if (item.ischosed) {
+              delArr.push(item.CouponBookId)
             }
           })
+        }
+        console.log(delArr);
+        this.$util.confirm(this).then(json=>{
+          // this.$http.post(api.delCoupon, {goodsId: delArr}).then(json => {
+          //   let data = json.data;
+          //   if (data.isSuc == true) {
+          //     this.$message({
+          //       message: '删除成功',
+          //       icon: 'success'
+          //     })
+          //   }
+          // })
+          this.$util.post(this,this.$api.delCoupon,{couponBookId:delArr},()=>{
+            this.getCouponList()
+            this.$message({
+              message: '删除成功',
+              icon: 'success'
+            })
+          })
+        })
+
       }
     },
     mounted() {
@@ -376,6 +425,10 @@
 
 <style lang='less' scoped>
   @import "~@/assets/style/mixin";
+
+  /deep/ .el-col-5 {
+    text-align: right;
+  }
 
   .box {
     width: 1200px;
@@ -404,16 +457,17 @@
       margin-left: 670px;
     }
   }
-  .select-side{
+
+  .select-side {
     width: 100%;
     height: 50px;
-    .select-side-row{
+    .select-side-row {
       height: 50px;
       line-height: 50px;
       display: flex;
       align-items: center;
     }
-    .select-del{
+    .select-del {
       .base-btn-111;
     }
   }
@@ -453,5 +507,21 @@
     .form-btn {
       .base-btn(111px);
     }
+  }
+
+  /deep/ .el-select--small {
+    width: 100%;
+  }
+
+  /*/deep/ .el-select--small{*/
+  /*width: 100%;*/
+  /*}*/
+
+  /deep/ .el-select {
+    width: 100%;
+  }
+
+  /deep/ input {
+    text-align: center;
   }
 </style>

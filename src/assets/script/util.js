@@ -61,11 +61,12 @@ export  function post(that,url,params,suc,err) {
           duration:1000,
           position: 'bottom-right'
         })
-        suc(json.data.result)
+        suc(json.data.result,this)
       }else{
         that.$notify({
             title:'接口报错',
-          message: h('i', { style: 'color: red'},json.data.message)
+          duration:20000,
+            message: h('i', { style: 'color: red'},json.data.message)
         })
       }
     }).catch(error=>{

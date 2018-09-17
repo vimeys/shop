@@ -21,11 +21,11 @@
           return {
             nav:[
               {name:'门店/员工管理',path:'/shop',active:true},
-              {name:'财务管理',path:'/moneyManage',active:false},
-              {name:'客户管理',path:'/clientIndex',active:false},
               {name:'运营管理',path:'/centerIndex',active:false},
-              {name:'运营数据',path:'/dataView',active:false},
+              {name:'客户管理',path:'/clientIndex',active:false},
               {name:'素材中心',path:'/fodderCenter/fodder',active:false},
+              {name:'财务管理',path:'/moneyManage',active:false},
+              {name:'运营数据',path:'/dataView',active:false},
               {name:'个人中心',path:'/cardManage',active:false},
             ]
           }

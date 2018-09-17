@@ -1,36 +1,45 @@
 <template>
   <div class="card" :style="[{marginBottom: marginBottom+'px'},{marginTop:marginTop+'px'}]">
     <div class="coupon-item-left">
-      <img v-if="CardType==1" src="@/assets/images/Coupons-bgimg.png" alt="">
-      <img v-else-if="CardType==2" src="@/assets/images/card02.png" alt="">
-      <img  v-else="CardType==3" src="@/assets/images/card03.png" alt="">
-      <div class="coupon-item-left-text">
-        <h1>¥{{card.Amount}}</h1>
-        <h4>¥{{card.DiscountAmount}}</h4>
+      <img v-if="card.Type==1" src="@/assets/images/Coupons-bgimg.png" alt="">
+      <img v-else-if="card.Type==2" src="@/assets/images/card02.png" alt="">
+      <img  v-else src="@/assets/images/card03.png" alt="">
+      <div v-if="card.Type==1" class="coupon-item-left-text">
+        <h1>¥{{card.DiscountAmount}}</h1>
+        <h5>满{{card.Amount}}可用</h5>
       </div>
+      <div v-else-if="card.Type==2" class="coupon-item-left-text">
+        <h1>{{card.DiscountAmount}}折</h1>
+        <h5>满{{card.Amount}}可用</h5>
+      </div>
+      <div v-else class="coupon-item-left-text">
+        <h1>¥{{card.Amount}}</h1>
+        <h5>任意金额可用</h5>
+      </div>
+
     </div>
     <div class="coupons-item-right">
       <div>
-        <div v-if="CardType==1">{{Type}}</div>
-        <div class="card02" v-else-if="CardType==2">{{Type}}</div>
-        <div class="card03" v-else="CardType==3">{{Type}}</div>
-        <div>{{card.Name}}</div>
+        <div v-if="card.Type==1">{{Type}}</div>
+        <div class="card02" v-else-if="card.Type==2">{{Type}}</div>
+        <div class="card03" v-else="card.Type==3">{{Type}}</div>
+        <!--<div>{{card.Name}}</div>-->
         <div>{{useName}}</div>
       </div>
       <div>
         库存:
-        <span v-if="CardType==1">{{card.storeName}}1</span>
-        <span class="card02" v-else-if="CardType==2">{{card.storeName}}1</span>
-        <span class="card03" v-else="CardType==3">{{card.storeName}}1</span>
+        <span v-if="card.Type==1">{{card.storeName}}1</span>
+        <span class="card02" v-else-if="card.Type==2">{{card.storeName}}1</span>
+        <span class="card03" v-else="card.Type==3">{{card.storeName}}1</span>
 
         张
       </div>
       <div>
         {{StartTime}}
       </div>
-      <div class="reBtn" v-if="CardType==1"  @click="reMake(index)">修改</div>
-      <div class="reBtn reBtn02" v-else-if="CardType==2"  @click="reMake(index)">修改</div>
-      <div class="reBtn reBtn03" v-else="CardType==3"  @click="reMake(index)">修改</div>
+      <div class="reBtn" v-if="card.Type==1"  @click="reMake(index)">修改</div>
+      <div class="reBtn reBtn02" v-else-if="card.Type==2"  @click="reMake(index)">修改</div>
+      <div class="reBtn reBtn03" v-else="card.Type==3"  @click="reMake(index)">修改</div>
       <div>
         <div>
           <span>详细信息</span>
@@ -41,8 +50,8 @@
         </div>
       </div>
     </div>
-    <div class="coupon-radio" @click="choose(index)" v-show="hasChecke">
-      <div class="coupon-radio-point" v-show="ischosed"></div>
+    <div class="coupon-radio" @click="choose(index)" v-show="card.hasChecke">
+      <div class="coupon-radio-point" v-show="card.ischosed"></div>
     </div>
   </div>
 </template>
@@ -147,7 +156,7 @@
       },
       Type(){
         let Name='';
-        switch (this.detail.SourceType) {
+        switch (this.detail.Type) {
           case 1:
             Name='满减卷';
             break;
@@ -212,7 +221,7 @@
           color:#fff;
           margin-bottom: -1px;
         }
-        h4{
+        h5{
           color:#fff;
           text-align: center;
         }
@@ -337,8 +346,8 @@
       align-items: center;
       background: #fff;
       .coupon-radio-point{
-        width: 28px;
-        height: 28px;
+        width: 26px;
+        height: 26px;
         border-radius: 50%;
         background: #ffd73a;
       }
