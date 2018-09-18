@@ -8,8 +8,8 @@
       <div :class="{'disabled':isDel}" @click="addCard">
         <span class="el-icon-circle-plus"></span>&nbsp;&nbsp;新建会员卡
       </div>
-      <div v-if="isDel" @click="endClick">结束删除</div>
-      <div v-else @click="beginClick">删除会员卡</div>
+      <div v-if="isDel"  @click="endClick">结束删除</div>
+      <div v-else style="background: #ccc"  @click="beginClick">删除会员卡</div>
 
       <div v-if="isDel" class="del" @click="delCard">删除</div>
     </div>
@@ -20,7 +20,6 @@
           :index="index"
           @choose="choose"
         >
-
         </ys-vip-card>
       </template>
     </div>
@@ -206,7 +205,7 @@
             pWidth:530,
             pHeight:580,
             showModal:false,
-            isDisabled:false,
+            isDisabled:true,
             value11:[],
             buyMoney:'',//充值金额
             Discount:'',//折扣

@@ -169,132 +169,200 @@
                <el-col :span="6">
                  <input type="text" placeholder="请输入会员姓名" class="input" v-model="GameusersName">
                </el-col>
-               <el-col :span="8" :offset="2">
+               <el-col :span="9" :offset="1">
                  <input type="text" placeholder="请输入会员手机号" class="input" v-model="PhoneNum">
                </el-col>
-               <el-col :span="5" :offset="2">
-                 <el-select v-model="carlType" size="small" placeholder="请选择">
-                   <el-option
-                     v-for="item in cardList"
-                     :key="item.value"
-                     :label="item.label"
-                     :value="item.value">
-                   </el-option>
-                 </el-select>
+               <el-col :span="5" :offset="1">
+                 <!--<el-select v-model="carlType" size="small" placeholder="请选择">-->
+                   <!--<el-option-->
+                     <!--v-for="item in cardList"-->
+                     <!--:key="item.value"-->
+                     <!--:label="item.label"-->
+                     <!--:value="item.value">-->
+                   <!--</el-option>-->
+                 <!--</el-select>-->
+                 <div class="btn-moban" @click="openChooseMoban">选择模板卡</div>
                </el-col>
              </el-row>
-              <el-row class="row">
-                <el-col :span="4">服务范围</el-col>
-                <el-col :span="19" >
-                  <el-select v-model="typeNum" multiple size="small" placeholder="请选择">
-                    <el-option
-                      v-for="item in typeList"
-                      :key="item.value"
-                      :label="item.Name"
-                      :value="item.GoodsTypeId">
-                    </el-option>
-                  </el-select>
+              <div v-if="!isUserMoban">
+                <el-row class="row">
+                  <el-col :span="4" class="base-col">会员卡类型</el-col>
+                  <el-col :span="19" >
+                    <el-select v-model="carlType"  size="small" placeholder="请选择">
+                      <el-option
+                        v-for="item in cardList"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
                     <!--<el-row>-->
-                      <!--<el-col :span="22"><div class="box">洗剪吹</div></el-col>-->
-                      <!--<el-col :span="1" :offset="1">-->
-                        <!--<div class="coupon-radio" >-->
-                          <!--<div class="coupon-radio-point"></div>-->
-                        <!--</div>-->
-                      <!--</el-col>-->
-                    <!--</el-row>-->
-                    <!--<el-row>-->
-                      <!--<el-col :span="22"><div class="box">洗剪吹</div></el-col>-->
-                      <!--<el-col :span="1" :offset="1" >-->
-                        <!--<div class="coupon-radio" >-->
-                          <!--<div class="coupon-radio-point"></div>-->
-                        <!--</div>-->
-                      <!--</el-col>-->
-                    <!--</el-row>-->
-                    <!--<el-row>-->
-                      <!--<el-col :span="22"><div class="box">洗剪吹</div></el-col>-->
-                      <!--<el-col :span="1" :offset="1">-->
-                        <!--<div class="coupon-radio" >-->
-                          <!--<div class="coupon-radio-point"></div>-->
-                        <!--</div>-->
-                      <!--</el-col>-->
-                    <!--</el-row>-->
-                </el-col>
-              </el-row>
-              <el-row class="row">
-                <el-col :span="4">有效期限</el-col>
-                <el-col :span="19">
-                  <el-select v-model="yearNum" size="small" placeholder="请选择">
-                    <el-option
-                      v-for="item in year"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                    </el-option>
-                  </el-select>
-                </el-col>
-              </el-row>
-              <el-row class="row">
-                <el-col :span="4">
-                  {{tips[carlType].name1}}
-                </el-col>
-                <el-col :span="19">
-                  <!--<input type="text" placeholder="请输入会员卡的折扣" class="input">-->
-                  <input type="text"
-                         v-model.number="Discount"
-                         v-if="carlType==0"
-                         class="base-input"
-                         :placeholder="tips[carlType].placeholder1">
-                  <input type="text"
-                         v-model.number="Discount"
-                         v-else-if="carlType==1"
-                         class="base-input"
-                         :placeholder="tips[carlType].placeholder1">
-                  <input type="text"
-                         v-model.number="Frequency"
-                         v-else="carlType==2"
-                         class="base-input"
-                         :placeholder="tips[carlType].placeholder1">
-                </el-col>
-              </el-row>
-              <!--<el-row class="row">-->
-                <!--<el-col :span="4">-->
-                  <!--购买金额-->
-                <!--</el-col>-->
-                <!--<el-col :span="19">-->
-                  <!--<el-row>-->
-                    <!--<el-col>-->
-                      <!--<input type="text" placeholder="请输入购买该会员卡的金额" class="input">-->
+                    <!--<el-col :span="22"><div class="box">洗剪吹</div></el-col>-->
+                    <!--<el-col :span="1" :offset="1">-->
+                    <!--<div class="coupon-radio" >-->
+                    <!--<div class="coupon-radio-point"></div>-->
+                    <!--</div>-->
                     <!--</el-col>-->
-                  <!--</el-row>-->
-                  <!--<el-row>-->
-                    <!--<el-col class="small-font">· 购买金额会直接算到会员卡余额当中</el-col>-->
-                  <!--</el-row>-->
-                <!--</el-col>-->
-              <!--</el-row>-->
-              <el-row class="row">
-                <el-col :span="4">
-                  充值金额
-                </el-col>
-                <el-col :span="19">
-                  <el-row>
-                    <el-col>
-                      <input type="text"
-                             v-model="buyMoney"
-                             placeholder="请输入继续充值该会员卡的金额"
-                             class="input">
-                    </el-col>
-                  </el-row>
-                  <el-row>
-                    <el-col class="small-font">· 继续充值的金额大于等于购买金额</el-col>
-                  </el-row>
-                </el-col>
-              </el-row>
+                    <!--</el-row>-->
+                    <!--<el-row>-->
+                    <!--<el-col :span="22"><div class="box">洗剪吹</div></el-col>-->
+                    <!--<el-col :span="1" :offset="1" >-->
+                    <!--<div class="coupon-radio" >-->
+                    <!--<div class="coupon-radio-point"></div>-->
+                    <!--</div>-->
+                    <!--</el-col>-->
+                    <!--</el-row>-->
+                    <!--<el-row>-->
+                    <!--<el-col :span="22"><div class="box">洗剪吹</div></el-col>-->
+                    <!--<el-col :span="1" :offset="1">-->
+                    <!--<div class="coupon-radio" >-->
+                    <!--<div class="coupon-radio-point"></div>-->
+                    <!--</div>-->
+                    <!--</el-col>-->
+                    <!--</el-row>-->
+                  </el-col>
+                </el-row>
+                <el-row class="row">
+                  <el-col :span="4" class="base-col">服务范围</el-col>
+                  <el-col :span="19" >
+                    <el-select v-model="typeNum" multiple size="small" placeholder="请选择">
+                      <el-option
+                        v-for="item in typeList"
+                        :key="item.value"
+                        :label="item.Name"
+                        :value="item.GoodsTypeId">
+                      </el-option>
+                    </el-select>
+                    <!--<el-row>-->
+                    <!--<el-col :span="22"><div class="box">洗剪吹</div></el-col>-->
+                    <!--<el-col :span="1" :offset="1">-->
+                    <!--<div class="coupon-radio" >-->
+                    <!--<div class="coupon-radio-point"></div>-->
+                    <!--</div>-->
+                    <!--</el-col>-->
+                    <!--</el-row>-->
+                    <!--<el-row>-->
+                    <!--<el-col :span="22"><div class="box">洗剪吹</div></el-col>-->
+                    <!--<el-col :span="1" :offset="1" >-->
+                    <!--<div class="coupon-radio" >-->
+                    <!--<div class="coupon-radio-point"></div>-->
+                    <!--</div>-->
+                    <!--</el-col>-->
+                    <!--</el-row>-->
+                    <!--<el-row>-->
+                    <!--<el-col :span="22"><div class="box">洗剪吹</div></el-col>-->
+                    <!--<el-col :span="1" :offset="1">-->
+                    <!--<div class="coupon-radio" >-->
+                    <!--<div class="coupon-radio-point"></div>-->
+                    <!--</div>-->
+                    <!--</el-col>-->
+                    <!--</el-row>-->
+                  </el-col>
+                </el-row>
+                <el-row class="row">
+                  <el-col :span="4" class="base-col">有效期限</el-col>
+                  <el-col :span="19">
+                    <el-select v-model="yearNum" size="small" placeholder="请选择">
+                      <el-option
+                        v-for="item in year"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                      </el-option>
+                    </el-select>
+                  </el-col>
+                </el-row>
+                <el-row class="row">
+                  <el-col :span="4">
+                    {{tips[carlType].name1}}
+                  </el-col>
+                  <el-col :span="19">
+                    <!--<input type="text" placeholder="请输入会员卡的折扣" class="input">-->
+                    <input type="text"
+                           v-model.number="Discount"
+                           v-if="carlType==0"
+                           class="base-input"
+                           :placeholder="tips[carlType].placeholder1">
+                    <input type="text"
+                           v-model.number="Discount"
+                           v-else-if="carlType==1"
+                           class="base-input"
+                           :placeholder="tips[carlType].placeholder1">
+                    <input type="text"
+                           v-model.number="Frequency"
+                           v-else="carlType==2"
+                           class="base-input"
+                           :placeholder="tips[carlType].placeholder1">
+                  </el-col>
+                </el-row>
+                <el-row class="row">
+                  <el-col :span="4" class="base-col">
+                    充值金额
+                  </el-col>
+                  <el-col :span="19">
+                    <el-row>
+                      <el-col>
+                        <input type="text"
+                               v-model="buyMoney"
+                               placeholder="请输入继续充值该会员卡的金额"
+                               class="input">
+                      </el-col>
+                    </el-row>
+                    <el-row>
+                      <el-col class="small-font">· 继续充值的金额大于等于购买金额</el-col>
+                    </el-row>
+                  </el-col>
+                </el-row>
+              </div>
+              <div v-else class="card-box">
+                <ys-vip-card
+                  :detail="currentMoban"
+                >
+
+                </ys-vip-card>
+              </div>
               <el-row class="row">
                 <el-col>
                   <div class="opc-btn" @click="handleEdit">开通会员</div>
                 </el-col>
               </el-row>
             </el-scrollbar>
+          </div>
+        </ys-popup>
+
+
+        <!--//选择会员卡模板-->
+        <ys-popup
+          v-show="moBan.showModal"
+          :width="moBan.width"
+          :height="moBan.height"
+          :zIndex="moBan.zIndex"
+          @close="closeMoban"
+        >
+          <div  style="width: 100%;">
+            <el-row class="moban-title">
+              <el-col :span="5" :offset="2">
+                <h4>选择模板卡</h4>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :offset="2" :span="22">
+                  <el-scrollbar class="moban-scroll">
+                      <template v-for="(item,index) in cardListType">
+                        <ys-vip-card
+                          :detail="item"
+                          :index="index"
+                          @chooseCard="chooseCard"
+                        ></ys-vip-card>
+                      </template>
+                  </el-scrollbar>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col>
+                <div class="moban-btn" @click="confirmMoban">确定</div>
+              </el-col>
+            </el-row>
           </div>
         </ys-popup>
 
@@ -317,7 +385,6 @@
                     总消费：￥281813
                   </div>
                 </div>
-
                 <el-table class="history-table"
                           :height="500"
                           :data="vipPriceTable">
@@ -466,13 +533,15 @@
   import  ysPay from '@/components/pay'
   import  ysSelectShop from '@/components/selectShop'
   import  ysPopup from '@/components/popup'
+  import  ysVipCard from "@/components/vipCard"
     export default {
       name: "clientList",
       components: {
         ysSearch,
         ysPopup,
         ysSelectShop,
-        ysPay
+        ysPay,
+        ysVipCard
       },
       data(){
         return {
@@ -489,7 +558,7 @@
             pHeight:708,
           },
           payHistory:{
-            showModal:true,
+            showModal:false,
             pWidth:700,
             pHeight:812,
           },
@@ -497,6 +566,12 @@
             showModel:false,
             width:759,
             height:748,
+          },
+          moBan:{
+            width:470,
+            height:850,
+            zIndex:1000,
+            showModal:false
           },
           placeholder:'搜索对应标签',
           value5:'',
@@ -550,17 +625,17 @@
           ],
           tips:[//提示文字
             {
-              name1:'享受折扣0',
+              name1:'享受折扣',
               placeholder1:'请输入会员卡的折扣',
 
             },
             {
-              name1:'享受折扣1',
+              name1:'享受折扣',
               placeholder1:'请输入会员卡的具体折扣',
 
             },
             {
-              name1:'使用次数2',
+              name1:'使用次数',
               placeholder1:'请输入该会员卡的可用次数',
               // name2:'最低充值次数',
               // placeholder2:'继续充值的次数',
@@ -590,6 +665,9 @@
           }],
           vipPriceTable:[],//会员消费记录
           vipList:[],//会员列表
+          cardListType:[],//会员卡列表
+          currentMoban:"",//当前选中的模板
+          isUserMoban:false,//是否使用当前模板
         }
       },
       methods:{
@@ -631,6 +709,23 @@
         closeHistory(){
             this.history.showModal=false
         },
+
+        // 选择模板卡
+        openChooseMoban(){
+             this.moBan.showModal=true;
+        },
+        closeMoban(){
+            this.moBan.showModal=false
+          this.cardListType.forEach(item=>{
+            item.hasBorder=false;
+          })
+        },
+        //确定选择模板卡
+        confirmMoban(index){
+            this.isUserMoban=true
+          this.moBan.showModal=false
+        },
+
         //todo 开通会员卡报错
         //开卡
         handleEdit(tab,event){
@@ -715,6 +810,14 @@
             }
           })
         },
+        chooseCard(e){
+
+          this.cardListType.forEach(item=>{
+            item.hasBorder=false
+          })
+          this.currentMoban=Object.assign({},this.cardListType[e]);
+          this.cardListType[e].hasBorder=true
+        },
         //获取会员列表
         getVipList(){
           this.$http.post(this.$api.getVipList,{ pageIndex:1,pageSize:10,isvip:1,key:''}).then(json=>{
@@ -724,12 +827,28 @@
               this.vipList=data.result
             }
           })
-        }
+        },
+        //获取会员卡列表
+        getCardList(){
+          let obj={}
+          obj.pageIndex=1;
+          obj.pageSize=10;
+          obj.isEnable=-1;
+          this.$util.post(this,this.$api.memberCardList,obj,(data)=>{
+            data.Items.forEach(item=>{
+              item.hasChecked=false;
+              item.isChecked=false;
+              item.hasBorder=false
+            });
+            this.cardListType=data.Items;
 
+          })
+        },
       },
       mounted(){
           this.getTypeList();//获取分组列表
           this.getVipList();//获取会员列表
+        this.getCardList()
       }
     }
 </script>
@@ -741,6 +860,10 @@
   }
   /deep/ .el-table__body-wrapper::-webkit-scrollbar{
       display: none;
+  }
+  /deep/ .el-input--small .el-input__inner {
+    height: 36px !important;
+    line-height: 36px !important;
   }
   .box{
     width:1200px;
@@ -957,6 +1080,24 @@
     color: #282828;
     margin-right: 10px;
   }
-
-
+.btn-moban{
+    .base-btn(180px)
+}
+    /*选择模板卡*/
+  .moban-title{
+    margin-top: 70px;
+  }
+.moban-scroll{
+  width: 100%;
+  height: 620px;
+}
+.moban-btn{
+  .base-btn(334px);
+  margin-top: 30px;
+}
+  .card-box{
+    width: 100%;
+    justify-content: center;
+    display: flex;
+  }
 </style>

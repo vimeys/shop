@@ -43,9 +43,9 @@
       <div>
         <div>
           <span>详细信息</span>
-          <span class="el-icon-arrow-down" @click="toggle"></span>
+          <span class="el-icon-arrow-down" :class="{'el-icon-arrow-up':toggleData}" @click="toggle"></span>
         </div>
-        <div class="coupon-detail" style="border-top: none;padding-right: 20px" v-show="toggleData">
+        <div class="coupon-detail" style="border-top: none;padding-right: 20px;background: #fff" v-show="toggleData">
             {{card.Details}}
         </div>
       </div>
@@ -199,6 +199,7 @@
     margin-top: 30px;
     display: flex;
     flex-direction: row;
+    background: #fff;
     .coupon-item-left{
       width: 96px;
       height: 100%;

@@ -46,6 +46,9 @@
     goodsDetail:head+'goods/version3/detail',
     goodsList:head+'goods/version3/list4web',
     moveGoods:head+'goods/version3/batchmove',//移动
+    sortGoods:head+'goods/setorder',//排序
+    hotGoods:head+'goods/version3/updateGoodsByIsSelected',//精选商品
+    hotGoodsList:head+'goods/version3/webgoodsByIsSelected',//精选商品
     //添加优惠券
     addCoupon:head+'couponBook/version3/add',//添加优惠券
     updataCoupon:head+'couponBook/version3/update',//跟新优惠券

@@ -3,7 +3,7 @@
 *   公共会员卡
 */
 <template>
-  <div class="card">
+  <div class="card" :class="{'border':detail.hasBorder}" @click="chooseCard(index)">
     <img src="../assets/images/payCardBg.png" alt="" v-if="detail.MembershipType==1">
     <img src="../assets/images/fixCard.png" alt="" v-else-if="detail.MembershipType==2">
     <img src="../assets/images/onceCard.png" alt="" v-else="detail.MembershipType==3">
@@ -53,6 +53,10 @@
             return 0
           }
         },
+        hasBorder:{
+          type:Boolean,
+          default:false
+        },
         detail:{
           type:Object,
           default(){
@@ -101,13 +105,17 @@
           console.log(index);
           this.detail.ischecked=!this.detail.ischecked;
           this.$emit('choose',[index,this.detail.ischecked])
+        },
+        // 点击选中卡片
+        chooseCard(index){
+            this.$emit('chooseCard',index)
         }
       }
     }
 </script>
 
 <style lang='less' scoped>
-
+  @import "~@/assets/style/mixin";
   .card{
     width: 369px;
     height: 144px;
@@ -115,6 +123,7 @@
     margin-bottom: 20px;
     margin-top: 20px;
     margin-right: 30px;
+    border: 2px solid rgba(0,0,0,0);
     img{
       position: absolute;
       top:0;
@@ -179,6 +188,10 @@
         background: #ffd73a;
       }
     }
+  }
+  .border{
+    border: 2px solid @bs-color !important;
+    border-radius: 9px;
   }
   .card:nth-child(3n+0){
     margin-right: 0;

@@ -8,15 +8,15 @@
       <el-main class="goods-main">
         <div class="goods-btns">
           <div class="header">
-            <div class="new" :class="{'disable':disable}" @click="openGoods">
+            <div class="new" :class="{'disable':disableAdd}" @click="openGoods">
               <img src="@/assets/images/icon/addBtn.png" alt="">新建服务
             </div>
-            <div class="manage" @click="manage">批量管理</div>
-            <div class="del" :class="{'disable':disable}" @click="Sort">排序</div>
+            <div class="manage" :class="{'disable':disableManage}" @click="manage">批量管理</div>
+            <div class="del" :class="{'disable':disableSort}" @click="Sort">排序</div>
           </div>
           <ys-search></ys-search>
         </div>
-        <el-row class="edit-btns" v-if="disable">
+        <el-row class="edit-btns" v-if="!disableManage">
           <el-col :span="4">
             <el-row>
               <el-col :span="4" :offset="8">
@@ -444,7 +444,10 @@
           width: 900,
           height: 830
         },
-        disable:false,//是否禁用
+        disable:true,
+        disableAdd:false,//是否禁用
+        disableManage:true,//批量管理
+        disableSort:true,//
         allChoosed:false,
         type: {//控制分类
           showModal: false,
@@ -536,19 +539,26 @@
         allTypeList:'',//所有的分类
         isSort:false,//是否是排序
       }
-    }, methods: {
+    },
+    methods: {
       choose() {
         console.log(123);
       },
       //批量管理
       manage(){
-          if(this.disable){
-            this.disable=false;
+          if(!this.disableManage){//是启用状态
+            this.disableManage=true;
+            this.disableAdd=false
+            this.disableSort=true
+            this.isSort=false
             this.goodsList.forEach(item=>{
               item.hasChecked=false
             })
-          }else{
-            this.disable=true
+          }else{//是禁止状态
+            this.disableManage=false;
+            this.disableAdd=true;
+            this.isSort=false
+            this.disableSort=true;
             this.goodsList.forEach(item=>{
               item.hasChecked=true
             })
@@ -602,7 +612,9 @@
 
       //打开商品弹窗
       openGoods(){
+        if(!this.disableAdd){//不是禁止才可以点击
           this.goods.showModal=true
+        }
       },
 
       //关闭商品弹窗
@@ -642,26 +654,50 @@
       },
       // 开始排序
       Sort(){
-        this.isSort=!this.isSort
+        if(!this.disableSort){
+          this.isSort=false
+          this.disableAdd=false;
+          this.disableManage=true;
+          this.disableSort=true
+          this.goodsList.forEach(item=>{
+            item.hasChecked=false
+          })
+        }else{
+          this.isSort=true
+          this.disableAdd=true;
+          this.disableManage=true;
+          this.disableSort=false
+          this.goodsList.forEach(item=>{
+            item.hasChecked=false
+          })
+        }
       },
       //todo 修改排序请求接口
       upSort(index){
-        console.log(index);
-        let old1=this.goodsList[index-1]
-        let old2=this.goodsList[index]
-        // old=old.reverse()
-        console.log(old1);
-        this.goodsList.splice(index-1,1,old2)
-        this.goodsList.splice(index,1,old1)
-        // console.log(newArr);
-        // this.goodsList=newArr
+        let obj={
+          firstid:this.goodsList[index-1].GoodsId,
+          secondid:this.goodsList[index].GoodsId
+        }
+        this.$util.post(this,this.$api.sortGoods,obj,()=>{
+          let old1=this.goodsList[index-1]
+          let old2=this.goodsList[index]
+          this.goodsList.splice(index-1,1,old2)
+          this.goodsList.splice(index,1,old1)
+        })
+
       },
-      //todo修改排序单位请求接口
+      //todo 修改排序单位请求接口
       downSort(index){
-        let old1=this.goodsList[index]
-        let old2=this.goodsList[index+1]
-        this.goodsList.splice(index,1,old2)
-        this.goodsList.splice(index+1,1,old1)
+        let obj={
+          firstid:this.goodsList[index].GoodsId,
+          secondid:this.goodsList[index+1].GoodsId
+        }
+        this.$util.post(this,this.$api.sortGoods,obj,()=>{
+          let old1=this.goodsList[index]
+          let old2=this.goodsList[index+1]
+          this.goodsList.splice(index,1,old2)
+          this.goodsList.splice(index+1,1,old1)
+        })
       },
       // handleAvatarSuccess(res, file){
       //   console.log(file);

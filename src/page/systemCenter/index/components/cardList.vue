@@ -2,88 +2,130 @@
 <template>
   <div>
     <div class="header">
-      <div class="return" @click="goback" >返回</div>
-      <div class="new">新建优惠券</div>
-      <div class="manage">管理</div>
-      <div class="del">删除</div>
-    </div>
-    <div class="card">
-      <!--<template v-for="item in list">-->
-        <!--<ys-card-->
-          <!--:detail="item"-->
-          <!--@reMake="reMake"-->
-          <!--:marginBottom="60"-->
-        <!--&gt;-->
-        <!--</ys-card>-->
-      <!--</template>-->
-    </div>
-    <ys-goods-card></ys-goods-card>
-    <ys-popup :showModal="showModal"
-              v-show="showModal"
-              @close="close"
-    >
-      <div class="popup-slide-left">
-        <div class="list-title">新建优惠券</div>
-        <div class="list-btns">
-          <ul>
-            <li><i class="el-icon-document"></i>活动详情<i class="el-icon-arrow-right"></i> </li>
-          </ul>
+      <!--<div class="return" @click="goback" >返回</div>-->
+      <!--<div class="new">新建优惠券</div>-->
+      <!--<div class="manage">管理</div>-->
+      <!--<div class="del">删除</div>-->
+      <div class="goods-btns">
+        <div class="">
+          <div class="new" :class="{'disable':disableAdd}" @click="openGoods">
+            <img src="@/assets/images/icon/addBtn.png" alt="">新建服务
+          </div>
+          <div class="manage" :class="{'disable':disableManage}" @click="manage">批量管理</div>
+          <div class="del" style="margin-left: 30px" :class="{'disable':disableSort}" @click="Sort">排序</div>
         </div>
-
+        <ys-search></ys-search>
       </div>
-      <div class="popup-slide-right">
-        <div class="content">
-            <div class="card-select">
-              <div>优惠券分类</div>
-              <div>
-                <el-select v-model="value" @change="change" placeholder="满减券" class="select">
-                <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-                </el-option>
-                </el-select>
+      <el-row class="edit-btns" v-if="!disableManage">
+        <el-col :span="4">
+          <el-row>
+            <el-col :span="4" :offset="8">
+              <div class="coupon-radio" @click="chooseAll">
+                <div class="coupon-radio-point" v-show="allChoosed"></div>
               </div>
-            </div>
-          <div class="cards">
+            </el-col>
+            <el-col :span="6" class="choose-word" >
+              全选
+            </el-col>
+          </el-row>
+        </el-col>
 
-            <div>
-              <el-scrollbar class="scroll">
-                <div class="card-border">
-                  <ys-card ></ys-card>
-                  <div class="coupon-radio"  >
-                    <div class="coupon-radio-point" ></div>
-                  </div>
-                </div>
-                <div class="card-border">
-                  <ys-card ></ys-card>
-                  <div class="coupon-radio"  >
-                    <div class="coupon-radio-point" ></div>
-                  </div>
-                </div>
-                <div class="card-border">
-                  <ys-card ></ys-card>
-                  <div class="coupon-radio"  >
-                    <div class="coupon-radio-point" ></div>
-                  </div>
-                </div>
-                <div class="card-border">
-                  <ys-card ></ys-card>
-                  <div class="coupon-radio"  >
-                    <div class="coupon-radio-point" ></div>
-                  </div>
-                </div>
-              </el-scrollbar>
-            </div>
-          </div>
-          <div>
-            <div class="btn">确认</div>
-          </div>
-        </div>
-
-      <!--<el-button type="text" @click="open5">点击打开 Message Box</el-button>-->
+        <el-col  :span="4"  :offset="16" class="edit-del" >
+          <div @click="delGoods">删除</div>
+        </el-col>
+      </el-row>
+    </div>
+    <!--<div class="card">-->
+      <!--&lt;!&ndash;<template v-for="item in list">&ndash;&gt;-->
+        <!--&lt;!&ndash;<ys-card&ndash;&gt;-->
+          <!--&lt;!&ndash;:detail="item"&ndash;&gt;-->
+          <!--&lt;!&ndash;@reMake="reMake"&ndash;&gt;-->
+          <!--&lt;!&ndash;:marginBottom="60"&ndash;&gt;-->
+        <!--&lt;!&ndash;&gt;&ndash;&gt;-->
+        <!--&lt;!&ndash;</ys-card>&ndash;&gt;-->
+      <!--&lt;!&ndash;</template>&ndash;&gt;-->
+    <!--</div>-->
+    <div class="goods-list">
+      <template v-for="(item,index) in goodsList">
+        <ys-goods-card :detail="item"
+                    :index="index"
+                    :isSort="isSort"
+                    @up="upSort"
+                    @down="downSort"
+                    @chooseCurrent="chooseCurrent1"
+                    ></ys-goods-card>
+      </template>
+    </div>
+    <!--<ys-goods-card></ys-goods-card>-->
+    <ys-popup
+      v-show="showModal"
+      :height="height"
+      :width="width"
+      @close="close"
+    >
+      <div style="width: 100%;padding: 50px">
+        <el-row>
+          <el-col :span="4"><h3>添加服务</h3></el-col>
+        </el-row>
+        <el-row :gutter="30">
+          <el-col :span="4">服务分类</el-col>
+          <el-col :span="10">
+            <el-select v-model="valueFirstType"
+                       @change="chooseFirstType"
+                       size="small"
+                       placeholder="一级分类">
+              <el-option
+                v-for="item  in typeList"
+                :key ="item.GoodsTypeId"
+                :label="item.Name"
+                :value="item.GoodsTypeId"
+              ></el-option>
+            </el-select>
+          </el-col>
+          <el-col :span="10">
+            <el-select v-model="valueSecondType"
+                       @change="chooseSecondType"
+                       size="small"
+                       placeholder="一级分类">
+              <el-option
+                v-for="item  in secondType"
+                :key ="item.GoodsTypeId"
+                :label="item.Name"
+                :value="item.GoodsTypeId"
+              ></el-option>
+            </el-select>
+          </el-col>
+        </el-row>
+        <el-row class="goods-list">
+          <el-col>
+            <el-scrollbar style="width: 800px; height: 550px">
+                <el-row :gutter="40" >
+                  <el-col :span="12" style="margin-bottom: 30px" v-for="(item,index) in goodsList">
+                      <div class="goods-card">
+                        <div>
+                          <img :src="item.Pic" alt="">
+                        </div>
+                        <div>
+                          <h4>{{item.Name}}</h4>
+                          <div class="price-old">原价：{{item.Price}}</div>
+                          <div class="price-new">现价：￥{{discountPrice||0}}</div>
+                        </div>
+                        <div class="circle" v-show="item.hasChecked" @click="choose(index)">
+                          <div class="point" v-show="item.isChecked" ></div>
+                        </div>
+                      </div>
+                  </el-col>
+                </el-row>
+            </el-scrollbar>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col>
+            <div class="base-btns" @click="confirm">确定</div>
+          </el-col>
+        </el-row>
       </div>
+
     </ys-popup>
   </div>
 
@@ -104,106 +146,272 @@
     },
     data(){
         return {
-          show:false,
           showModal:false,//显示弹窗
-          options: [{
-            value: '选项1',
-            label: '黄金糕'
-          }, {
-            value: '选项2',
-            label: '双皮奶'
-          }, {
-            value: '选项3',
-            label: '蚵仔煎'
-          }, {
-            value: '选项4',
-            label: '龙须面'
-          }, {
-            value: '选项5',
-            label: '北京烤鸭'
-          }],
-          value: '',
-          list:[
-            {
-              id:1,
-              price:100,
-              mPrice:10,
-              cardName:'满减劵',
-              shopName:'ATH眼镜店铺',
-              useName:'一元买券',
-              storeName:200,
-              start_time:'2018.06.18',
-              end_time:'2018.06.20'
-            },
-            {
-              id:2,
-              price:1020,
-              mPrice:103,
-              cardName:'满减劵',
-              shopName:'ATH眼镜店铺',
-              useName:'一元买券',
-              storeName:200,
-              start_time:'2018.06.18',
-              end_time:'2018.06.20'
-            },
-            {
-              id:3,
-              price:1020,
-              mPrice:103,
-              cardName:'满减劵',
-              shopName:'ATH眼镜店铺',
-              useName:'一元买券',
-              storeName:200,
-              start_time:'2018.06.18',
-              end_time:'2018.06.20'
-            },
-            {
-              id:3,
-              price:1020,
-              mPrice:103,
-              cardName:'满减劵',
-              shopName:'ATH眼镜店铺',
-              useName:'一元买券',
-              storeName:200,
-              start_time:'2018.06.18',
-              end_time:'2018.06.20'
-            },
-          ]
+          width:880,
+          height:855,
+          isSort:false,
+          typeList:[],//分类列表
+          disableAdd:false,//是否禁用
+          disableManage:true,//批量管理
+          disableSort:true,//
+          goodsList:[],
+          valueFirstType:'',
+          valueSecondType:'',
+          secondType:'',
+          hotGoodsList:[]
         }
+    },
+    watch:{
+      goodsList(){
+        let aPrice=this.goodsList.SpecList;
+        console.log(this.goodsList);
+        let a=[]
+        try{
+          aPrice.forEach(item=>{
+            a.push(item.Price)
+          })
+          function s(a,b) {
+            return a-b
+          }
+          a.sort(s)
+          return a[0]
+        }catch (e) {
+          console.log(e);
+        }
+
+
+
+        console.log(a);
+
+      }
     },
     methods:{
       goback(){
         this.$router.go(-1)
           this.$emit('back',this.show)
       },
+      chooseCurrent1(index,state){
+        console.log(index, state);
+        this.goodsList[index].isChecked=state;
+      },
       reMake(e){
         console.log(e);
         this.showModal=!this.showModal
         console.log(this.showModal);
       },
+      //打开弹窗
+      openGoods(){
+        if(!this.disableAdd){//不是禁止才可以点击
+          this.showModal=true
+        }
+      },
+
+      //选择一级
+      chooseFirstType(e){
+        let index1='';
+        this.getGoodsList(e)
+        this.typeList.forEach((item,index)=>{
+          console.log(item.GoodsTypeId);
+          console.log(e);
+          if(item.GoodsTypeId==e){
+            index1=index
+          }
+          this.valueSecondType='';
+        })
+        let arr=this.typeList[index1].ChildGoodsType
+        if(arr.length){
+          this.secondType=arr
+        }else{
+          this.secondType=[{
+            GoodsTypeId:0,
+            Name:'无'
+          }]
+        }
+      },
+      chooseSecondType(e){
+        console.log(e);
+        this.getGoodsList(this.valueFirstType,e)
+      },
+      choose(index){
+        console.log(index);
+        this.goodsList[index].isChecked=!this.goodsList[index].isChecked
+      },
+      //确认分类
+      confirm(){
+        let arr=[]
+          this.goodsList.forEach(item=>{
+
+            if(item.isChecked){
+                arr.push(item.GoodsId)
+            }
+
+          })
+        this.$util.post(this,this.$api.hotGoods,{goodsIds:arr,isSelected:1},()=>{
+          this.showModal=false;
+          this.valueSecondType="";
+          this.valueFirstType="";
+        })
+      },
+      //批量管理
+      manage(){
+        if(!this.disableManage){//是启用状态
+          this.disableManage=true;
+          this.disableAdd=false
+          this.disableSort=true
+          this.isSort=false
+          this.goodsList.forEach(item=>{
+            item.hasChecked=false
+          })
+        }else{//是禁止状态
+          this.disableManage=false;
+          this.disableAdd=true;
+          this.isSort=false
+          this.disableSort=true;
+          this.goodsList.forEach(item=>{
+            item.hasChecked=true
+          })
+        }
+      },
+      // 开始排序
+      Sort(){
+        if(!this.disableSort){
+          this.isSort=false
+          this.disableAdd=false;
+          this.disableManage=true;
+          this.disableSort=true
+          this.goodsList.forEach(item=>{
+            item.hasChecked=false
+          })
+        }else{
+          this.isSort=true
+          this.disableAdd=true;
+          this.disableManage=true;
+          this.disableSort=false
+          this.goodsList.forEach(item=>{
+            item.hasChecked=false
+          })
+        }
+      },
+      //todo 修改排序请求接口
+      upSort(index){
+        let obj={
+          firstid:this.goodsList[index-1].GoodsId,
+          secondid:this.goodsList[index].GoodsId
+        }
+        this.$util.post(this,this.$api.sortGoods,obj,()=>{
+          let old1=this.goodsList[index-1]
+          let old2=this.goodsList[index]
+          this.goodsList.splice(index-1,1,old2)
+          this.goodsList.splice(index,1,old1)
+        })
+
+      },
+      //todo 修改排序单位请求接口
+      downSort(index){
+        let obj={
+          firstid:this.goodsList[index].GoodsId,
+          secondid:this.goodsList[index+1].GoodsId
+        }
+        this.$util.post(this,this.$api.sortGoods,obj,()=>{
+          let old1=this.goodsList[index]
+          let old2=this.goodsList[index+1]
+          this.goodsList.splice(index,1,old2)
+          this.goodsList.splice(index+1,1,old1)
+        })
+      },
       close(e){
         console.log(e);
         this.showModal=e
       },
-      open5() {
-        this.$alert('<strong>这是 <i>HTML</i> 片段</strong>', 'HTML 片段', {
-          dangerouslyUseHTMLString: true
-        });
+      //获取分类列表
+      getTypeList :async function() {
+        let json= await this.$http.post(this.$api.typeList, {type: 2});
+        let data=json.data;
+        if(data.isSuc==true){
+          this.allTypeList=data.result;
+          let shopId=data.result[0].UserId;
+          let arr=[]
+          data.result.forEach((item)=>{
+            if(item.UserId==shopId){
+              arr.push(item)
+            }
+          })
+          this.typeList=arr
+        }
       },
-      change(e){
-        console.log(e);
-      }
+      getHotGoods(){
+          this.$util.post(this,this.$api.hotGoodsList,{pageIndex:1, pageSize:100},(data)=>{
+            this.hotGoodsList=data
+          })
+      },
+      //获取商品列表
+      // @param
+      getGoodsList(p=0,c=0){
+        this.$http.post(this.$api.goodsList,{ pageIndex:1, pageSize:10, goodTypeParentId:p, goodsTypeId:c}).then(json=>{
+          console.log(json);
+          let data=json.data;
+
+          if(data.isSuc==true){
+            let arr=[];
+            data.result.Items.forEach(item=>{
+              item.hasChecked=true;
+              item.isChecked=false
+            })
+            this.goodsList=data.result.Items
+          }
+        })
+      },
+      //获取分组列表
+      // getGroupList(shopId,re){
+      //   this.$http.post(this.$api.waterGroupList,
+      //     {pageindex:1,pagesize:10,userId:shopId}).then(json=>{
+      //     if(json.data.isSuc==true){
+      //       this.groupList=json.data.result.Items;
+      //       if(re){
+      //         console.log('re');
+      //         this.UserId=this.groupList[0].UserId;
+      //         let a=JSON.parse(JSON.stringify(this.groupList));
+      //         let obj={sizeName:'',sizePrice:''};
+      //         let obj2={valuePerson:[],groupList:a,shopValue:shopId,};
+      //         // a.newPrice='';
+      //         this.aSize.push(obj);
+      //         this.aPeople.push(obj2)
+      //       }
+      //     }else{
+      //       this.$message({
+      //         message:'获取失败',
+      //         icon:'error'
+      //       })
+      //     }
+      //   })
+      // },
+
+    },
+    mounted(){
+      // this.getGroupList();
+      this.getHotGoods();
+      this.getTypeList();
+      this.getGoodsList();
     }
   }
 </script>
 
 <style lang="less" scoped>
   @import "~@/assets/style/mixin";
-
+  //todo  设置选择框的宽度
+  /deep/ .el-select--small{
+    width: 100%;
+  }
+  /deep/ input{
+    text-align: center;
+  }
+  /deep/ .el-scrollbar__wrap{
+    overflow-x: hidden;
+  }
   .header{
     width: 1200px;
     height: 38px;
-    margin-top: 60px;
+    margin-top: 10px;
     margin-bottom: 30px;
     .return{
       float: left;
@@ -344,5 +552,164 @@
     .base-btn-111;
     margin-top: 30px;
   }
+
+  .box {
+    width: 1200px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
+  }
+  .disable{
+    background: #E5E5E5 !important;
+  }
+  .coupon-radio {
+    width: 21px;
+    height: 21px;
+    /*position: absolute;*/
+    /*top:-17px;*/
+    /*right: -17px;*/
+    border-radius: 50%;
+    border: 2px solid #ffd73a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    .coupon-radio-point {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: #ffd73a;
+    }
+  }
+
+  .header {
+    width: 100%;
+    height: 38px;
+    /*margin-top: 60px;*/
+    /*margin-bottom: 30px;*/
+    .new {
+      float: left;
+      .base-btn-111;
+      margin-right: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /*margin-top: 30px;*/
+      /*margin-bottom: 30px;*/
+      img {
+        width: 15px;
+        height: 15px;
+        margin-right: 10px;
+      }
+    }
+
+    .manage {
+      float: left;
+      .base-btn-111;
+    }
+    .del {
+      .base-btn-111;
+    }
+  }
+
+  .choose-word {
+    height: 21px;
+    line-height: 21px;
+  }
+
+  .edit-btns {
+    margin-bottom: 20px;
+  }
+
+  .edit-move, .edit-del {
+    .base-btn-111;
+    background: #e5e5e5;
+  }
+
+  .goods-btns {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .goods-list {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 50px;
+    padding-top: 30px;
+    justify-content: flex-start;
+    /*column-count: 4;*/
+    >div{
+      margin-right: 60px;
+    }
+    >div:nth-child(5n+0){
+      margin-right: 0;
+    }
+  }
+
+  .goods-main {
+    min-width: 835px;
+    padding-right: 17px;
+    overflow-y: visible;
+    overflow-x: hidden;
+  }
+
+  .goods-list {
+    margin-top: 30px;
+    width: 1200px;
+    .goods-card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: row;
+      width: 360px;
+      height: 144px;
+      position: relative;
+      border-radius: 8px;
+      border: 1px solid rgba(151, 151, 151, 1);
+      img {
+        width: 108px;
+        height: 108px;
+        margin-right: 30px;
+      }
+    }
+    .price-old {
+      line-height: 20px;
+      text-decoration: line-through;
+      color: #B4B4B4;
+      font-size: 14px;
+    }
+    .price-new {
+      font-size: 14px;
+      color: #D0021B;
+    }
+    .circle{
+      position: absolute;
+      top:50px;
+      background: #fff;
+      right: -17px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      width: 34px;
+      height: 34px;
+      border: 2px solid @bs-color;
+      .point{
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: @bs-color;
+      }
+    }
+
+  }
+  .base-btns{
+    .base-btn(770px)
+  }
+
 
 </style>
