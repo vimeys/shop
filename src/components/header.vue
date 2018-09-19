@@ -7,6 +7,7 @@
         <!--<li v-for="(item,index) in nav" @click="href(index)">{{item.name}}</li>-->
         <router-link tag="li" :to="item.path" v-for="(item,index) in nav"  :key="index" > {{item.name}}</router-link>
       </ul>
+      <div>{{Role}}</div>
     </div>
 </template>
 
@@ -19,7 +20,7 @@
       computed:{
         ...mapGetters(['userId','Role','shop']),
         Role(){
-          console.log(this.shop);
+          // console.log(this.shop);
           this.nav.splice(4,1)
         }
       },

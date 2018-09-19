@@ -6,9 +6,9 @@
           <el-select v-model="value"
                      placeholder="请选择"
                      @change="chooseShop"
-                     v-if="shopList.length">
+                     v-if="shop.length">
             <el-option
-              v-for="item in shopList"
+              v-for="item in shop"
               :key="item.value"
               :label="item.Name"
               :value="item.UserId">
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+  import {mapState,mapGetters} from 'vuex'
     export default {
         name: "selectShop",
       props:{
@@ -25,6 +26,9 @@
           type:Number,
           default:300
         }
+      },
+      computed:{
+        ...mapState(['shop'])
       },
       data(){
           return {

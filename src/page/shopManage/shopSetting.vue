@@ -281,19 +281,28 @@
               EmployeesNumber: form.EmployeesNumber
             }
           }
-          this.$http.post(api.updataShop, obj).then(json => {
-            let data = json.data;
-            if (data.isSuc == true) {
-              this.showModal = false;
-              this.getShopList()
-              this.form = emptyObj(this.form);
-              this.$message({
-                message: '店铺修改成功',
-                type: 'success'
-              });
-            }
-          }).catch(err => {
-            console.log(err);
+          // this.$http.post(api.updataShop, obj).then(json => {
+          //   let data = json.data;
+          //   if (data.isSuc == true) {
+          //     this.showModal = false;
+          //     this.getShopList()
+          //     this.form = emptyObj(this.form);
+          //     this.$message({
+          //       message: '店铺修改成功',
+          //       type: 'success'
+          //     });
+          //   }
+          // }).catch(err => {
+          //   console.log(err);
+          // })
+          this.$util.post(this,this.$api.updataShop,obj,(data)=>{
+            this.showModal=false;
+            this.getShopList()
+            this.form = emptyObj(this.form);
+                this.$message({
+                  message: '店铺修改成功',
+                  type: 'success'
+                });
           })
         }else{
           let form = this.form;
@@ -316,19 +325,28 @@
               EmployeesNumber: form.EmployeesNumber
             }
           }
-          this.$http.post('/shop/usershop/addUserShop', obj).then(json => {
-            let data = json.data;
-            if (data.isSuc == true) {
-              this.showModal = false;
-              this.getShopList()
-              this.form = emptyObj(this.form);
-              this.$message({
-                message: '店铺添加成功',
-                type: 'success'
-              });
-            }
-          }).catch(err => {
-            console.log(err);
+          // this.$http.post('/shop/usershop/addUserShop', obj).then(json => {
+          //   let data = json.data;
+          //   if (data.isSuc == true) {
+          //     this.showModal = false;
+          //     this.getShopList()
+          //     this.form = emptyObj(this.form);
+          //     this.$message({
+          //       message: '店铺添加成功',
+          //       type: 'success'
+          //     });
+          //   }
+          // }).catch(err => {
+          //   console.log(err);
+          // })
+          this.$util.post(this,this.$api.addUserShop,obj,(data)=>{
+                this.showModal = false;
+                this.getShopList()
+                this.form = emptyObj(this.form);
+                this.$message({
+                  message: '店铺添加成功',
+                  type: 'success'
+                });
           })
         }
 
@@ -359,17 +377,24 @@
       // 获取列表
       getShopList(){
         console.log(api.shopList);
-        this.$http.post(api.shopList,{}).then(json=>{
-          let data=json.data
-          if(data.isSuc==true){
-            this.shopList=data.result;
-            this.$message({
-              message: '恭喜你，这是一条成功消息',
-              type: 'warning'
-            })
-          }
-        }).catch(error=>{
-          console.log(error);
+        // this.$http.post(api.shopList,{}).then(json=>{
+        //   let data=json.data
+        //   if(data.isSuc==true){
+        //     this.shopList=data.result;
+        //     this.$message({
+        //       message: '恭喜你，这是一条成功消息',
+        //       type: 'warning'
+        //     })
+        //   }
+        // }).catch(error=>{
+        //   console.log(error);
+        // })
+        this.$util.post(this,this.$api.shopList,{},()=>{
+          this.shopList=data.result;
+              this.$message({
+                message: '恭喜你，这是一条成功消息',
+                type: 'warning'
+              })
         })
       }
 

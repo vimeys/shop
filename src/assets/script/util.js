@@ -61,7 +61,7 @@ export  function post(that,url,params,suc,err) {
           duration:1000,
           position: 'bottom-right'
         })
-        suc(json.data.result,this)
+        suc(json.data.result)
       }else{
         that.$notify({
             title:'接口报错',

@@ -19,13 +19,18 @@
       name: "login",
       components:{
         YsHeader,
-      },data(){
+      },
+      computed:{
+        ...mapGetters(['shop']),
+      },
+      data(){
         return {
           phone:'',
           psw:''
         }
       },
       methods:{
+        ...mapMutations(['saveShop']),
         getShopList(){
           console.log(api.shopList);
           this.$http.post(api.shopList,{}).then(json=>{
@@ -38,16 +43,15 @@
               }
             })
 
+          }).then(data=>{
+            this.saveShop(data.result)
           }).catch(error=>{
-
             console.log(error);
           })
         },
         login(){
           // debugger
-          this.getShopList().then(data=>{
-            console.log(data);
-          })
+          this.getShopList()
 
           this.$emit('login',true)
           this.$http.post(api.logincom,{username:'18981736266',password:'123456'}).then(this.log)
