@@ -1,6 +1,7 @@
 const state = {
-  userId: '',
-  Role:123,
+  userId: 270,
+  Role:4,//权限
+  shop:[],
 };
 
 export default state

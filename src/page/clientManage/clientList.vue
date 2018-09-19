@@ -10,7 +10,8 @@
         <div class="header">
           <div class="btn">导出EXCEL</div>
           <ys-search :placeholder="placeholder"></ys-search>
-          <ys-select-shop></ys-select-shop>
+          <ys-select-shop @getShop="getShop"
+                          @selectShop="selectShop"></ys-select-shop>
         </div>
         <div class="select-bar">
           <!--<el-select v-model="value123" @change="change" placeholder="满减券" class="select">-->
@@ -30,7 +31,6 @@
               label="姓名"
               width="130">
               <template slot-scope="scope">
-                <!--<i class="el-icon-time"></i>-->
                 <span style="margin-left: 10px">{{ scope.row.date }}</span>
               </template>
             </el-table-column>
@@ -454,6 +454,8 @@
       </ys-popup>
 
       </el-tab-pane>
+
+
       <el-tab-pane label="普通用户" name="second">
           <div class="box">
             <div class="header">
@@ -627,12 +629,10 @@
             {
               name1:'享受折扣',
               placeholder1:'请输入会员卡的折扣',
-
             },
             {
               name1:'享受折扣',
               placeholder1:'请输入会员卡的具体折扣',
-
             },
             {
               name1:'使用次数',
@@ -671,6 +671,9 @@
         }
       },
       methods:{
+        getShop(e){
+          this.getVipList(e)
+        },
         handleClick(tab, event){
           // switch (this.activeName) {
           //   case 'second':
@@ -810,8 +813,8 @@
             }
           })
         },
+        //选择模板卡
         chooseCard(e){
-
           this.cardListType.forEach(item=>{
             item.hasBorder=false
           })
@@ -819,8 +822,8 @@
           this.cardListType[e].hasBorder=true
         },
         //获取会员列表
-        getVipList(){
-          this.$http.post(this.$api.getVipList,{ pageIndex:1,pageSize:10,isvip:1,key:''}).then(json=>{
+        getVipList(shopId,isvip=1,pageIndex=1,pageSize=10){
+          this.$http.post(this.$api.getVipList,{shopId:shopId,pageIndex:pageIndex,pageSize:pageSize,isvip:isvip,key:''}).then(json=>{
             let data=json.data
             console.log(data);
             if(data.isSuc=true){

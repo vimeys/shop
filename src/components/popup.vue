@@ -72,7 +72,7 @@
       left: 50%;
       top: 50%;
       transform: translate(-50%,-50%);
-      background: #F6F6F6;
+      background: #fff;
       width: 1024px;
       height: 796px;
       border-radius: 20px;

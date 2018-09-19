@@ -14,6 +14,7 @@
 <script>
     import YsHeader from "../../components/header";
     import  api  from '../../assets/script/url'
+    import {mapGetters, mapMutations} from 'vuex'
     export default {
       name: "login",
       components:{
@@ -23,9 +24,31 @@
           phone:'',
           psw:''
         }
-      },methods:{
+      },
+      methods:{
+        getShopList(){
+          console.log(api.shopList);
+          this.$http.post(api.shopList,{}).then(json=>{
+            let data=json.data
+            return new Promise(function (resolve,reject) {
+              if(data.isSuc==true){
+                  resolve(data)
+              }else{
+                reject(data)
+              }
+            })
+
+          }).catch(error=>{
+
+            console.log(error);
+          })
+        },
         login(){
-          debugger
+          // debugger
+          this.getShopList().then(data=>{
+            console.log(data);
+          })
+
           this.$emit('login',true)
           this.$http.post(api.logincom,{username:'18981736266',password:'123456'}).then(this.log)
         },

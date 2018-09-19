@@ -49,6 +49,8 @@
     sortGoods:head+'goods/setorder',//排序
     hotGoods:head+'goods/version3/updateGoodsByIsSelected',//精选商品
     hotGoodsList:head+'goods/version3/webgoodsByIsSelected',//精选商品
+
+
     //添加优惠券
     addCoupon:head+'couponBook/version3/add',//添加优惠券
     updataCoupon:head+'couponBook/version3/update',//跟新优惠券
@@ -77,6 +79,13 @@
     //挂单
     serverList:head+'settleAccounts/version3/goodsList',//获取服务列表
     serverPeopleList:head+'settleAccounts/version3/userList',//获取服务员列表
+
+    //订单管理
+    getOrderList:head+'goodsorderform/version3/list',//订单列表
+    orderDetail:head+'goodsorderform/detail',//订单详情
+    getAppOrderList:head+'subscribe/list ',//预约订单
+    delAppOrder:head+'subscribe/delete',//删除预约订单
+    appOrderDetail:head+'subscribe/detail ',//预约详情
 
 
     //添加活动

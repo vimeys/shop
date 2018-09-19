@@ -12,11 +12,17 @@
 
 <script>
     // import RouterLink from "vant/es/mixins/router-link";
-    import {client,shopSetting,accountSetting,clientManage,fodderCenter} from "../assets/script/stepsData";
-
+    import  {mapGetters, mapMutations, mapActions} from 'vuex'
     export default {
         name: "ysHeader",
       components: {},
+      computed:{
+        ...mapGetters(['userId','Role','shop']),
+        Role(){
+          console.log(this.shop);
+          this.nav.splice(4,1)
+        }
+      },
       data(){
           return {
             nav:[
@@ -35,7 +41,15 @@
               // let path=this.nav[index].path;
               // this.$router.push({path:path})
               this.$emit('chooseNav',index)
-          }
+          },
+
+      },
+      watch:{
+        Role(){
+          // this.nav.splice(4,1)
+        }
+      },
+      mounted(){
       }
     }
 </script>

@@ -7,21 +7,10 @@
     <div class="header">
       <div class="btn" @click="exportExcel">导出EXCEL</div>
       <ys-search :isLeft="isLeft" :placeholder="placeholder"></ys-search>
-      <!--<el-select v-model="value"-->
-                 <!--style="margin-left: 500px"-->
-                 <!--placeholder="请选择"-->
-                 <!--@change="chooseShop"-->
-                 <!--v-if="shopList.length">-->
-        <!--<el-option-->
-          <!--v-for="item in shopList"-->
-          <!--:key="item.value"-->
-          <!--:label="item.Name"-->
-          <!--:value="item.UserId">-->
-        <!--</el-option>-->
-      <!--</el-select>-->
-      <ys-select-shop :marginLeft="500" @selectShop="selectShop"></ys-select-shop>
+      <ys-select-shop :marginLeft="500" @getShop="getShop" @selectShop="selectShop"></ys-select-shop>
     </div>
-    <div class="table">
+    <!--下载表格-->
+    <div class="table" style="position: fixed;top:-10000px">
       <el-table
         :data="table"
         id="test-table"
@@ -30,7 +19,6 @@
           label="顾客名称"
           width="120">
           <template slot-scope="scope">
-            <!--<i class="el-icon-time"></i>-->
             <span style="margin-left: 10px">{{ scope.row.Name }}</span>
           </template>
         </el-table-column>
@@ -38,7 +26,6 @@
           label="联系方式"
           width="140">
           <template slot-scope="scope">
-            <!--<i class="el-icon-time"></i>-->
             <span style="margin-left: 10px">{{ scope.row.Phone }}</span>
           </template>
         </el-table-column>
@@ -46,7 +33,6 @@
           label="服务编号"
           width="180">
           <template slot-scope="scope">
-            <!--<i class="el-icon-time"></i>-->
             <span style="margin-left: 10px">{{ scope.row.OrderNum }}</span>
           </template>
         </el-table-column>
@@ -56,26 +42,14 @@
 
           <template slot-scope="scope">
             <span style="margin-left: 10px">{{ scope.row.OrderTime }}</span>
-            <!--<el-popover trigger="hover" placement="top">-->
-              <!--<p>姓名: {{ scope.row.name }}</p>-->
-              <!--<p>住址: {{ scope.row.address }}</p>-->
-              <!--<div slot="reference" class="name-wrapper">-->
-                <!--<el-tag size="medium">{{ scope.row.OrderTime }}</el-tag>-->
-              <!--</div>-->
-            <!--</el-popover>-->
+
           </template>
         </el-table-column>
         <el-table-column
           label="价格"
           width="120">
           <template slot-scope="scope">
-            <!--<el-popover trigger="hover" placement="top">-->
-              <!--<p>姓名: {{ scope.row.name }}</p>-->
-              <!--<p>住址: {{ scope.row.address }}</p>-->
-              <!--<div slot="reference" class="name-wrapper">-->
-                <!--<el-tag size="medium">{{ scope.row.Price }}</el-tag>-->
-              <!--</div>-->
-            <!--</el-popover>-->
+
             <span style="margin-left: 10px">{{ scope.row.Price }}</span>
           </template>
         </el-table-column>
@@ -87,24 +61,73 @@
           width="140">
           <template slot-scope="scope">
             <span style="margin-left: 10px;color:red;" >{{ scope.row.State }}</span>
-            <!--<el-popover trigger="hover" placement="top">-->
-              <!--<p>姓名: {{ scope.row.name }}</p>-->
-              <!--<p>住址: {{ scope.row.address }}</p>-->
-              <!--<div slot="reference" class="name-wrapper">-->
-                <!--<el-tag size="medium">{{ scope.row.State }}</el-tag>-->
-              <!--</div>-->
-            <!--</el-popover>-->
           </template>
         </el-table-column>
+      </el-table>
+    </div>
 
+
+    <div class="table">
+      <el-table
+        :data="table"
+        style="width: 100%">
+        <el-table-column
+          label="顾客名称"
+          width="120">
+          <template slot-scope="scope">
+            <span style="margin-left: 10px">{{ scope.row.Name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="联系方式"
+          width="140">
+          <template slot-scope="scope">
+            <span style="margin-left: 10px">{{ scope.row.Phone }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="服务编号"
+          width="180">
+          <template slot-scope="scope">
+            <span style="margin-left: 10px">{{ scope.row.OrderNum }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="预约时间"
+          width="180">
+
+          <template slot-scope="scope">
+            <span style="margin-left: 10px">{{ scope.row.OrderTime }}</span>
+
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="价格"
+          width="120">
+          <template slot-scope="scope">
+
+            <span style="margin-left: 10px">{{ scope.row.Price }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="状态"
+          prop="tap"
+          :filters="[{ text: '待服务', value: '待服务' }, { text: '已服务', value: '已服务' }]"
+          :filter-method="filterTag"
+          width="140">
+          <template slot-scope="scope">
+            <span style="margin-left: 10px;color:red;" >{{ scope.row.State }}</span>
+
+          </template>
+        </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button
               size="mini"
-              @click="handleEdit(scope.$index, scope.row)">删除</el-button>
+              @click="handleEdit(scope.$index, scope.row.SubscribeId)">删除</el-button>
             <el-button
               size="mini"
-              @click="handleDelete(scope.$index, scope.row)">详情</el-button>
+              @click="handleDelete(scope.$index, scope.row.SubscribeId)">详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -234,25 +257,37 @@
               tag:'待服务'
             }],
             table:[],
+            table2:[],
+            currentShopId:'',
             list:[1,2,3],
             currentDetail:"",
             shopList:''
           }
       },
       methods:{
-        handleEdit(index, row) {
-          console.log(index, row);
+        getShop(id){
+          this.currentShopId=id
+          this.getOrderList(id)
         },
-        handleDelete(index, row) {
-          console.log(index, row);
-          this.showModal=true
-          this.currentDetail=row;
+        selectShop(id){
+          this.currentShopId=id
+          this.getOrderList(id)
+        },
+        handleEdit(index, id) {
+          console.log(index, id);
+          this.$util.confirm(this).then(()=>{
+            this.$util.post(this,this.$api.delAppOrder,{subscribeId:id},(data)=>{
+              console.log(data);
+            })
+          })
         },
 
-        //选择店铺
-        selectShop(e){
-          console.log(e);
+        handleDelete(index, id) {
+          this.showModal=true
+
         },
+
+
         filterTag(val,row){
           return row.State === val;
         },
@@ -269,26 +304,33 @@
         close2(e){
             this.showModal2=e
         },
-        getAppList(){
-            this.$http.post('http://rap2api.taobao.org/app/mock/84341/appList',{})
-              .then(json=>{
-                console.log(json);
-                this.table=json.data.table;
-              })
-        },
+
+        // getAppList(){
+        //     this.$http.post('http://rap2api.taobao.org/app/mock/84341/appList',{})
+        //       .then(json=>{
+        //         console.log(json);
+        //         this.table=json.data.table;
+        //       })
+        // },
         //导出excel
         exportExcel () {
-          /* generate workbook object from table */
-          var wb = XLSX.utils.table_to_book(document.querySelector('#test-table'))
-          /* get binary string as output */
-          var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
-          try {
-            FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '预约客户.xlsx')
-          } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
-          return wbout
+          this.$util.post(this,this.$api.getAppOrderList,{shopId:this.currentShopId,pageIndex:1,pageSize:100000,state:-1,key:''},(data)=>{
+            this.table2=data.Items
+          })
+          setTimeout(()=>{
+            var wb = XLSX.utils.table_to_book(document.querySelector('#test-table'))
+            /* get binary string as output */
+            var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
+            try {
+              FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '预约客户.xlsx')
+            } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
+            return wbout
+          },2000)
+
         },
         // 获取店铺列表
         getShopList(){
+
           this.$http.post(this.$api.shopList,{}).then(json=>{
             let data=json.data
             if(data.isSuc==true){
@@ -303,11 +345,18 @@
             }
           }).catch(err=>{
             console.log(err);
-          })}
+          })},
+
+        //获取订单列表
+        getOrderList(shopId,pageIndex=1,pageSize=10){
+            this.$util.post(this,this.$api.getAppOrderList,{shopId:shopId,pageIndex,pageSize,state:-1,key:''},(data)=>{
+              this.table=data.Items
+            })
+        }
       },
       mounted(){
-        this.getAppList();
-        this.getShopList()
+        // this.getAppList();
+        // this.getShopList()
       }
     }
 </script>

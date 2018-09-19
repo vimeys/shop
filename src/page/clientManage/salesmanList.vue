@@ -6,6 +6,10 @@
   <div class="box">
     <div class="header">
       <ys-search  :placeholder="placeholder"></ys-search>
+      <ys-select-shop
+        :marginLeft="700"
+        @getShop="getShop"
+        @selectShop="selectShop"></ys-select-shop>
     </div>
     <div class="table">
       <el-table
@@ -61,11 +65,13 @@
 <script>
   import ysSearch from '@/components/search';
   import  ysPopup from '@/components/popup'
+  import ysSelectShop from '@/components/selectShop'
     export default {
         name: "salesmanList",
       components:{
         ysSearch,
         ysPopup,
+        ysSelectShop
       },
       data(){
           return {
