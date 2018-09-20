@@ -20,44 +20,45 @@
 <script>
   import {mapState,mapGetters} from 'vuex'
     export default {
-        name: "selectShop",
-      props:{
-        marginLeft:{
-          type:Number,
-          default:300
+      name: "selectShop",
+      props: {
+        marginLeft: {
+          type: Number,
+          default: 300
         }
       },
-      computed:{
+      computed: {
         ...mapState(['shop'])
       },
-      data(){
-          return {
-            shopList:'',
-            value:""
-          }
+      data() {
+        return {
+          shopList: '',
+          value: ""
+        }
       },
-      methods:{
-        chooseShop(e){
-          this.$emit('selectShop',e)
+      methods: {
+        chooseShop(e) {
+          this.$emit('selectShop', e)
         },
         // 获取店铺列表
-        getShopList(){
-          this.$http.post(this.$api.shopList,{}).then(json=>{
-            let data=json.data
-            if(data.isSuc==true){
-              this.shopList=data.result;
+        getShopList() {
+          this.$http.post(this.$api.shopList, {}).then(json => {
+            let data = json.data
+            if (data.isSuc == true) {
+              this.shopList = data.result;
               // let firstShopId=data.result[0].UserId;
               // this.currentShopId=firstShopId
               // this.getGroupList(this.currentShopId)
-              this.$emit('getShop',this.shopList[0].UserId)
+              this.$emit('getShop', this.shopList[0].UserId)
               this.$message({
                 message: '请求成功',
                 type: 'warning'
               })
             }
-          }).catch(err=>{
+          }).catch(err => {
             console.log(err);
-          })}
+          })
+        }
       },
       mounted(){
             // this.getShopList()

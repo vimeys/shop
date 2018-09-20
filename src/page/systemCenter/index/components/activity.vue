@@ -68,7 +68,7 @@
                 class="coupons-header"
         >
           <div class="block-btn" @click="goBack"> 返回</div>
-          <div class="base-btn-111" > 新建优惠券</div>
+          <div class="base-btn-111" @click="openPopup" > 新建优惠券</div>
           <div class="base-btn-111"> 管理</div>
         </div>
         <div class="coupons-item">
@@ -290,6 +290,9 @@
         },
         goBack(){
             this.isCardList=true
+        },
+        openPopup(){
+            this.popup.showModal=true
         },
         change(){
           console.log(123);
@@ -791,11 +794,14 @@
       align-items: center;
       justify-content: center;
       .coupon-point{
-        width: 25px;
-        height: 25px;
+        width: 24px;
+        height: 24px;
         border-radius: 50%;
         background: @bs-color;
       }
     }
+  }
+  .base-btn-111{
+    margin-top: 30px;
   }
 </style>

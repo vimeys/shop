@@ -6,6 +6,7 @@
         <!--<div class="left"></div>-->
         <!--<div class="right page">财务管理</div>-->
         <step :navList="moneyManage"></step>
+        <router-view></router-view>
       </div>
 </template>
 
@@ -30,15 +31,6 @@
 
   .money-box{
     width: 100%;
-    .left{
-      min-width: 375px;
-    }
-    .right{
-      min-width: 1200px;
-    }
-  .page{
-    font-size: 30px;
-    color: red;
-  }
+    display: flex;
   }
 </style>
