@@ -15,13 +15,13 @@
     // import RouterLink from "vant/es/mixins/router-link";
     import  {mapGetters, mapMutations, mapActions} from 'vuex'
     export default {
-        name: "ysHeader",
+      name: "ysHeader",
       components: {},
       computed:{
         ...mapGetters(['userId','Role','shop']),
         Role(){
           // console.log(this.shop);
-          this.nav.splice(4,1)
+          this.nav.splice(4,0)
         }
       },
       data(){

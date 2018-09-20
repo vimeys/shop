@@ -63,6 +63,7 @@
           <template v-for="(item,index) in goodsList">
             <goods-card :detail="item"
                         :index="index"
+                        @editGoods="editGoods"
                         :isSort="isSort"
                         @up="upSort"
                         @down="downSort"
@@ -116,12 +117,12 @@
           <div class="content">
             <div class="img-list" >
               <el-upload
-                v-if="aPics.length<5"
                 action="http://mdimg.yilianchuang.cn/uploadimage3.ashx"
                 list-type="picture-card"
                 :on-success="handlePictureSuccess"
                 :limit="5"
                 :on-remove="handleRemove">
+                <!--<img v-if="aPics" :src="item" class="avatar" v-for="item in aPics">-->
                 <i class="el-icon-plus"></i>
               </el-upload>
             </div>
@@ -130,7 +131,10 @@
               <el-row class="base-row">
                 <el-col :span="4" class="base-col">上传到</el-col>
                 <el-col :span="19">
-                  <el-select v-model="valueFirstType"  @change="chooseFirstType" placeholder="分类" size="small">
+                  <el-select v-model="valueFirstType"
+                             @change="chooseFirstType"
+                             placeholder="分类"
+                             size="small">
                     <el-option
                       v-for="item in typeList"
                       :highlight-current="true"
@@ -262,7 +266,7 @@
                                    multiple
                                    collapse-tags
                                    placeholder="选择人员"
-                                   size="small" >
+                                   size="small">
                           <el-option
                             v-for="(itemGrand,index) in itemSon.groupList"
                             :key="itemGrand.GroupId"
@@ -272,8 +276,13 @@
                         </el-select>
                       </el-col>
                       <el-col :span="1">
-                        <span class="before base-col" v-if="index==0"></span>
-                        <span class=" base-col el-icon-delete" v-if="index>0" @click="delGoodsApeople(index)"></span>
+                        <span class="before base-col" v-if="index==0">
+                        </span>
+                        <span class=" base-col el-icon-delete"
+                              v-if="index>0"
+                              @click="delGoodsApeople(index)">
+
+                        </span>
                       </el-col>
                     </template>
 
@@ -455,38 +464,8 @@
           height: 670
         },
         chosed: false,
-        options: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }],
         value: '',
-        data: [{
-          label: '一级 1',
-          children: [{
-            label: '二级 1-1',
-          }]
-        }, {
-          label: '一级 2',
-          children: [{
-            label: '二级 2-1',
-
-          }, {
-            label: '二级 2-2',
-
-          }]
-        }, {
-          label: '一级 3',
-          children: [{
-            label: '二级 3-1',
-
-          }, {
-            label: '二级 3-2',
-
-          }]
-        }],
+        data: [],
         valueTips:'',//特价商品
         goodsTips:[//商品标签
           {value:1,label:'特价'},
@@ -652,6 +631,7 @@
       confirmGoodsDetail(){
 
       },
+
       // 开始排序
       Sort(){
         if(!this.disableSort){
@@ -712,8 +692,6 @@
       chooseFirstType(e ){
         let index1='';
         this.typeList.forEach((item,index)=>{
-          console.log(item.GoodsTypeId);
-          console.log(e);
           if(item.GoodsTypeId==e){
               index1=index
           }
@@ -729,7 +707,41 @@
           }]
         }
       },
+      //编辑单个商品
+      editGoods(id,index){
+        this.goods.showModal=true;
+        console.log(this.goodsList[index]);
+        let data=this.goodsList[index];
+        this.valueTips=data.FlagId;
+        this.aPics=data.Pics.split(',');
+        this.Name=data.Name;
+        this.Price=data.Price;
+        this.CommissionCharge=data.CommissionCharge;
+        this.ReceiveGuestCharge=data.ReceiveGuestCharge;
+        if(this.FlagId=3){
+          this.hoursValue=data.SecKillHour
+        };
+        this.valueFirstType=data.GoodsTypeParentId;
+        let index1='';
+        this.typeList.forEach((item,index)=>{
+          if(item.GoodsTypeId==this.valueFirstType){
+            index1=index
+          }
+          this.valueSecondType='';
+        })
+        let arr=this.typeList[index1].ChildGoodsType
+        if(arr.length){
+          this.secondType=arr
+        }else{
+          this.secondType=[{
+            GoodsTypeId:0,
+            Name:'无'
+          }]
+        }
+        this.valueSecondType=data.GoodsTypeId;
 
+
+      },
         //删除单个商品
       delGOods(id,index){
         this.$util.confirm(this).then(()=>{
@@ -762,7 +774,7 @@
           CommissionCharge: this.CommissionCharge,
           ReceiveGuestCharge: this.ReceiveGuestCharge,
           FlagId: this.valueTips,
-          SecKillHour: 12,
+          SecKillHour: this.hoursValue,
           Type: 2,
         };
         if (this.valueSecondType !== 0) {
@@ -962,7 +974,7 @@
       },
       //保存分类
       saveType() {
-        //  @param   isEditType   是否是修改
+        //  @params   isEditType   是否是修改
         if (this.isEditType) {//修改
           // let aType=[]
           // this.allTypeList.forEach(item=>{
@@ -1121,14 +1133,18 @@
           if(json.data.isSuc==true){
             this.groupList=json.data.result.Items;
             if(re){
-              console.log('re');
-              this.UserId=this.groupList[0].UserId;
-              let a=JSON.parse(JSON.stringify(this.groupList));
-              let obj={sizeName:'',sizePrice:''};
-              let obj2={valuePerson:[],groupList:a,shopValue:shopId,};
-              // a.newPrice='';
-              this.aSize.push(obj);
-              this.aPeople.push(obj2)
+              try{
+                this.UserId=this.groupList[0].UserId;
+                let a=JSON.parse(JSON.stringify(this.groupList));
+                let obj={sizeName:'',sizePrice:''};
+                let obj2={valuePerson:[],groupList:a,shopValue:shopId,};
+                // a.newPrice='';
+                this.aSize.push(obj);
+                this.aPeople.push(obj2)
+              } catch (err) {
+                console.log(err);
+              }
+
             }
           }else{
             this.$message({
@@ -1333,7 +1349,13 @@
       }
     }
   }
-  .el-scrollbar__view::-webkit-scrollbar{
+  .avatar {
+    width: 94px;
+    height: 94px;
+    display: block;
+  }
+
+    .el-scrollbar__view::-webkit-scrollbar{
     display: none;
   }
   .el-scrollbar__view{

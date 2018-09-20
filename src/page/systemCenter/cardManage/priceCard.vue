@@ -101,7 +101,10 @@
             下放数量
           </el-col>
           <el-col :span="17" :offset="1">
-            <input type="text" class="base-input">
+            <input type="text"
+                   class="base-input"
+                   v-model.number="Num"
+                   placeholder="请输入该优惠券下放的数量">
           </el-col>
           <el-col :span="1" class="before">
           </el-col>
@@ -233,6 +236,7 @@
             label: '幸运大抽奖'
           }
         ],
+        Num:'',//下放数量
         Amount: '',//总金额
         DiscountAmount: '',//打折或满减金额
         Details: '',//详细介绍
@@ -270,6 +274,7 @@
         obj.Details = this.Details;
         obj.SourceType = 2;
         obj.ServiceType = 2;
+        obj.Number=this.Num;
         obj.ActivityType = this.type2;
         obj.Name = 'ATH眼镜店铺';
         // console.log(StartTime);
@@ -305,6 +310,7 @@
               })
               this.type=1;
               this.Amount=''
+              this.Num=''
               this.DiscountAmount=''
               this.Details=''
               this.type2=3

@@ -250,7 +250,7 @@
           </el-row>
           <el-row class="row">
             <el-col :span="2" :offset="1">预约时间</el-col>
-            <el-col :offset="12" :span="8">{{currentDetail.CreateDate}}</el-col>
+            <el-col :offset="12" :span="8">{{currentDetail.CreateDate|dateChange}}</el-col>
           </el-row>
           <el-row class="row">
             <el-col :span="2" :offset="1">价格</el-col>

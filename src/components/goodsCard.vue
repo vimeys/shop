@@ -77,7 +77,7 @@
           },
 
           edit(){
-
+              this.$emit('editGoods',this.detail.GoodsId,this.index)
           },
         del(){
           this.$emit('delGoods',this.detail.GoodsId,this.index)

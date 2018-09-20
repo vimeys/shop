@@ -33,7 +33,7 @@
       data(){
           return {
             shopList:'',
-            value:''
+            value:""
           }
       },
       methods:{
@@ -51,7 +51,7 @@
               // this.getGroupList(this.currentShopId)
               this.$emit('getShop',this.shopList[0].UserId)
               this.$message({
-                message: '恭喜你，这是一条成功消息',
+                message: '请求成功',
                 type: 'warning'
               })
             }
@@ -60,7 +60,9 @@
           })}
       },
       mounted(){
-            this.getShopList()
+            // this.getShopList()
+        this.$emit('getShop',this.shop[0].UserId);
+        this.value=this.shop[0].UserId;
       }
     }
 </script>

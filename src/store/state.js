@@ -1,6 +1,6 @@
 const state = {
   userId: 270,
-  Role:4,//权限
+  Role:1,//权限
   shop:[],
 };
 

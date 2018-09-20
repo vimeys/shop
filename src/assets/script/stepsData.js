@@ -13,13 +13,13 @@
   },
 ]
 //财务数据
-export  const moneyManage=[
-  {
-    name:'财务管理',
-    active:true,
-    router:'moneyManage'
-  }
-]
+// export  const moneyManage=[
+//   {
+//     name:'财务管理',
+//     active:true,
+//     router:'moneyManage'
+//   }
+// ]
 
 
 //客户管理
@@ -128,6 +128,18 @@ export const  fodderCenter=[
     router:'/fodderCenter/push'
   }
 ]
+
+//财务管理
+export  const  moneyManage=[{
+  name:'财务管理',
+  active:true,
+  router:'/moneyManage/data'
+},{
+  name:'目标管理',
+  active:false,
+  router:'/moneyManage/target'
+}];
+
 
 
 //账号管理

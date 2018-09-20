@@ -3,15 +3,27 @@
 */
 <template>
       <div class="money-box">
-        <div class="left"></div>
-        <div class="right page">财务管理</div>
+        <!--<div class="left"></div>-->
+        <!--<div class="right page">财务管理</div>-->
+        <step :navList="moneyManage"></step>
       </div>
 </template>
 
 <script>
-    export default {
-        name: "moneyManage"
+  import step from '@/components/steps';
+  import {moneyManage} from "../../assets/script/stepsData";
+
+  export default {
+    name: "moneyManage",
+    components: {
+      step
+    },
+    data() {
+      return {
+        moneyManage:moneyManage
+      }
     }
+  }
 </script>
 
 <style lang='less' scoped>

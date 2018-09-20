@@ -389,8 +389,8 @@
         // }).catch(error=>{
         //   console.log(error);
         // })
-        this.$util.post(this,this.$api.shopList,{},()=>{
-          this.shopList=data.result;
+        this.$util.post(this,this.$api.shopList,{},(data)=>{
+          this.shopList=data;
               this.$message({
                 message: '恭喜你，这是一条成功消息',
                 type: 'warning'

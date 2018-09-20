@@ -63,7 +63,8 @@ import  push from '@/page/fodderCenter/push'
 
 //****************财务管理*********************
 import  moneyManage from '@/page/moneyManage/moneyManage'
-
+import moneyDate from '@/page/moneyManage/moneyData'
+import target from '@/page/moneyManage/targetManage'
 
 //******************运营数据**************************
 import  serviceRate from '@/page/dataView/serviceRate'
@@ -229,7 +230,15 @@ export default new Router({
     {
       path:'/moneyManage',
       name:'moneyManage',
-      component:moneyManage
+      component:moneyManage,
+      children:[{
+        path:'/moneyManage/data',
+        component:moneyDate
+      },{
+        path:'/moneyManage/target',
+        component:target
+      }],
+      redirect:'/moneyManage/data'
     },
     // //服务评价
     // {

@@ -30,7 +30,7 @@
         }
       },
       methods:{
-        ...mapMutations(['saveShop']),
+        ...mapMutations({saveShop:'SET_SHOP'}),
         getShopList(){
           console.log(api.shopList);
           this.$http.post(api.shopList,{}).then(json=>{
@@ -44,7 +44,7 @@
             })
 
           }).then(data=>{
-            this.saveShop(data.result)
+            this.saveShop(data.result)//设置全局变量
           }).catch(error=>{
             console.log(error);
           })

@@ -727,6 +727,7 @@
               let firstShopId=data.result[0].UserId;
               this.currentShopId=firstShopId
               this.getGroupList(this.currentShopId)
+              this.value=firstShopId;
               this.$message({
                 message: '恭喜你，这是一条成功消息',
                 type: 'warning'
