@@ -204,7 +204,7 @@
             obj.Year=this.valueYear;
             obj.Name=item.Name;
             obj.Amount=item.Amount;
-            obj.ShopId=item.currentShopId;
+            obj.ShopId=this.currentShopId;
             obj.Profit=Profit;
             arr.push(obj)
           })
