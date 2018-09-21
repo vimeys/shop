@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-      <ys-nav @chooseNav="chooseNav" v-if="loginType"></ys-nav>
-    <div class="main" v-if="loginType" >
+      <ys-nav @chooseNav="chooseNav" v-if="shop.length"></ys-nav>
+    <div class="main" v-if="shop.length" >
       <!--<steps :navList="client"></steps>-->
       <router-view/>
     </div>
@@ -19,6 +19,7 @@
   import  ysNav from './components/header'
   import  {client,shopSetting,accountSetting,clientManage,fodderCenter,moneyManage,dataView} from './assets/script/stepsData'
   import  ysLogin from './page/login/login'
+  import {mapState,mapGetters} from 'vuex'
 export default {
   name: 'App',
   components: {
@@ -33,6 +34,9 @@ export default {
       phone:'',
       psw:''
     }
+  },
+  computed:{
+    ...mapState(['shop'])
   },
   methods:{
     chooseNav(index){
@@ -67,6 +71,8 @@ export default {
   },
   created(){
     // console.log(shopSetting);
+    localStorage.getItem("shop") && this.$store.replaceState(JSON.parse(localStorage.getItem("shop")));
+
 
   },
   watch:{

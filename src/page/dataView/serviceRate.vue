@@ -4,7 +4,7 @@
 <template>
       <div  class="rate-box">
           <el-tabs v-model="activeName" @tab-click="toggle" class="rate-table">
-              <el-tab-pane label="服务" name="first">
+            <el-tab-pane label="服务" name="first">
                 <!--服务-->
                 <div class="rate-goods-btn">
                   <div class="base-btn-111 {'noActive':isActive}" @click="getRated">已审核</div>

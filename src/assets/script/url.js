@@ -91,7 +91,11 @@
     //添加活动
     activeList:head+'usergame/list',//新建活动列表
       //一元买卷
-    addOne:head+'usergame/version3/addtype3'
+    addOne:head+'usergame/version3/addtype3',
+
+    //目标管理
+    addTarget:head+'SalesTarget/add',//新增目标
+    targetList:head+'SalesTarget/version3/salesTarget',//目标列表
 
 
   };

@@ -96,6 +96,7 @@
       },
       computed:{
         discountPrice(){
+          try{
             let aPrice=this.detail.SpecList;
             let a=[]
             aPrice.forEach(item=>{
@@ -105,11 +106,11 @@
               return a-b
             }
             a.sort(s)
-          try{
-
-          }catch (err) {
-            console.log(err);
+          }catch (e) {
+            console.log(e);
           }
+
+
           console.log(a);
             return a[0]
         }
