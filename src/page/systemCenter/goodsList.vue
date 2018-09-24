@@ -1260,7 +1260,7 @@
     justify-content: flex-start;
     /*column-count: 4;*/
     >div{
-      margin-right: 60px;
+      margin-right: 58px;
     }
     >div:nth-child(4n+0){
       margin-right: 0;

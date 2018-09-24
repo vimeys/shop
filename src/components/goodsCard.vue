@@ -40,82 +40,79 @@
 </template>
 
 <script>
-    export default {
-        name: "goodsCard",
-      props:{
-          index:Number,
-          one:{
-            type:Boolean,
-            default(){
-              return true
-            }
-          },
-          detail:{
-            type:Object,
-            default(){
-              return {
-
-              }
-            }
-          },
-        isSort:{
-            type:Boolean,
-            default(){
-              return false
-            }
+  export default {
+    name: "goodsCard",
+    props: {
+      index: Number,
+      one: {
+        type: Boolean,
+        default() {
+          return true
         }
       },
-      data(){
-          return{
-            src:require('../assets/images/goods.jpg'),
-            chosed:true
-          }
-      },
-      methods:{
-          choose(index){
-            this.$emit('chooseCurrent',index,!this.detail.isChecked)
-          },
-
-          edit(){
-              this.$emit('editGoods',this.detail.GoodsId,this.index)
-          },
-        del(){
-          this.$emit('delGoods',this.detail.GoodsId,this.index)
-        },
-        //查看详情
-        check(){
-            this.$emit('check',index,)
-        },
-        up(index){
-          console.log(123);
-          this.$emit('up',this.index)
-        },
-        down(index){
-            this.$emit("down",this.index)
+      detail: {
+        type: Object,
+        default() {
+          return {}
         }
       },
-      computed:{
-        discountPrice(){
-          try{
-            let aPrice=this.detail.SpecList;
-            let a=[]
-            aPrice.forEach(item=>{
-              a.push(item.Price)
-            })
-            function s(a,b) {
-              return a-b
-            }
-            a.sort(s)
-          }catch (e) {
-            console.log(e);
+      isSort: {
+        type: Boolean,
+        default() {
+          return false
+        }
+      }
+    },
+    data() {
+      return {
+        src: require('../assets/images/goods.jpg'),
+        chosed: true
+      }
+    },
+    methods: {
+      choose(index) {
+        this.$emit('chooseCurrent', index, !this.detail.isChecked)
+      },
+
+      edit() {
+        this.$emit('editGoods', this.detail.GoodsId, this.index)
+      },
+      del() {
+        this.$emit('delGoods', this.detail.GoodsId, this.index)
+      },
+      //查看详情
+      check() {
+        this.$emit('check', index,)
+      },
+      up(index) {
+        console.log(123);
+        this.$emit('up', this.index)
+      },
+      down(index) {
+        this.$emit("down", this.index)
+      }
+    },
+    computed: {
+      discountPrice() {
+        try {
+          let aPrice = this.detail.SpecList;
+          let a = []
+          aPrice.forEach(item => {
+            a.push(item.Price)
+          })
+
+          function s(a, b) {
+            return a - b
           }
 
-
-          console.log(a);
-            return a[0]
+          a.sort(s)
+          return a[0]
+        } catch (e) {
+          console.log(e);
         }
       }
     }
+  }
 </script>
 
 <style lang='less' scoped>

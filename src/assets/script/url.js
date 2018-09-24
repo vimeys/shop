@@ -98,6 +98,10 @@
     targetList:head+'SalesTarget/version3/salesTarget',//目标列表
 
 
+    //获取评价信息
+    getGoodsCheck:head+"evaluate/version3/list4serverperson",//单个已审核商品评价
+    getGoodsChecked:head+"evaluate/version3/list4serverperson",//单个已审核商品评价
+
   };
 
 
