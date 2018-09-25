@@ -75,7 +75,7 @@
     //客户管理页面
     openVipCard:head+'membershipCard/version3/addMembershipCard',//开新会员卡
     getVipList:head+'gameuser/version3/list4web',//获取会员列表
-
+    getVipCardList:head+'membershipCard/currentUserVip',//获取单个会员卡片
     //挂单
     serverList:head+'settleAccounts/version3/goodsList',//获取服务列表
     serverPeopleList:head+'settleAccounts/version3/userList',//获取服务员列表
@@ -96,12 +96,17 @@
     //目标管理
     addTarget:head+'SalesTarget/add',//新增目标
     targetList:head+'SalesTarget/version3/salesTarget',//目标列表
+    hasTargetYear:head+'SalesTarget/version3/IsExistYear',//获取年份
+    updataTarget:head+'SalesTarget/version3/updateSalesTarge',//更新
+    targetDetail:head+'SalesTarget/version3/salesTargedetails',//详情
+
 
 
     //获取评价信息
     getGoodsCheck:head+"evaluate/version3/list4serverperson",//单个已审核商品评价
-    getGoodsChecked:head+"evaluate/version3/list4serverperson",//单个已审核商品评价
-
+    doGoodsCheck:head+"evaluate/version3/updatestate",//对商品进行审核
+    // getPeople:head+'Users/version/shopByuser',//获取当前店铺下所有员工
+    getPeople:head+'user/version/userByPics',//获取当前店铺下所有员工
   };
 
 

@@ -42,7 +42,6 @@
                 path: '/centerIndex/cardManage/vipCard'
               });
               break;
-
           }
         },
       },
@@ -53,6 +52,13 @@
       //
       // }
       created(){
+        if(sessionStorage.getItem("cardManage")){
+          this.activeName=sessionStorage.getItem('cardManage')
+        }
+
+        window.addEventListener("beforeunload",()=>{
+          sessionStorage.setItem("cardManage",this.activeName)
+        })
       }
     }
 </script>

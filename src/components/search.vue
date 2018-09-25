@@ -77,8 +77,10 @@
       top:0;
       right: 0;
       line-height: 35px;
+      cursor: pointer;
     }
     .search-icon-left{
+      cursor: pointer;
       width: 44px;
      height: 35px;
       display: inline-block;

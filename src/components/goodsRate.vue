@@ -65,11 +65,11 @@
         // },
         //查看未审核
         check() {
-          this.$emit('check', index,)
+          this.$emit('check', this.index,)
         },
         //查看已审核
         checked(){
-            this.$emit("checked",index)
+            this.$emit("checked",this.index)
         }
       },
       computed: {

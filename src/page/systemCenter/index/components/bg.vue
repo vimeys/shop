@@ -14,22 +14,36 @@
     <div class="right">
       <div class="title">背景图</div>
       <div class="images">
+        <template v-for="(item,index) in bannerImages">
+          <div class="image-box">
+            <img :src="item" alt="">
+            <div class="image-del">
+              <span class="el-icon-delete" @click="delImage(index)"></span>
+            </div>
+          </div>
+
+        </template>
         <!--<img src="https://img.yzcdn.cn/2.jpg" alt="">-->
         <!--<img src="https://img.yzcdn.cn/2.jpg" alt="">-->
         <!--<img src="https://img.yzcdn.cn/2.jpg" alt="">-->
         <!--<img src="https://img.yzcdn.cn/2.jpg" alt="">-->
         <!--action="https://jsonplaceholder.typicode.com/posts/"-->
-        <el-upload
-          action="http://mdimg.yilianchuang.cn/uploadimage3.ashx"
-          list-type="picture-card"
-          :on-preview="handlePictureCardPreview"
-          :on-success="getFile"
-          :on-remove="handleRemove">
-          <i class="el-icon-plus"></i>
-        </el-upload>
-        <el-dialog :visible.sync="dialogVisible">
-          <img width="100%" :src="dialogImageUrl" alt="">
-        </el-dialog>
+        <!--<el-upload-->
+          <!--action="http://mdimg.yilianchuang.cn/uploadimage3.ashx"-->
+          <!--list-type="picture-card"-->
+          <!--:on-preview="handlePictureCardPreview"-->
+          <!--:on-success="getFile"-->
+          <!--:on-remove="handleRemove">-->
+          <!--<i class="el-icon-plus"></i>-->
+        <!--</el-upload>-->
+        <div class="up-box" v-if="bannerImages.length<5">
+          <ys-upload
+            @imageUrl="upLoad"
+          ></ys-upload>
+        </div>
+        <!--<el-dialog :visible.sync="dialogVisible">-->
+          <!--<img width="100%" :src="dialogImageUrl" alt="">-->
+        <!--</el-dialog>-->
       </div>
       <div>
         <h4>· Banner最多上传5张</h4>
@@ -44,8 +58,12 @@
 <script>
   import { Swipe, SwipeItem } from 'vant';
   import RouterLink from "vant/es/mixins/router-link";
+  import ysUpload from '@/components/upload'
     export default {
         name: "bg",
+      components:{
+        ysUpload
+      },
       data(){
           return{
             imageUrl: true,
@@ -69,6 +87,19 @@
           let url=file.response.url;
           console.log(file.response.url);
           this.bannerImages.push(url)
+        },
+        upLoad(url){
+          console.log(url);
+          this.bannerImages.push(url)
+        },
+
+        //删除上传的图片
+        delImage(index){
+
+          this.$util.confirm(this).then(json=>{
+            console.log(json);
+            this.bannerImages.splice(index,1)
+          })
         }
       }
 
@@ -122,10 +153,41 @@
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
-        img{
+        .image-box{
           width:120px;
           height:195px;
           margin-right: 16px;
+          position: relative;
+          .image-del{
+            position: absolute;
+            top:0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            background: rgba(0,0,0,.5);
+            span{
+              color:#fff;
+            }
+          }
+
+        }
+        .image-box:hover .image-del{
+          display: flex;
+        }
+        img{
+          z-index: 10;
+          width:120px;
+          height:195px;
+          margin-right: 16px;
+        }
+
+        .up-box{
+          width: 120px;
+          height: 195px;
         }
       }
       h4{

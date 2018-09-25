@@ -104,7 +104,16 @@
             })
         }
       },
+      created(){
+        if(sessionStorage.getItem("index")){
+          this.activeName=sessionStorage.getItem('index')
+        }
 
+
+        window.addEventListener("beforeunload",()=>{
+          sessionStorage.setItem("index",this.activeName)
+        })
+      }
     }
 </script>
 

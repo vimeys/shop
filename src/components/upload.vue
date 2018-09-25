@@ -1,6 +1,7 @@
 <template>
 	<div class="input-box">
     <input class="fileInput" type="file" :multiple="multiple" @change="inputChange">
+    <span class="el-icon-plus"></span>
 	</div>
 
 </template>
@@ -75,11 +76,17 @@ export default {
                 //  + imageMogrStr
                 console.log(result.url,'****************');
                 console.log(that,'****************');
+                // that.$emit(
+                //   "imageUrl",
+                //   that.imgIndex,
+                //   result.url,
+                //   that.type
+                // );
                 that.$emit(
                   "imageUrl",
-                  that.imgIndex,
+                  // that.imgIndex,
                   result.url,
-                  that.type
+                  // that.type
                 );
               } else {
                 that.$emit("imageUrl", that.imgIndex, "上传失败", that.type);
@@ -96,11 +103,17 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
   .input-box{
     width: 100%;
     height: 100%;
     border: 2px dotted #ccc;
+    position: relative;
+    span{
+      position: absolute;
+      top:50%-8px;
+      left: 50%-8px;
+    }
   }
 .fileInput {
   /*position: absolute;*/

@@ -69,7 +69,7 @@ import target from '@/page/moneyManage/targetManage'
 //******************运营数据**************************
 import  serviceRate from '@/page/dataView/serviceRate'
 import  dataView from '@/page/dataView/dataView'
-
+import serviceData from '@/page/dataView/serviceData'
 Vue.use(Router);
 
 export default new Router({
@@ -255,6 +255,11 @@ export default new Router({
           path:'serviceRate',
           name:'serviceRate',
           component:serviceRate
+        },
+        {
+          path:'serviceData',
+          name:'serviceData',
+          component:serviceData
         }
       ]
     }

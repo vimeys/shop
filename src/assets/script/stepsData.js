@@ -75,27 +75,27 @@ export  const dataView=[
   {
     name:'服务数据',
     active:false,
-    router:'/dataView/serviceRate'
+    router:'/dataView/serviceData'
   },
   {
     name:'员工业绩',
     active:false,
-    router:'/dataView/serviceRate'
+    router:'/dataView/serviceData'
   },
   {
     name:'游戏数据',
     active:false,
-    router:'/dataView/serviceRate'
+    router:'/dataView/serviceData'
   },
   {
     name:'分销数据',
     active:false,
-    router:'/dataView/serviceRate'
+    router:'/dataView/serviceData'
   },
   {
     name:'文章及画报数据',
     active:false,
-    router:'/dataView/serviceRate'
+    router:'/dataView/serviceData'
   },
   {
     name:'评价管理',
@@ -105,12 +105,12 @@ export  const dataView=[
   {
     name:'客流增长报表',
     active:false,
-    router:'/dataView/serviceRate'
+    router:'/dataView/serviceData'
   },
   {
     name:'用户评价统计',
     active:false,
-    router:'/dataView/serviceRate'
+    router:'/dataView/serviceData'
   },
 ]
 

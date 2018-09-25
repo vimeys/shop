@@ -9,7 +9,8 @@
     <img src="../assets/images/onceCard.png" alt="" v-else="detail.MembershipType==3">
     <div class="content">
       <div class="name">
-        {{detail.MembershipName}}
+        {{detail.MembershipName}}（通用）
+        <span class="sale-name">已售：100</span>
       </div>
       <div class="detail">
         <div>
@@ -18,9 +19,10 @@
         <div>具体权益：美发类享受8折优惠</div>
       </div>
       <div class="money-date">
-        <div v-if="cardNum==3">消费次数：{{detail.Frequency}}次</div>
+        <div v-if="detail.MembershipType==3">消费次数：{{detail.Frequency}}次</div>
         <div v-else>卡内额度：{{detail.BuyAmount}}</div>
-        <div>有效期：{{detail.EffectiveTime/12}}年</div>
+        <div v-if="detail.EffectiveTime==-1">有效期：永久</div>
+        <div v-else>有效期：{{detail.EffectiveTime/12}}年</div>
       </div>
     </div>
     <div class="coupon-radio"
@@ -118,7 +120,7 @@
   @import "~@/assets/style/mixin";
   .card{
     width: 369px;
-    height: 144px;
+    height: 148px;
     position: relative;
     margin-bottom: 20px;
     margin-top: 20px;
@@ -146,6 +148,13 @@
         color:#fff;
         padding-left: 30px;
         margin-top: 12px;text-align: left;
+        position: relative;
+        .sale-name{
+          position: absolute;
+          top:10px;
+          right:18px;
+          font-size: 13px;
+        }
       }
       .detail{
         width: 100%;

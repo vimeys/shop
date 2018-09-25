@@ -36,31 +36,42 @@
           <span>达标</span>
         </el-col>
       </el-row>
-      <el-row class="target-progress">
-        <el-col :offset="1" span="12" style="height: 52px;line-height: 52px;padding: 20px">
-          <van-progress :percentage="50" :color="redP"/>
-        </el-col>
-        <el-col :span="4" :class="{'green-font':green}">
-          17000（达标20%）
-        </el-col>
-        <el-col :span="2" :offset="4">
-          2018年1月
-        </el-col>
-      </el-row>
-      <el-row class="target-progress">
-        <el-col :offset="1" span="12" style="height: 52px;line-height: 52px;padding: 20px">
-          <van-progress :percentage="50" :color="greenp"/>
-        </el-col>
-        <el-col :span="4" :class="{'red-font':red}">
-          17000（达标20%）
-        </el-col>
-        <el-col :span="2" :offset="4">
-          2018年1月
-        </el-col>
-      </el-row>
+      <template v-for="item in targetListValue">
+        <el-row class="target-progress">
+          <el-col :offset="1" span="12" style="height: 52px;line-height: 52px;padding: 20px">
+            <van-progress :percentage="item.Quantity " :color="redP" v-if="item.Standard==1"/>
+            <van-progress :percentage="item.Quantity " :color="greenp" v-else />
+          </el-col>
+          <el-col :span="4" :class="{'green-font':green}" v-if="item.Standard==1">
+            {{item.OrderAmount}}（达标{{item.Quantity}}%）
+          </el-col>
+          <el-col :span="4" :class="{'red-font':green}" v-else>
+            {{item.OrderAmount}}（达标{{item.Quantity}}%）
+          </el-col>
+          <el-col :span="2" :offset="4">
+            {{item.DateTime}}
+          </el-col>
+        </el-row>
+      </template>
+
+      <!--<el-row class="target-progress">-->
+        <!--<el-col :offset="1" span="12" style="height: 52px;line-height: 52px;padding: 20px">-->
+          <!--<van-progress :percentage="50" :color="greenp"/>-->
+        <!--</el-col>-->
+        <!--<el-col :span="4" :class="{'red-font':red}">-->
+          <!--17000（达标20%）-->
+        <!--</el-col>-->
+        <!--<el-col :span="2" :offset="4">-->
+          <!--2018年1月-->
+        <!--</el-col>-->
+      <!--</el-row>-->
     </div>
     <div v-else>
-
+      <el-row>
+        <el-col>
+          暂无数据
+        </el-col>
+      </el-row>
     </div>
     <ys-popup
       :width="width"
@@ -129,16 +140,16 @@
           showModel:false,
           valueYear:'',
           date:[
-            {
-              date:'2016',
-              value:2016
-            },{
-              date:'2017',
-              value:2017
-            },{
-              date:'2018',
-              value:2018
-            },
+            // {
+            //   date:'2016',
+            //   value:2016
+            // },{
+            //   date:'2017',
+            //   value:2017
+            // },{
+            //   date:'2018',
+            //   value:2018
+            // },
           ],
           //每月成本
           cost:[
@@ -150,9 +161,10 @@
           //每月净利润
           Amount:'',
           currentShopId:'',//当前店铺的id
-          red:true,
+          red:false,
           green:true,
           hasTarget:true,
+          targetListValue:[],
           greenp:"#D0021B",
           redP:'#7ED321'
         }
@@ -161,6 +173,7 @@
         getShop(e){
             this.currentShopId=e
           this.getList(this.valueYear,e)
+          this.hasTargetYear(e)
         },
         selectShop(e){
             this.currentShopId=e;
@@ -169,7 +182,30 @@
         //打开弹窗
         open(){
           this.showModel=true;
+          if(this.targetListValue){
+              this.getTargetOld();
+          }
+        },
+        getTargetOld(){
+            this.$util.post(this,this.$api.targetDetail,{year:this.valueYear,shopId:this.currentShopId},(data)=>{
+              console.log(data);
+              try{
+                let arr=[];
+                data.SalesTarget_List.forEach(item=>{
+                  let obj={}
+                  obj.Name=item.Name;
+                  obj.Amount=item.Amount;
+                  obj.ProfitId=item.ProfitId
+                  obj.SalesTargetId=item.SalesTargetId
+                  arr.push(obj)
+                })
+                this.cost=arr;
+              this.Amount=data.Profit_List.Amount;
+              }catch (e) {
+                console.log(e);
+              }
 
+            })
         },
         //关闭弹窗
         close(){
@@ -184,31 +220,66 @@
             this.getList(e,this.currentShopId)
         },
         add(){
+          if(this.targetListValue){
+            this.cost.push({
+              Name:'',
+              Amount:'',
+              ProfitId:'',
+              SalesTargetId:''
+            })
+          }else{
             this.cost.push({
               Name:'',
               Amount:''
             })
+          }
+
         },
         del(index){
           this.cost.splice(index,1)
         },
+        //新增/修改目标设置
+        //todo 接口数据错误
         addTarget(){
-          let Profit=[{
-            Amount:this.Amount,
-            Year:this.valueYear,
-            shopId:this.currentShopId
-          }];
-          let arr=[]
-          this.cost.forEach(item=>{
-            let obj={};
-            obj.Year=this.valueYear;
-            obj.Name=item.Name;
-            obj.Amount=item.Amount;
-            obj.ShopId=this.currentShopId;
-            obj.Profit=Profit;
-            arr.push(obj)
-          })
+          if(this.targetListValue){
+              let profit=[];
+            profit[0]={}
+            profit[0].Amount=this.Amount
+            profit[0].ShopId=this.currentShopId;
+            profit[0].Year=this.valueYear;
+            let arr=[]
+            this.cost.forEach(item=>{
+              let obj={};
+              obj.Year=this.valueYear;
+              obj.Name=item.Name;
+              obj.Amount=item.Amount;
+              obj.ShopId=this.currentShopId;
+              obj.ProfitId=item.ProfitId;
+              obj.SalesTargetId=item.SalesTargetId
+              arr.push(obj)
+            })
+            // profit[0].
+            this.$util.post(this,this.$api.updataTarget,{profit:profit,salesTarget:arr},()=>{
+                this.getList(this.valueYear,this.currentShopId)
+                this.showModel=false;
+            })
 
+          }else {
+            let Profit=[{
+              Amount:this.Amount,
+              Year:this.valueYear,
+              ShopId:this.currentShopId
+            }];
+            let arr=[]
+            this.cost.forEach(item=>{
+              let obj={};
+              obj.Year=this.valueYear;
+              obj.Name=item.Name;
+              obj.Amount=item.Amount;
+              obj.ShopId=this.currentShopId;
+              obj.Profit=Profit;
+              arr.push(obj)
+            })
             this.$util.post(this,this.$api.addTarget,{model:arr},(data)=>{
               this.showModel=false;
               this.Amount=''
@@ -217,18 +288,47 @@
                 Amount:''
               }]
             })
+          }
+
         },
+        //获取目标列表
         getList(year,shopid){
             this.$util.post(this,this.$api.targetList,{year:year,shopId:shopid},(data)=>{
               console.log(data);
+              this.targetListValue=data
             })
+        },
+
+        //判断到什么年份
+        hasTargetYear(shopid){
+          this.$util.post(this,this.$api.hasTargetYear,{shopId:shopid},(data)=>{
+            console.log(data);
+            let date=new Date();
+            let year=date.getFullYear();
+            if(data.Year<year){
+              let cha=year-data.Year;
+              let arr=[];
+              for(var i=0;i<cha;i++){
+                let obj={}
+                obj.date=`"${data.Year+i}"`
+                obj.value=data.Year+i;
+                arr.push(obj)
+              }
+              this.date=arr
+            }else{
+              this.date=[{
+                date:`${year}`,
+                value:year
+              }]
+            }
+          })
         }
       },
       created(){
          let date=new Date();
          let year=date.getFullYear();
          this.valueYear=year;
-
+        this.hasTargetYear();
       }
     }
 </script>

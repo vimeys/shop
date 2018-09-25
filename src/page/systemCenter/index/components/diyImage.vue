@@ -4,8 +4,8 @@
     <div class="left">
       <img src="@/assets/images/nav-image.png"/>
       <div class="swiper">
-        <div class="dotted">
-          <img src="https://img.yzcdn.cn/2.jpg" alt="">
+        <div class="border">
+          <img :src="upImage" alt="">
         </div>
       </div>
     </div>
@@ -13,11 +13,15 @@
       <div class="title">自定义图片</div>
       <div class="images">
         <div v-show="toggle" class="hasImage">
-          <img src="https://img.yzcdn.cn/2.jpg" alt="">
+          <!--<img src="https://img.yzcdn.cn/2.jpg" alt="">-->
+          <p class="upload-box" v-if="!upImage">
+              <ys-upload @imageUrl="upLoad"></ys-upload>
+          </p>
+          <img v-else :src="upImage" style="width: 120px;height: 120px" alt="">
           <div>
             跟换图片
           </div>
-          <div>
+          <div @click="delImage">
             删除图片
           </div>
         </div>
@@ -44,9 +48,12 @@
 </template>
 
 <script>
-
+    import ysUpload from  '@/components/upload'
     export default {
       name: "diyImage",
+      components:{
+        ysUpload
+      },
       data(){
         return{
           imageUrl: true,
@@ -54,6 +61,7 @@
           dialogImageUrl: '',
           dialogVisible: false,
           toggle:true,
+          upImage:'',
           images:[
             'https://img.yzcdn.cn/2.jpg',
             'https://img.yzcdn.cn/2.jpg'
@@ -61,13 +69,20 @@
 
         }
       },
-      methods:{
+      methods: {
         handleRemove(file, fileList) {
           console.log(file, fileList);
         },
         handlePictureCardPreview(file) {
           this.dialogImageUrl = file.url;
           this.dialogVisible = true;
+        },
+        // 上传
+        upLoad(url) {
+          this.upImage = url
+        },
+        delImage(){
+          this.upImage=''
         }
       }
     }
@@ -94,6 +109,9 @@
         width: 100%;
         height: 609px;
         background: #fff;
+        .border{
+          border-top: 1px solid #ccc;
+        }
         .dotted{
           width:375px;
           height:375px;
@@ -121,6 +139,10 @@
         margin-left: 30px;
         margin-bottom: 30px;
       }
+      .upload-box{
+        width: 120px!important;
+        height: 120px!important;
+      }
       .images{
         margin-left: 30px;
         display: flex;
@@ -133,7 +155,7 @@
         }
         .hasImage{
           display: flex;
-          div{
+          >div{
             background: #FDD731;
             text-align: center;
             line-height: 37px;

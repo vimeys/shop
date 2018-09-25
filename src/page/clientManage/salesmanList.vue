@@ -13,14 +13,14 @@
     </div>
     <div class="table">
       <el-table
-        :data="tableData"
+        :data="list"
         style="width: 100%">
         <el-table-column
           label="分销商名称"
           width="300">
           <template slot-scope="scope">
             <!--<i class="el-icon-time"></i>-->
-            <span style="margin-left: 10px">{{ scope.row.name }}</span>
+            <span style="margin-left: 10px">{{ scope.row.ServicePersonName }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -28,7 +28,7 @@
           width="300">
           <template slot-scope="scope">
             <!--<i class="el-icon-time"></i>-->
-            <span style="margin-left: 10px">{{ scope.row.date }}</span>
+            <span style="margin-left: 10px">{{ scope.row.ContactPhoneNum }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -106,33 +106,43 @@
           }
       },
       methods:{
+        getShop(e){
+            this.getSalesman(e)
+        },
+        selectShop(e){
+          this.getSalesman(e)
+        },
         handleEdit(index,data){
           console.log(data);
           console.log(index);
         },
         //获取经销商列表
-        getSalesman(){
+        getSalesman(shopId){
             let obj={
               query:{
-                pageIndex:1, pageSize:10, key:''
+                pageIndex:1, pageSize:10, key:'',
+                shopId:shopId
               }
             };
-            this.$http.post('http://rap2api.taobao.org/app/mock/84341/gameusershop/list',{}).then(json=>{
-              console.log(json);
-              let data=json.data;
-              if(data.isSuc==true){
-                this.list=data.result.Items
-                console.log(this.list);
-              }
-              // let data=json.data;
-              // if(data.isSuc==true){
-              //   this.list=data.result.Items
-              // }
-            })
+            // this.$http.post('http://rap2api.taobao.org/app/mock/84341/gameusershop/list',{}).then(json=>{
+            //   console.log(json);
+            //   let data=json.data;
+            //   if(data.isSuc==true){
+            //     this.list=data.result.Items
+            //     console.log(this.list);
+            //   }
+            //   // let data=json.data;
+            //   // if(data.isSuc==true){
+            //   //   this.list=data.result.Items
+            //   // }
+            // })
+          this.$util.post(this,this.$api.getSalesman,obj,(data)=>{
+            console.log(data);
+          })
         }
       },
       mounted(){
-          this.getSalesman()
+          // this.getSalesman()
       }
     }
 </script>

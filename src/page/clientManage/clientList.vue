@@ -25,56 +25,58 @@
         </div>
         <div class="table">
           <el-table
-            :data="tableData"
+            :data="vipList"
             style="width: 100%">
             <el-table-column
               label="姓名"
-              width="130">
+              width="180">
               <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                <span style="margin-left: 10px">{{ scope.row.NickName }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="手机号"
-              width="130">
+              width="180">
               <template slot-scope="scope">
                 <!--<i class="el-icon-time"></i>-->
-                <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                <span style="margin-left: 10px">{{ scope.row.PhoneNum }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="成为会员时间"
-              width="130">
+              width="180">
               <template slot-scope="scope">
                 <!--<i class="el-icon-time"></i>-->
-                <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                <span style="margin-left: 10px">{{ scope.row.CreateDate|dateChange }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="已消费金额"
-              width="130">
+              width="180">
               <template slot-scope="scope">
-                <el-popover trigger="hover" placement="top">
-                  <p>姓名: {{ scope.row.name }}</p>
-                  <p>住址: {{ scope.row.address }}</p>
-                  <div slot="reference" class="name-wrapper">
-                    <!--<el-tag size="medium">{{ scope.row.name }}</el-tag>-->
-                    {{scope.row.name}}
-                  </div>
-                </el-popover>
+                <!--<el-popover trigger="hover" placement="top">-->
+                  <!--<p>姓名: {{ scope.row.name }}</p>-->
+                  <!--<p>住址: {{ scope.row.address }}</p>-->
+                  <!--<div slot="reference" class="name-wrapper">-->
+                    <!--&lt;!&ndash;<el-tag size="medium">{{ scope.row.name }}</el-tag>&ndash;&gt;-->
+                    <!--{{scope.row.name}}-->
+                  <!--</div>-->
+                <!--</el-popover>-->
+                <span style="margin-left: 10px">{{ scope.row.Money }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="消费次数"
-              width="80">
+              width="180">
               <template slot-scope="scope">
-                <el-popover trigger="hover" placement="top">
-                  <p>姓名: {{ scope.row.name }}</p>
-                  <p>住址: {{ scope.row.address }}</p>
-                  <div slot="reference" class="name-wrapper">
-                    <el-tag size="medium">{{ scope.row.name }}</el-tag>
-                  </div>
-                </el-popover>
+                <!--<el-popover trigger="hover" placement="top">-->
+                  <!--<p>姓名: {{ scope.row.name }}</p>-->
+                  <!--<p>住址: {{ scope.row.address }}</p>-->
+                  <!--<div slot="reference" class="name-wrapper">-->
+                    <!--<el-tag size="medium">{{ scope.row.name }}</el-tag>-->
+                  <!--</div>-->
+                <!--</el-popover>-->
+                <span style="margin-left: 10px">{{ scope.row.Money }}</span>
               </template>
             </el-table-column>
             <!--<el-table-column-->
@@ -98,7 +100,7 @@
                 <el-button
                   size="mini"
                   class="base-btn"
-                  @click="handleEdit(scope.$index, scope.row)">查询</el-button>
+                  @click="checkPayList(scope.$index, scope.row)">查询</el-button>
               </template>
             </el-table-column>
             <el-table-column label="消费信息">
@@ -114,7 +116,7 @@
                 <el-button
                   size="mini"
                   class="base-btn"
-                  @click="handleEdit(scope.$index, scope.row)">查询</el-button>
+                  @click="checkVipCard(scope.$index, scope.row)">查询</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -162,7 +164,7 @@
         >
           <div class="table-box">
             <el-row class="row">
-              <el-col :span="24">开卡</el-col>
+              <el-col :span="24"><div class="base-h3">开卡</div></el-col>
             </el-row>
             <el-scrollbar class="scroll">
              <el-row class="row">
@@ -342,7 +344,7 @@
           <div  style="width: 100%;">
             <el-row class="moban-title">
               <el-col :span="5" :offset="2">
-                <h4>选择模板卡</h4>
+                <div class="base-h3">选择模板卡</div>
               </el-col>
             </el-row>
             <el-row>
@@ -375,7 +377,7 @@
         >
           <div class="history">
             <el-row class="history-word">
-              <el-col><h3>消费信息</h3></el-col>
+              <el-col><div class="base-h3">消费信息</div></el-col>
             </el-row>
             <el-row>
               <el-col>
@@ -418,7 +420,7 @@
       >
         <div class="history">
           <el-row class="history-word">
-            <el-col><h3>消费信息</h3></el-col>
+            <el-col><div class="base-h3">消费信息</div></el-col>
           </el-row>
           <el-row>
             <el-col>
@@ -449,9 +451,39 @@
             </el-col>
           </el-row>
         </div>
-
-
       </ys-popup>
+       <ys-popup
+        :width="vipCard.width"
+        :height="vipCard.height"
+        v-show="vipCard.showModal"
+        @close="closeVipCard"
+       >
+         <div class="vip-card-list">
+           <el-row class="history-word">
+             <el-col><h3>消费信息</h3></el-col>
+           </el-row>
+           <el-row>
+             <el-col :span="8" style="margin-bottom:30px;margin-left: 25px">持卡用户：Mact</el-col>
+           </el-row>
+           <el-row>
+             <el-col>
+               <el-scrollbar class="vip-card-scroll">
+                <template v-for="item in [123,3,3,3,3,3]">
+                  <ys-vip-card></ys-vip-card>
+                </template>
+
+               </el-scrollbar>
+             </el-col>
+           </el-row>
+           <el-row>
+             <el-col>
+               <div class="vip-btn">
+                 确定
+               </div>
+             </el-col>
+           </el-row>
+         </div>
+       </ys-popup>
 
       </el-tab-pane>
 
@@ -545,11 +577,37 @@
         ysPay,
         ysVipCard
       },
+      filters:{
+        dateChange(val){
+          try{
+            var first =val.indexOf('(');
+            var last =val.indexOf(')');
+            var time=val.substring(first+1,last)
+          }catch(err){
+            console.log(err);
+          }
+
+          time=new Date(parseInt(time));
+          // return
+          const year = time.getFullYear()
+          const month = time.getMonth() + 1
+          const day = time.getDate()
+          const hour = time.getHours()
+          const minute = time.getMinutes()
+          const second = time.getSeconds()
+          const formatNumber = n => {
+            n = n.toString()
+            return n[1] ? n : '0' + n
+          }
+          return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute].map(formatNumber).join(':')
+
+        }
+      },
       data(){
         return {
           activeName:'first',
           value123:'',
-          opc:{//开发弹窗
+          opc:{//开卡弹窗
             showModal:false,
             pWidth:760,
             pHeight:608,
@@ -559,10 +617,15 @@
             pWidth:504,
             pHeight:708,
           },
-          payHistory:{
+          payHistory:{//充值记录
             showModal:false,
             pWidth:700,
             pHeight:812,
+          },
+          vipCard:{
+            width:470,
+            height:850,
+            showModal:false
           },
           pay:{//付费页面
             showModel:false,
@@ -665,6 +728,7 @@
           }],
           vipPriceTable:[],//会员消费记录
           vipList:[],//会员列表
+          defaultList:[],//普通会员
           cardListType:[],//会员卡列表
           currentMoban:"",//当前选中的模板
           isUserMoban:false,//是否使用当前模板
@@ -672,7 +736,14 @@
       },
       methods:{
         getShop(e){
+          console.log(e);
           this.getVipList(e)
+          this.getDefaultList(e)
+        },
+        selectShop(e){
+          console.log(e);
+          this.getVipList(e);
+          this.getDefaultList(e)
         },
         handleClick(tab, event){
           // switch (this.activeName) {
@@ -731,49 +802,55 @@
 
         //todo 开通会员卡报错
         //开卡
-        handleEdit(tab,event){
-            // this.opc.showModal=true;
-            let obj={ model:
-                { GameusersName:this.GameusersName,
-                  PhoneNum :this.PhoneNum,
-                  MembershipName :'',
-                  MembershipType :this.carlType+1,
-                  Effective :this.yearNum>0?this.yearNum*12:-1,
-                  Frequency :this.Frequency?this.Frequency:0,
-                  Type:2,
-                  BuyAmount :this.buyMoney?this.buyMoney:0,
-                  // BuyAmount :1000,
-                  Minimum :2,
-                  Discount :this.Discount?this.Discount:0,
-                  Content:'123',
-                  GoodsType:this.typeNum
-                }
-        }
-        if(this.carlType===0){
-          obj.model.MembershipName='充值卡'
-        }else if(this.carlType=1){
-          obj.model.MembershipName='定制卡'
-        }else{
-          obj.model.MembershipName='次卡'
-        }
-        // try{
-        //   let arr=[];
-        //     this.typeNum.forEach(item=>{
-        //         arr.push({GoodsTypeId:item})
-        //     })
-        //   obj.model.GoodsType=arr;
-        // }catch (err) {
-        //   console.log(err);
-        // }
+        handleEdit(tab, event) {
+          // this.opc.showModal=true;
+          let obj = {
+            model:
+              {
+                GameusersName: this.GameusersName,
+                PhoneNum: this.PhoneNum,
+                MembershipName: '',
+                MembershipType: this.carlType + 1,
+                Effective: this.yearNum > 0 ? this.yearNum * 12 : -1,
+                Frequency: this.Frequency ? this.Frequency : 0,
+                Type: 2,
+                BuyAmount: this.buyMoney ? this.buyMoney : 0,
+                // BuyAmount :1000,
+                Minimum: 2,
+                Discount: this.Discount ? this.Discount : 0,
+                Content: '123',
+                GoodsType: this.typeNum
+              }
+          }
+          if (this.carlType === 0) {
+            obj.model.MembershipName = '充值卡'
+          } else if (this.carlType = 1) {
+            obj.model.MembershipName = '定制卡'
+          } else {
+            obj.model.MembershipName = '次卡'
+          }
+          // try{
+          //   let arr=[];
+          //     this.typeNum.forEach(item=>{
+          //         arr.push({GoodsTypeId:item})
+          //     })
+          //   obj.model.GoodsType=arr;
+          // }catch (err) {
+          //   console.log(err);
+          // }
           // console.log(obj);
           // console.log('执行到这里');
           // return
-        this.$http.post(this.$api.openVipCard,obj).then(json=>{
-          let data=json.data
-          if(data.isSuc==true){
+          this.$http.post(this.$api.openVipCard, obj).then(json => {
+            let data = json.data
+            if (data.isSuc == true) {
 
-          }
-        })
+            }
+          })
+        },
+        //查看消费记录
+        checkPayList(index){
+          this.payHistory.showModal=true
         },
         //查询消费记录
         handleHistory(){
@@ -783,7 +860,18 @@
                 this.vipPriceTable=json.data.table;
               })
         },
-
+        //查询会员的会员卡
+        checkVipCard(index,row){
+          console.log(index);
+          console.log(row);
+          this.vipCard.showModal=true
+          this.$util.post(this,this.$api.getVipCardList,{gameusersId:row.GameusersId},(data)=>{
+            console.log(data);
+          })
+        },
+        closeVipCard(){
+            this.vipCard.showModal=false
+        },
         // pay(){
         //   this.
         // },
@@ -827,7 +915,17 @@
             let data=json.data
             console.log(data);
             if(data.isSuc=true){
-              this.vipList=data.result
+              this.vipList=data.result.Items
+            }
+          })
+        },
+        //获取普通会员
+        getDefaultList(shopId,isvip=0,pageIndex=1,pageSize=10){
+          this.$http.post(this.$api.getVipList,{shopId:shopId,pageIndex:pageIndex,pageSize:pageSize,isvip:isvip,key:''}).then(json=>{
+            let data=json.data
+            console.log(data);
+            if(data.isSuc=true){
+              this.defaultList=data.result.Items
             }
           })
         },
@@ -850,7 +948,7 @@
       },
       mounted(){
           this.getTypeList();//获取分组列表
-          this.getVipList();//获取会员列表
+          // this.getVipList();//获取会员列表
         this.getCardList()
       }
     }
@@ -868,9 +966,15 @@
     height: 36px !important;
     line-height: 36px !important;
   }
+/deep/.el-button:hover, .el-button:focus {
+  color: #282828;
+}
+/deep/ .el-table th > .cell.highlight{
+  color:#282828;
+}
   .box{
     width:1200px;
-    margin-top: 30px;
+    /*margin-top: 30px;*/
   }
 .open-card-btn{
   .base-btn-111;
@@ -997,14 +1101,13 @@
   /*消费信息弹窗*/
   .history{
   width: 100%;
-    padding: 50px 50px 0;
+    padding: 0 50px 0;
     &-word{
       margin-top: 20px;
       margin-bottom: 30px;
       text-align: left;
       font-size: 20px;
       color:#282828;
-
     }
     &-title{
       display: flex;
@@ -1038,6 +1141,30 @@
     line-height: 47px;
   }
 }
+//会员卡查询接口
+.vip-card-list{
+  width: 100%;
+  .history-word{
+    margin-top: 0px;
+    margin-bottom: 0px;
+    text-align: left;
+    font-size: 20px;
+    margin-left: 50px;
+    color:#282828;
+  }
+  .vip-card-scroll{
+    height: 560px;
+    width: 100%;
+    text-align: center;
+    display: table;
+    padding-left: 50px;
+  }
+  .vip-btn{
+    .base-btn(334px);
+    margin-top: 50px;
+  }
+}
+
     //支付页面弹窗
   .pay{
     width: 100%;

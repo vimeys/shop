@@ -171,11 +171,11 @@
       <el-table-column
         label="状态"
         prop="tap"
-        :filters="[{ text: '待服务', value: '待服务' }, { text: '已服务', value: '已服务' }]"
+        :filters="[{ text: '未收款', value: '4' }, { text: '已收款', value: '12' }]"
         :filter-method="filterTag"
         width="100">
         <template slot-scope="scope">
-          <span style="margin-left: 10px;color:red;" >{{ scope.row.State }}</span>
+          <span style="margin-left: 10px;color:red;" >{{ scope.row.State|state}}</span>
           <!--<el-popover trigger="hover" placement="top">-->
           <!--<p>姓名: {{ scope.row.name }}</p>-->
           <!--<p>住址: {{ scope.row.address }}</p>-->
@@ -302,7 +302,39 @@
       v-show="order.showModal"
       @close="closeOrder"
     >
+      <div class="make-order">
+        <el-row>
+          <el-col :span="6" :offset="2"><div class="base-h3"> 收款</div></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6" :offset="2">
+            顾客名称：李二狗
+          </el-col>
+          <el-col :span="4">
+            15198023456
+          </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="8">服务及服务员</el-col>
+          <el-col :span="15">
+              <el-scrollbar class="make-order-scroll">
+                <template v-for="item in [1,2,2,3,3,3,3,3,3,3,3,3,3]">
+                  <el-row >
+                    <el-col style="font-size: 30px">
+                      lajsfljasdlfkjfal
+                    </el-col>
+                  </el-row>
+                </template>
 
+              </el-scrollbar>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6" :offset="2">
+
+          </el-col>
+        </el-row>
+      </div>
 
     </ys-popup>
 
@@ -324,6 +356,19 @@ import ysSelectShop from '@/components/selectShop'
       ysSelectShop
     },
     filters:{
+      state(val){
+        let str
+        if(val==12){
+          str='已收款'
+        }else{
+          str='未收款'
+        }
+        return str
+       // switch (val) {
+       //   case -1
+       // }
+      },
+      //转换时间
       dateChange(val){
         try{
           var first =val.indexOf('(');
@@ -397,7 +442,11 @@ import ysSelectShop from '@/components/selectShop'
         this.currentShopId=id
         this.getOrderList(id)
       },
-      filterTag(){},
+      filterTag(value,row){
+        console.log(value);
+        console.log(row);
+        return row.State == value;
+      },
       // 查看图片详情
       openImage(){},
       //打开详情弹窗
@@ -533,5 +582,12 @@ import ysSelectShop from '@/components/selectShop'
     width: 500px;
     height: 500px;
   }
-
+  //收款弹窗
+  .make-order{
+    width: 100%;
+    .make-order-scroll{
+      width: 100%;
+      height: 270px;
+    }
+  }
 </style>

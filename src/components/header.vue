@@ -66,6 +66,7 @@
     li{
       flex: 1;
       color: #fff;
+      cursor: pointer;
     }
     .active{
       font-size: 20px;

@@ -3,6 +3,14 @@
 */
 <template>
       <div  class="rate-box">
+        <div class="position-box">
+          <!--<ys-search></ys-search>-->
+          <ys-select-shop
+            @getShop="getShop"
+            @selectShop="selectShop"
+            :marginLeft="0"
+          ></ys-select-shop>
+        </div>
           <el-tabs v-model="activeName" @tab-click="toggle" class="rate-table">
             <el-tab-pane label="服务" name="first">
                 <!--服务-->
@@ -20,67 +28,23 @@
                   <!--<ys-goods-rate></ys-goods-rate>-->
                 </div>
                 <!--//评价窗口-->
-                <ys-popup
-                  :width="Rate.width"
-                  :height="Rate.height"
-                  v-show="Rate.showModal"
-                  @close="closeRate"
-                >
-                  <div class="rate-popup-box">
-                    <el-row class="base-row">
-                      <el-col :span="6"><h3>用户评价</h3></el-col>
-                    </el-row>
-                    <el-row>
-                      <el-col>
-                        <el-scrollbar class="rate-popup-scroll">
-                          <el-row v-for="item in rateList">
-                            <el-col class="rate-popup-li">
-                              <div><img  class="user-logo" src="../../assets/images/goods.jpg" alt=""></div>
-                              <div class="rate-popup-info">
-                                <div>愤怒的猫哆哩</div>
-                                <div>这是我见过技术最好的理发师了！</div>
-
-                              </div>
-                              <div >
-                                <span class="el-icon-delete"></span>
-                              </div>
-                              <div v-if="false">
-                                <span class="el-icon-circle-check"></span>
-                              </div>
-                            </el-col>
-                          </el-row>
-                        </el-scrollbar>
-                        <el-row class="base-row">
-                          <el-col>
-                            <div class="block">
-                              <!--<span class="demonstration">页数较少时的效果</span>-->
-                              <el-pagination
-                                prev-text="上一页"
-                                next-text="下一页"
-                                layout="prev, pager, next"
-                                :total="50">
-                              </el-pagination>
-                            </div>
-                          </el-col>
-                        </el-row>
-                      </el-col>
-                    </el-row>
-                  </div>
-                </ys-popup>
 
               </el-tab-pane>
+
+
             <el-tab-pane label="店员" name="second">
               <!--<div class="rate-goods-btn">-->
                 <!--<div class="base-btn-111 {'noActive':isActive}" @click="getRated">已审核</div>-->
                 <!--<div class="base-btn-111 {'noActive':isActive2}" @click="getRate">未审核</div>-->
               <!--</div>-->
               <div class="water-items">
-                <div class="water-item" v-for="item in waterList">
+                <div class="water-item" v-for="(item,index) in waterList">
                   <div class="box-image">
                     <img :src="src" alt="">
 
                     <div class="box-btns">
-                      <div class="box-btns-edit" @click="check">查看评价</div>
+                      <div class="box-btns-edit" @click="peopleChecked(index)">已审核</div>
+                      <div class="box-btns-edit" @click="peopleCheck(index)">未审核</div>
                     </div>
                     <!--<div class="coupon-radio" @click="choose" >-->
                     <!--<div class="coupon-radio-point" v-show="chosed"></div>-->
@@ -103,12 +67,67 @@
 
 
             </el-tab-pane>
+
           </el-tabs>
         <ys-popup
           :width="water.width"
           :height="water.height"
           v-show="water.showModal"
           @close="closeWater"
+        >
+          <div class="rate-popup-box">
+            <el-row class="base-row">
+              <el-col :span="6"><h3>用户评价</h3></el-col>
+            </el-row>
+            <el-row>
+              <el-col>
+                <el-scrollbar class="rate-popup-scroll">
+                  <el-row v-for="(item,index) in rateList">
+                    <el-col class="rate-popup-li">
+                      <div><img  class="user-logo" src="../../assets/images/goods.jpg" alt=""></div>
+                      <div class="rate-popup-info">
+                        <div>愤怒的猫哆哩</div>
+                        <div>这是我见过技术最好的理发师了！</div>
+                      </div>
+                      <div class="water-item-rate">
+                        <el-rate
+                          v-model="rateValue"
+                          disabled
+                          text-color="#ff9900"
+                          score-template="{value}">
+                        </el-rate>
+                      </div>
+                      <div >
+                        <span class="el-icon-delete"></span>
+                      </div>
+                      <div v-if="true">
+                        <span @click="doCheck(index)" class="el-icon-circle-check"></span>
+                      </div>
+                    </el-col>
+                  </el-row>
+                </el-scrollbar>
+                <el-row class="base-row">
+                  <el-col>
+                    <div class="block">
+                      <!--<span class="demonstration">页数较少时的效果</span>-->
+                      <el-pagination
+                        prev-text="上一页"
+                        next-text="下一页"
+                        layout="prev, pager, next"
+                        :total="50">
+                      </el-pagination>
+                    </div>
+                  </el-col>
+                </el-row>
+              </el-col>
+            </el-row>
+          </div>
+        </ys-popup>
+        <ys-popup
+          :width="Rate.width"
+          :height="Rate.height"
+          v-show="Rate.showModal"
+          @close="closeRate"
         >
           <div class="rate-popup-box">
             <el-row class="base-row">
@@ -125,18 +144,10 @@
                         <div>这是我见过技术最好的理发师了！</div>
 
                       </div>
-                      <div class="water-item-rate">
-                        <el-rate
-                          v-model="rateValue"
-                          disabled
-                          text-color="#ff9900"
-                          score-template="{value}">
-                        </el-rate>
-                      </div>
                       <div >
                         <span class="el-icon-delete"></span>
                       </div>
-                      <div v-if="true">
+                      <div v-if="false">
                         <span class="el-icon-circle-check"></span>
                       </div>
                     </el-col>
@@ -159,9 +170,6 @@
             </el-row>
           </div>
         </ys-popup>
-        <div class="position-box">
-          <ys-search></ys-search>
-        </div>
       </div>
 </template>
 
@@ -169,12 +177,13 @@
   import ysGoodsRate from '@/components/goodsRate';
   import  ysSearch from '@/components/search'
   import  ysPopup from "@/components/popup"
-
+  import  ysSelectShop from '@/components/selectShop'
   export default {
     name: "rate",
     components: {
       ysGoodsRate,
       ysPopup,
+      ysSelectShop,
       ysSearch
     },
     data() {
@@ -185,6 +194,7 @@
         rateList: [1, 3, 4, 3, 2, 3,],
         waterList: [1, 2, 3, 4, 4, 5],
         goodsList: [],//商品列表
+        goodsCurrentIndex:'',//当前查看商品的index
         Rate: {
           width: 542,
           height: 600,
@@ -193,26 +203,100 @@
         water: {
           width: 670,
           height: 600,
-          showModal: true
+          showModal: false
         },
         rateValue: 3.2,
         src: require('../../assets/images/goods.jpg'),
       }
     }, methods: {
-      //获取审核服务
-      getRated() {
-
+      getShop(e){
+        this.getPeopleList(e)
       },
-      //获取还未审核的服务
-      getRate() {
-
+      selectShop(e){
+        this.getPeopleList(e)
       },
-      //查看未评价
-      check(index) {
-        this.$util.post(this,this.$api.getGoodsChecked,{},(data)=>{
-            // this.
+      // //获取审核服务
+      // getRated() {
+      //
+      // },
+      // //获取还未审核的服务
+      // getRate() {
+      //
+      // },
+      //服务查看未评价
+      check(index,) {
+        console.log(index);
+        this.goodsCurrentIndex=index
+        this.checkPage(index)
+      },
+      //未审核回调
+      checkPage(index,pageIndex=1,pageSize=10){
+        let obj={}
+        obj.servicePersonId=this.goodsList[index].GoodsId;
+
+        obj.pageIndex=pageIndex;
+        obj.pageSize=pageSize;
+        obj.type=2;
+        obj.state=1;
+        this.$util.post(this,this.$api.getGoodsCheck,obj,(data)=>{
+          // this.
+          console.log(data);
         })
       },
+      // 服务查看已审核
+      checked(index){
+        this.goodsCurrentIndex=index;
+        this.checkedPage(index)
+      },
+      //已审核回调
+      checkedPage(index,pageIndex=1,pageSize=10){
+        let obj={}
+        obj.servicePersonId=this.goodsList[index].GoodsId;
+
+        obj.pageIndex=pageIndex;
+        obj.pageSize=pageSize;
+        obj.type=2;
+        obj.state=2;
+        this.$util.post(this,this.$api.getGoodsCheck,obj,(data)=>{
+          // this.
+          console.log(data);
+        })
+      },
+      //人员查看已审核
+      peopleChecked(index){
+
+      },
+      peopleCheckedPage(index,pageIndex=1,pageSize=10){
+        let obj={}
+        obj.servicePersonId=this.goodsList[index].GoodsId;
+
+        obj.pageIndex=pageIndex;
+        obj.pageSize=pageSize;
+        obj.type=1;
+        obj.state=1;
+        this.$util.post(this,this.$api.getGoodsCheck,obj,(data)=>{
+          // this.
+          console.log(data);
+        })
+      },
+      //人员查看未审核
+      peopleCheck(index){
+
+      },
+      peopleCheckPage(index,pageIndex=1,pageSize=10){
+        let obj={}
+        obj.servicePersonId=this.goodsList[index].GoodsId;
+
+        obj.pageIndex=pageIndex;
+        obj.pageSize=pageSize;
+        obj.type=1;
+        obj.state=2;
+        this.$util.post(this,this.$api.getGoodsCheck,obj,(data)=>{
+          // this.
+          console.log(data);
+        })
+      },
+
       toggle(tab, event) {
         console.log(tab, event);
       },
@@ -226,6 +310,14 @@
       },
       closeWater() {
         this.water.showModal = false
+      },
+      //审核评价
+      doCheck(index){
+        let id=this.rateList[index].evaluateId;
+        this.$util.post(this,this.$api.doGoodsCheck,{evaluateId:id,state:1},(data)=>{
+          console.log(data);
+          this.rateList.splice(index,1)
+        })
       },
       //获取商品列表
       // @param
@@ -249,9 +341,23 @@
           }
         })
       },
+      //获取人员列表
+      getPeopleList(shopId){
+            this.$util.post(this,this.$api.getPeople,{shopId:shopId,pageIndex :1,pageSize:1000},(data)=>{
+              console.log(data);
+            })
+      }
+
     },
     created(){
-      this.getGoodsList();
+      this.getGoodsList();//获取商品列表
+      // this.getPeopleList();//获取人员列表
+      if(sessionStorage.getItem("Rate")){
+        this.activeName=sessionStorage.getItem('Rate')
+      }
+      window.addEventListener("beforeunload",()=>{
+        sessionStorage.setItem("Rate",this.activeName)
+      })
     }
   }
 </script>
@@ -319,9 +425,12 @@
   }
   //固定搜索位置
   .position-box{
+    width: 200px;
+    /*margin-top: 20px;*/
     position: relative;
-    top:-50px;
-    right: -1020px;
+    top:30px;
+    right: -1000px;
+    z-index: 10000;
   }
 
   //店员评价
@@ -335,6 +444,7 @@
     margin-right: 45px;
     flex-direction: column;
     width: 175px;
+    margin-bottom: 30px;
   }
   .water-item:nth-child(5n+0){
     margin-right: 0;

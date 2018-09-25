@@ -463,6 +463,7 @@
         div {
           width: 111px;
           height: 37px;
+          cursor:pointer;
           background: #FFD736;
           font-size: 14px;
           line-height: 37px;
@@ -471,6 +472,7 @@
         }
         .disabled {
           background: #E5E5E5;
+          cursor: auto;
         }
         .del {
           /*float: right;*/

@@ -22,6 +22,8 @@ img {
 
 //111像素的按钮
 .base-btn-111{
+  //cursor:;
+  cursor: pointer;
   width: 111px;
   height: 38px;
   border-radius: 4px;
@@ -32,8 +34,13 @@ img {
   text-align: center;
   display: inline-block;
 }
+.base-disable{
+  cursor: auto;
+}
+
 
 .base-btn(@width){
+  cursor: pointer;
   width: @width;
   height: 38px;
   border-radius: 4px;
@@ -94,6 +101,15 @@ img {
   height: 36px;
   line-height: 36px;
   //margin-right: 10px;
+}
+.base-h3{
+  width:100px;
+  height:28px;
+  font-size:20px;
+  font-weight:600;
+  color:rgba(40,40,40,1);
+  margin: 30px 0;
+  line-height:28px;
 }
 
 .small-row{
