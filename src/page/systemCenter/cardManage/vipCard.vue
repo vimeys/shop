@@ -8,8 +8,8 @@
       <div :class="{'disabled':isDel}" @click="addCard">
         <span class="el-icon-circle-plus"></span>&nbsp;&nbsp;新建会员卡
       </div>
-      <div v-if="isDel"  @click="endClick">结束删除</div>
-      <div v-else style="background: #ccc"  @click="beginClick">删除会员卡</div>
+      <div v-if="isDel"  @click="endClick" >结束删除</div>
+      <div v-else style="background: #ccc;cursor: auto"  @click="beginClick">删除会员卡</div>
 
       <div v-if="isDel" class="del" @click="delCard">删除</div>
     </div>

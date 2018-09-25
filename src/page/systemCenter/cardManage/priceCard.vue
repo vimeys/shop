@@ -5,13 +5,13 @@
 <template>
   <div class="box">
     <el-container>
-      <el-header height="100px">
+      <el-header height="100px" >
         <div class="active-header">
           <div :class="{'disabled':manageState}" @click="addCard" style="width: 111px">
             <span class="el-icon-circle-plus"></span>&nbsp;&nbsp;新建活动
           </div>
           <div @click="manage">管理</div>
-          <ys-search class="del"></ys-search>
+          <ys-search class="del" :placeholder="placeholder"></ys-search>
           <!--<div class="del">删除</div>-->
         </div>
         <div class="select-side" v-show="manageState">
@@ -58,10 +58,10 @@
     >
       <div class="form">
         <el-row>
-          <el-col :span="6"><h3>修改优惠券</h3></el-col>
+          <el-col :span="6"><h3 class="base-h3">修改优惠券</h3></el-col>
         </el-row>
         <el-row>
-          <el-col :span="5" class="base-font">
+          <el-col :span="5" class="base-font base-col">
             优惠券类型
           </el-col>
           <el-col :span="17" :offset="1">
@@ -78,7 +78,7 @@
           <el-col :span="1" class="before"></el-col>
         </el-row>
         <el-row class="row">
-          <el-col :span="5">
+          <el-col :span="5" class="base-col">
             下放渠道
           </el-col>
           <el-col :span="17" :offset="1">
@@ -97,7 +97,7 @@
           </el-col>
         </el-row>
         <el-row class="row">
-          <el-col :span="5">
+          <el-col :span="5" class="base-col">
             下放数量
           </el-col>
           <el-col :span="17" :offset="1">
@@ -110,10 +110,10 @@
           </el-col>
         </el-row>
         <el-row class="row">
-          <el-col :span="5">
+          <el-col :span="5" class="base-col">
             有效期限
           </el-col>
-          <el-col :span="17" :offset="1">
+          <el-col :span="16" :offset="1">
             <!--<el-time-picker-->
             <!--is-range-->
             <!--v-model="value4"-->
@@ -136,7 +136,7 @@
           </el-col>
         </el-row>
         <el-row class="row">
-          <el-col :span="5">
+          <el-col :span="5" class="base-col">
             优惠券设置
           </el-col>
           <el-col :span="17" :offset="1" v-if="type==3">
@@ -200,9 +200,10 @@
         pWidth: 550,
         pHeight: 680,
         showModal: false,
+        placeholder:'搜索优惠券类型、金额',
         manageState: false,//管理状态
         type: 1,//优惠券类型
-        value5: [new Date(2018, 9, 10, 8, 40), new Date(2018, 9, 10, 9, 40)],
+        value5: [new Date(2018, 9, 10), new Date(2018, 9, 11)],
         StartTime: '',
         EndTime: '',
         newTime: '2018-8-12',
@@ -249,7 +250,10 @@
     },
     methods: {
       addCard() {
-        this.showModal = true
+        if(!this.manageState){
+          this.showModal = true
+        }
+
       },
       //管理卡片
       manage() {
@@ -260,7 +264,13 @@
       },
       close() {
         this.showModal = false;
-        this.isEdit=false
+        this.isEdit=false;
+        this.type=1;
+        this.Amount=''
+        this.Num=''
+        this.DiscountAmount=''
+        this.Details=''
+        this.type2=3
       },
       //上传表单
       postForm() {
@@ -355,11 +365,26 @@
         // obj.EndTime=this.EndTime;
         this.type = data.Type;
         this.Amount = data.Amount;
+        this.Num=data.Number
         this.DiscountAmount = data.DiscountAmount;
         this.Details = data.Details;
         // obj.SourceType=2;
         // obj.ServiceType=2;
         this.type2 = data.ActivityType;
+        function f(val) {
+          console.log(typeof val);
+          // debugger
+          // var firstS=val.indexOf('(');
+          // var firstE=val.indexOf(')');
+          // let time=val.substring(firstS+1,firstE);
+          let time=new Date(parseInt(val));
+          const year = time.getFullYear()
+          const month = time.getMonth() + 1
+          const day = time.getDate()
+          return new Date(year,month,day)
+        }
+        this.value5=[f(data.StartTime),f(data.EndTime)]
+
         // obj.Name='ATH眼镜店铺';
       },
       // 单个选择
@@ -402,6 +427,7 @@
           // })
           this.$util.post(this,this.$api.delCoupon,{couponBookId:delArr},()=>{
             this.getCouponList()
+            this.manageState=false
             this.$message({
               message: '删除成功',
               icon: 'success'
@@ -449,6 +475,7 @@
     div {
       width: 111px;
       height: 37px;
+      cursor: pointer;
       background: #FFD736;
       font-size: 14px;
       line-height: 37px;
@@ -457,6 +484,7 @@
     }
     .disabled {
       background: #E5E5E5;
+      cursor: auto;
     }
     .del {
       /*float: right;*/
@@ -498,15 +526,15 @@
       width: 125px;
       height: 36px;
       background: rgba(229, 229, 229, 1);
-      box-shadow: 0px 1px 3px 0px rgba(187, 187, 187, 0.5);
+      box-shadow:0px 0px 3px rgba(187,187,187,0.5) inset;
       border-radius: 4px;
       border: none;
     }
     .textarea {
       width: 313px;
-      height: 143px;
+      height: 123px;
       background: rgba(229, 229, 229, 1);
-      box-shadow: 0px 1px 3px 0px rgba(187, 187, 187, 0.5);
+      box-shadow:0px 0px 3px rgba(187,187,187,0.5) inset;
       border-radius: 4px;
       border: none;
     }

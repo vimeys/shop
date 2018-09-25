@@ -9,7 +9,7 @@
         <h5>满{{card.Amount}}可用</h5>
       </div>
       <div v-else-if="card.Type==2" class="coupon-item-left-text">
-        <h1>{{card.DiscountAmount}}折</h1>
+        <h1>{{10-card.DiscountAmount}}折</h1>
         <h5>满{{card.Amount}}可用</h5>
       </div>
       <div v-else class="coupon-item-left-text">
@@ -24,7 +24,7 @@
         <div class="card02" v-else-if="card.Type==2">{{Type}}</div>
         <div class="card03" v-else="card.Type==3">{{Type}}</div>
         <!--<div>{{card.Name}}</div>-->
-        <div>{{useName}}</div>
+        <div style="margin-left: 120px">{{useName}}</div>
       </div>
       <div>
         库存:

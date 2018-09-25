@@ -15,7 +15,7 @@
               </el-option>
             </el-select>
           </el-col>
-          <el-col :span="2" class="base-col">总数：2人</el-col>
+          <el-col :span="2" class="base-col">总数：{{allPeople}}人</el-col>
           <el-col :span="6" :offset="12"> <div><ys-search></ys-search></div></el-col>
         </el-row>
       </div>
@@ -369,6 +369,7 @@
               zIndex: 1000
             },
             table:[1,3,4],
+            allPeople:'',//总人数
             currentShopId:'',//当前店铺的id
             shopList:[],//店铺列表
             groupList:[],//当前店铺分组列表
@@ -683,6 +684,7 @@
               console.log(json);
                   if(json.data.isSuc==true){
                     this.groupList=json.data.result.Items;
+                    let i=0
                     this.groupList.forEach((item)=>{
                       if(item.UsersList.Items.length>0){
                         item.UsersList.Items.forEach((itemSon,indexSon)=>{
@@ -690,6 +692,7 @@
                           let a=Math.floor(Math.random()*100)
                           console.log(a);
                           // let
+                          i++
                           itemSon.jobList=arr;
                           itemSon.job=itemSon.ShopRole;
                           if(itemSon.State==1){
@@ -701,6 +704,7 @@
                         })
                       }
                     })
+                    this.allPeople=i//计算总人数
                   }
             })
         },

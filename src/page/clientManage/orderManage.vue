@@ -379,7 +379,6 @@ import ysSelectShop from '@/components/selectShop'
         }
 
          time=new Date(parseInt(time));
-        // return
         const year = time.getFullYear()
         const month = time.getMonth() + 1
         const day = time.getDate()

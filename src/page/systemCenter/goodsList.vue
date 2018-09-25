@@ -569,6 +569,7 @@
         // debugger
         if(this.typeList[i].ChildGoodsType){
           this.SecondTypeList=this.typeList[i].ChildGoodsType
+          this.SecondTypeValue=this.SecondTypeList[0].Name
         }else{
           this.SecondTypeList=[{Name:'无',GoodsTypeId:0}]
         }
@@ -584,6 +585,15 @@
               if(json.data.isSuc==true){
                 this.$message({
                   message:'移动成功'
+                })
+                this.disableAdd=false;
+                this.disableManage=true;
+                this.disableSort=true;
+                this.typeValue="";
+                this.SecondTypeValue="";
+                this.goodsList.forEach(item=>{
+                  item.isChecked=false
+                  item.hasChecked=false
                 })
               }
         })
@@ -611,6 +621,7 @@
         this.FlagId = ''
         this.aSize = [];
         this.aPeople = [];
+        this.aPics=[];
         let obj = {sizeName: '', sizePrice: ''};
         let a = JSON.parse(JSON.stringify(this.groupList));
         let obj2 = {valuePerson: [], groupList: a,shopValue:''};
@@ -823,11 +834,13 @@
             this.FlagId = ''
             this.aSize = [];
             this.aPeople = [];
+            this.aPics=[];
             let obj = {sizeName: '', sizePrice: ''};
             let a = JSON.parse(JSON.stringify(this.groupList));
             let obj2 = {valuePerson: [], groupList: a,shopValue:[]};
             this.aSize.push(obj);
-            this.aPeople.push(obj2)
+            this.aPeople.push(obj2);
+
             this.goods.showModal = false;
             this.getGoodsList();
           } else {
@@ -903,11 +916,25 @@
       },
       handleNodeClick(data,node,self) {
         console.log(data);
+        this.resize()
         if(data.ChildGoodsType){
             this.getGoodsList(data.GoodsTypeId,0)
         }else{
           this.getGoodsList(data.ParentId,data.GoodsTypeId)
         }
+      },
+
+      //重置编辑
+      resize(){
+        this.disableAdd=false;
+        this.disableManage=true;
+        this.disableSort=true;
+        this.typeValue="";
+        this.SecondTypeValue="";
+        this.goodsList.forEach(item=>{
+          item.isChecked=false
+          item.hasChecked=false
+        })
       },
       //弹起添加分类
       addTypePopup() {
