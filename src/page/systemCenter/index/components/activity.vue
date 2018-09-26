@@ -76,12 +76,25 @@
         </div>
       </div>
     </div>
-    <ys-popup :showModal="showModal"
-              v-show="showModal"
-              @close="close"
+
+  <!--一元买卷-->
+    <ys-popup v-show="activeValue==1"
+              @close="closeOne"
     >
       <div class="popup-slide-left">
         <div class="list-title">活动</div>
+        <el-row>
+          <el-col>
+            <el-select v-model="activeValue" >
+              <el-option
+                v-for="item in options"
+                :kye=item.value
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-col>
+        </el-row>
         <div class="list-btns">
           <ul>
             <li><i class="el-icon-document"></i>活动详情<i class="el-icon-arrow-right"></i> </li>
@@ -166,6 +179,132 @@
       </div>
     </ys-popup>
 
+    <!--//团购-->
+    <ys-popup
+        v-show="activeValue==2"
+        @close="closeTeam"
+    >
+      <div class="popup-slide-left">
+        <div class="list-title">活动</div>
+        <el-row>
+          <el-col>
+            <el-select v-model="activeValue" >
+              <el-option
+                v-for="item in options"
+                :kye=item.value
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-col>
+        </el-row>
+        <div class="list-btns">
+          <ul>
+            <li :class="[goodsItemClass1]" @click="chooseGoodsItem(1)">
+              <i class="el-icon-document "></i>
+              <span class="after">服务属性</span>
+              <i class="el-icon-arrow-right"></i>
+            </li>
+            <li :class="[goodsItemClass2]" @click="chooseGoodsItem(2)" >
+              <i class="el-icon-document"></i>
+              服务详情
+              <i class="el-icon-arrow-right"></i>
+            </li>
+          </ul>
+          <el-row class="team-detail-li">
+            <el-col :span="12">
+              <span class="choose-point" :class="[choose1]"></span>
+              <span>基础设置</span>
+            </el-col>
+          </el-row>
+          <el-row class="team-detail-li">
+            <el-col :span="18">
+              <span class="choose-point" :class="[choose2]"></span>
+              <span>商品设置</span>
+            </el-col>
+          </el-row>
+
+        </div>
+      </div>
+      <div class="popup-slide-right">
+        <div class="content">
+          <!--<div class="card-select">-->
+            <!--<div>优惠券分类</div>-->
+            <!--<div>-->
+              <!--<el-select v-model="value" @change="change" placeholder="满减券" class="select">-->
+                <!--<el-option-->
+                  <!--v-for="item in options"-->
+                  <!--:key="item.value"-->
+                  <!--:label="item.label"-->
+                  <!--:value="item.value">-->
+                <!--</el-option>-->
+              <!--</el-select>-->
+            <!--</div>-->
+          <!--</div>-->
+          <div class="form">
+            <div class="modal">
+              <div class="modal-btn" :class="{'disabled':one.isDiy}" @click="toggleDiy">填写模板Banner信息</div>
+              <div class="diy-btn" :class="{'disabled':!one.isDiy}" @click="toggleDiy">上传自定义Banner</div>
+            </div>
+            <div>
+              <div class="content" v-if="!one.isDiy">
+                <div class="active-items-one">
+                  <img src="../../../../assets/images/oneBg.png" alt="">
+                  <div class="active-text"> {{one.bannerWord}}</div>
+                  <div class="active-radio" @click="choose" v-show="isChecke">
+                    <div class="active-radio-point" v-show="chosed"></div>
+                  </div>
+                </div>
+              </div>
+              <div v-else style="margin-bottom: 30px">
+                <el-upload
+                  class="avatar-uploader"
+                  action="http://mdimg.yilianchuang.cn/uploadimage3.ashx"
+                  :show-file-list="false"
+                  :on-success="upLoadDiy"
+                  :on-preview="handlePictureCardPreview"
+                  :on-remove="handleRemove">
+                  <img v-if="one.Pic" :src="one.Pic" class="avatar">
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+                <!--<el-dialog :visible.sync="dialogVisible">-->
+                <!--<img width="100%" :src="dialogImageUrl" alt="">-->
+                <!--</el-dialog>-->
+              </div>
+            </div>
+            <div class="time">
+              <div class="name">活动时间</div>
+              <div class="select"><el-date-picker
+                v-model="Timevalue"
+                type="daterange"
+                range-separator="-"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期">
+              </el-date-picker></div>
+            </div>
+            <div class="word">
+              <el-row>
+                <el-col :span="6">文案</el-col>
+                <el-col :span="16">
+                  <input type="text"
+                         v-model="one.bannerWord"
+                         class="base-input"
+                         placeholder="请输入Banner文案" >
+                  <span>*限20个字以内
+                  </span>
+                </el-col>
+              </el-row>
+            </div>
+          </div>
+          <div>
+            <div class="btn" @click="confirmOne">确认</div>
+          </div>
+        </div>
+        <!--<el-button type="text" @click="open5">点击打开 Message Box</el-button>-->
+      </div>
+    </ys-popup>
+
+
     <!--添加优惠券-->
     <ys-popup
       :width="popup.width"
@@ -178,6 +317,16 @@
         <div class="list-btns">
           <ul>
             <li><i class="el-icon-document"></i>活动详情<i class="el-icon-arrow-right"></i> </li>
+            <!--<li :class="[goodsItemClass1]" @click="chooseGoodsItem(1)">-->
+              <!--<i class="el-icon-document "></i>-->
+              <!--<span class="after">服务属性</span>-->
+              <!--<i class="el-icon-arrow-right"></i>-->
+            <!--</li>-->
+            <!--<li :class="[goodsItemClass2]" @click="chooseGoodsItem(2)" >-->
+              <!--<i class="el-icon-document"></i>-->
+              <!--服务详情-->
+              <!--<i class="el-icon-arrow-right"></i>-->
+            <!--</li>-->
           </ul>
         </div>
       </div>
@@ -237,44 +386,42 @@
           isChecke:false,
           value:'',
           // 一元买卷
-
           marginBottom:0,
           popup:{
             width:1024,
             height:796,
             showModal:false
           },
-
-          one:{
+          one:{//一元买卷弹窗
             bannerWord:'',//文案
             Pic:'',
             isDiy:false
           },
-
-
           isCardList:true,//是否显示卡片信息
           activeCardList:[],
           isEdit:false,//是否可以添加
           showDel:false,//是否有删除
+          activeValue:'',
           options: [{
-            value: '选项1',
-            label: '黄金糕'
+            value: 1,
+            label: '一元买卷'
           }, {
-            value: '选项2',
-            label: '双皮奶'
+            value:2,
+            label: '拼团'
           }, {
-            value: '选项3',
-            label: '蚵仔煎'
+            value: 3,
+            label: '秒杀'
           }, {
-            value: '选项4',
-            label: '龙须面'
-          }, {
-            value: '选项5',
-            label: '北京烤鸭'
+            value: 4,
+            label: '幸运大抽奖'
           }],
           show:true,
           // 上传组件的按钮
           dialogImageUrl: '',
+          goodsItemClass1:'goods-active',//分类class
+          goodsItemClass2:'',
+          choose1:'chosed',
+          choose2:'',
           dialogVisible: false,
           // 显示第一个按钮还是第二个
           showBtn1:true,
@@ -305,15 +452,27 @@
         checkCoupon(e){
             this.isCardList=false;
         },
-
-        //关闭模态框
-        close(e){
-          console.log(e);
-          this.showModal=e
+        //选择分类
+        chooseGoodsItem(value){
+          if(value==1){
+            this.goodsItemClass1='goods-active';
+            this.goodsItemClass2=''
+          }else {
+            this.goodsItemClass1='';
+            this.goodsItemClass2='goods-active'
+          }
         },
+        //关闭一元买卷模态框
+        closeOne(e){
+          this.activeValue=""
+        },
+        //关闭团购模态框
+        closeTeam(e){
+            this.activeValue=""
+        },
+
         //选择是否是用diy
         toggleDiy(){
-          console.log(123);
           this.one.isDiy=!this.one.isDiy;
         },
         upLoadDiy(res,file){
@@ -349,7 +508,7 @@
         },
         //添加文档
         addCard(){
-          this.showModal=true
+          this.activeValue=1
         },
         //编辑卡片
         editCards(){
@@ -657,7 +816,6 @@
         width: 276px;
         height: 48px;
         border-radius: 4px;
-        background: @bs-color;
         align-items: center;
         font-size: 16px;
         i{
@@ -665,6 +823,9 @@
           display: inline-block;
           margin: 0 20px;
         }
+      }
+      li.goods-active{
+        background: @bs-color;
       }
     }
   }
@@ -803,5 +964,22 @@
   }
   .base-btn-111{
     margin-top: 30px;
+  }
+  .team-detail-li{
+      height: 48px;
+    line-height: 48px;
+    display: flex;
+    justify-content: center;
+    margin-left: -60px;
+    .choose-point{
+      width: 10px;
+      height: 10px;
+      display: inline-block;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    .chosed{
+      background-color:#FFD736;
+    }
   }
 </style>

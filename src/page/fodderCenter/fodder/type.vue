@@ -1,14 +1,16 @@
 /**
-*   Created By  YS  on 2018/8/22
-*   平台推荐
+*   Created By  YS  on 2018/9/26
+*  分类
 */
 <template>
-    <div>平台推荐</div>
+    <div class="">
+
+    </div>
 </template>
 
 <script>
     export default {
-        name: "push"
+        name: "type"
     }
 </script>
 

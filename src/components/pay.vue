@@ -25,7 +25,7 @@
                 </el-select>
               </el-col>
             </el-row>
-            <el-row v-if="payWayValue==1" >
+            <el-row class="fix-height" style="margin-top: 50px" v-if="payWayValue==1" >
               <el-col>
                 <el-row>
                   <el-col><img src="../assets/images/testCode.png" alt=""></el-col>
@@ -35,10 +35,10 @@
                 </el-row>
               </el-col>
             </el-row>
-            <el-row v-if="payWayValue==2" style="margin-top: 50px">
+            <el-row class="fix-height" v-if="payWayValue==2" style="margin-top: 50px">
               <el-col>请确认顾客使用银行卡支付成功后点击支付完成</el-col>
             </el-row>
-            <el-row v-if="payWayValue==3" style="margin-top: 50px">
+            <el-row class="fix-height" v-if="payWayValue==3" style="margin-top: 50px">
               <el-col>请确认顾客使用现金支付成功后点击支付完成</el-col>
             </el-row>
             <el-row>
@@ -63,12 +63,15 @@
           type:Boolean,
           default: true
         },
+        image:{
+          type:String,
+        }
       },
       data(){
           return {
             width:760,
             height:750,
-            payWayValue:'',
+            payWayValue:1,
             payWayList:[
               {
                 value:1,
@@ -87,6 +90,7 @@
       },
       methods:{
         close(){
+          this.showModel=false
           this.$emit('close')
         }
       }
@@ -114,12 +118,15 @@
   .pay-select{
     margin-top: 30px;
   }
+  .fix-height{
+    height: 300px;
+  }
 .pay-btn{
   .base-btn(271px);
-  margin-top: 300px;
-  /*position:absolute;*/
-  /*top:500px;*/
-  /*left: 400px;*/
+  /*margin-top: 300px;*/
+  position:absolute;
+  top:10px;
+  left: 200px;
 }
 
 </style>

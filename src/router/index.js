@@ -56,8 +56,9 @@ import  staffSetting from '@/page/shopManage/staffSetting'
 
 //*************素材管理**********
 import  fodderCenter from '@/page/fodderCenter/fodder'
-// 平台推荐
+import  fodder  from '@/page/fodderCenter/accountSetting'
 import  push from '@/page/fodderCenter/push'
+import  type from '@/page/fodderCenter/fodder/type'
 
 
 
@@ -216,15 +217,28 @@ export default new Router({
 
     //素材中心
     {
-      path:'/fodderCenter/fodder',
-      name:'fodder',
-      component:fodderCenter
-    },
-    //平台推荐
-    {
-      path:'/fodderCenter/push',
-      name:'push',
-      component:push
+      path:'/fodderCenter',
+      name:'fodderCenter',
+      component:fodderCenter,
+      children:[
+        {
+          path:'fodder',
+          name:'fodder',
+          component:fodder,
+          children:[
+            {
+              path:'fodder',
+              name:"type",
+              component:type
+            }
+          ]
+        },
+        {
+          path:'push',
+          name:'push',
+          component:push
+        }
+      ]
     },
     //财务管理
     {
@@ -232,10 +246,10 @@ export default new Router({
       name:'moneyManage',
       component:moneyManage,
       children:[{
-        path:'/moneyManage/data',
+        path:'data',
         component:moneyDate
       },{
-        path:'/moneyManage/target',
+        path:'target',
         component:target
       }],
       redirect:'/moneyManage/data'

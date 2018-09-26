@@ -75,7 +75,11 @@
     //客户管理页面
     openVipCard:head+'membershipCard/version3/addMembershipCard',//开新会员卡
     getVipList:head+'gameuser/version3/list4web',//获取会员列表
-    getVipCardList:head+'membershipCard/currentUserVip',//获取单个会员卡片
+    getVipCardList:head+'membershipCard/version3/webcurrentUserVip',//获取单个会员卡片
+    getVipPriceList:head+'gameusersmoneylog/version3/list ',//查询充值消费记录
+
+
+
     //挂单
     serverList:head+'settleAccounts/version3/goodsList',//获取服务列表
     serverPeopleList:head+'settleAccounts/version3/userList',//获取服务员列表

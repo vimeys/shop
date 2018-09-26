@@ -122,23 +122,23 @@
           <span style="margin-left: 10px">{{ scope.row.Tel||'13350900722' }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="门店名称"
-        width="127">
-        <template slot-scope="scope">
-          <!--<el-popover trigger="hover" placement="top">-->
-            <!--<p>姓名: {{ scope.row.name }}</p>-->
-            <!--<p>住址: {{ scope.row.address }}</p>-->
-            <!--<div slot="reference" class="name-wrapper">-->
-              <!--<el-tag size="medium">{{ scope.row.StoreName||'成都店' }}</el-tag>-->
-            <!--</div>-->
-          <!--</el-popover>-->
-          <span style="margin-left: 10px">{{ scope.row.StoreName||'成都店' }}</span>
-        </template>
-      </el-table-column>
+      <!--<el-table-column-->
+        <!--label="门店名称"-->
+        <!--width="127">-->
+        <!--<template slot-scope="scope">-->
+          <!--&lt;!&ndash;<el-popover trigger="hover" placement="top">&ndash;&gt;-->
+            <!--&lt;!&ndash;<p>姓名: {{ scope.row.name }}</p>&ndash;&gt;-->
+            <!--&lt;!&ndash;<p>住址: {{ scope.row.address }}</p>&ndash;&gt;-->
+            <!--&lt;!&ndash;<div slot="reference" class="name-wrapper">&ndash;&gt;-->
+              <!--&lt;!&ndash;<el-tag size="medium">{{ scope.row.StoreName||'成都店' }}</el-tag>&ndash;&gt;-->
+            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+          <!--&lt;!&ndash;</el-popover>&ndash;&gt;-->
+          <!--<span style="margin-left: 10px">{{ scope.row.StoreName||'成都店' }}</span>-->
+        <!--</template>-->
+      <!--</el-table-column>-->
       <el-table-column
         label="订单编号"
-        width="145">
+        width="215">
         <template slot-scope="scope">
           <!--<i class="el-icon-time"></i>-->
           <span style="margin-left: 10px">{{ scope.row.OrderNo||'123' }}</span>
@@ -146,7 +146,7 @@
       </el-table-column>
       <el-table-column
         label="创建时间"
-        width="139">
+        width="159">
         <template slot-scope="scope">
           <!--<i class="el-icon-time"></i>-->
           <span style="margin-left: 10px">{{ scope.row.CreateDate|dateChange}}</span>
@@ -162,7 +162,7 @@
       </el-table-column>
       <el-table-column
         label="金额"
-        width="77">
+        width="87">
         <template slot-scope="scope">
           <!--<i class="el-icon-time"></i>-->
           <span style="margin-left: 10px">{{ scope.row.AmountPrice||'0' }}</span>
@@ -173,7 +173,7 @@
         prop="tap"
         :filters="[{ text: '未收款', value: '4' }, { text: '已收款', value: '12' }]"
         :filter-method="filterTag"
-        width="100">
+        width="120">
         <template slot-scope="scope">
           <span style="margin-left: 10px;color:red;" >{{ scope.row.State|state}}</span>
           <!--<el-popover trigger="hover" placement="top">-->
@@ -207,6 +207,20 @@
         </template>
       </el-table-column>
     </el-table>
+    <div class="page-size-box">
+      <el-pagination
+        prev-text="上一页"
+        next-text="下一页"
+        :page-size="pageSize"
+        @size-change="changeSize"
+        @prev-click="prev"
+        @next-click="next"
+        @current-change="current"
+        layout="prev, pager, next"
+        class="page"
+        :total="total">
+      </el-pagination>
+    </div>
     <!--<el-row class="order-btn">-->
       <!--<el-col :span="4">-->
         <!--<div class="base-btn-111" @click="openOrder">挂单</div>-->
@@ -304,7 +318,7 @@
     >
       <div class="make-order">
         <el-row>
-          <el-col :span="6" :offset="2"><div class="base-h3"> 收款</div></el-col>
+          <el-col :span="6" :offset="2"><div class="base-h3">收款</div></el-col>
         </el-row>
         <el-row>
           <el-col :span="6" :offset="2">
@@ -374,8 +388,10 @@ import ysSelectShop from '@/components/selectShop'
           var first =val.indexOf('(');
           var last =val.indexOf(')');
           var time=val.substring(first+1,last)
+          // console.debug(123);
+          // console.log(123);
         }catch(err){
-          console.log(err);
+          console.debug(err);
         }
 
          time=new Date(parseInt(time));
@@ -398,7 +414,7 @@ import ysSelectShop from '@/components/selectShop'
         order:{//挂单
            width:670,
           height:595,
-          showModal:true
+          showModal:false
         },
         detail:{//订单详情
           width:900,
@@ -413,6 +429,8 @@ import ysSelectShop from '@/components/selectShop'
           disable:false,
           address: '上海市普陀区金沙江路 1518 弄'
         }],
+        total:11,
+        pageSize:5,
         Data:[],//表格数据
         Data2:[],
         currentDetail:'',//详情
@@ -461,7 +479,8 @@ import ysSelectShop from '@/components/selectShop'
       getOrderList(shopId,pageIndex=1,pageSize=5){
           this.$util.post(this,this.$api.getOrderList,{shopId:shopId,pageIndex,pageSize,state:-1,key:''},
             (data)=>{
-                this.Data=data.Items
+                this.Data=data.Items;
+                this.total=data.TotalItems
                 // this.Data.forEach(item=>{
                 //   item.CreateDate=this.$util.
                 // })
@@ -488,9 +507,27 @@ import ysSelectShop from '@/components/selectShop'
 
       //关闭详情弹窗
       closeDetailPopup(){
-
+        console.error(123)
         this.detail.showModal=false;
-
+      },
+      //获取详情
+      changeSize(e){
+        console.log(e);
+      },
+      // 上一页
+      prev(e){
+        console.log(e);
+        this.getOrderList(this.currentShopId,e,5)
+      },
+      // 下一页
+      next(e){
+        console.log(e);
+        this.getOrderList(this.currentShopId,e,5)
+      },
+      // 当前页点击
+      current(e){
+        console.log(e);
+        this.getOrderList(this.currentShopId,e,5)
       },
       addOrderServer(){
           this.orderServerList.forEach(item=>{
@@ -588,5 +625,11 @@ import ysSelectShop from '@/components/selectShop'
       width: 100%;
       height: 270px;
     }
+  }
+  /*/deep/ .el-pagination button:disabled{*/
+    /*background: #ccc!important;*/
+  /*}*/
+  .page-size-box{
+    margin-top: 50px;
   }
 </style>

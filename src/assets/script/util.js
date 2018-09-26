@@ -51,7 +51,15 @@ export function confirm(that,type='warning',info='您确定要删除吗?',title=
 //   }
 // }
 //分装的ajax
-export  function post(that,url,params,suc,err) {
+export  function post(that,url,params,suc,isLoad,err) {
+  if(isLoad){//判断是否有loading状态
+    var  loading = that.$loading({
+      lock: true,
+      text: 'Loading',
+      spinner: 'el-icon-loading',
+      background: 'rgba(0, 0, 0, 0.7)'
+    });
+  }
     that.$http.post(url,params).then(json=>{
       const h = that.$createElement;
       if(json.data.isSuc==true){
@@ -61,6 +69,9 @@ export  function post(that,url,params,suc,err) {
           duration:1000,
           position: 'bottom-right'
         })
+        if(isLoad){//判断是否有loading状态
+          loading.close();
+        }
         suc(json.data.result)
       }else{
         that.$notify({
