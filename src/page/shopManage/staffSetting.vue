@@ -44,12 +44,12 @@
       <el-row class="row" v-for="(itemSon,indexSon ) in item.UsersList.Items" :key="itemSon.GroupId">
         <el-col :span="4">
           <el-row>
-            <el-col :span="8" class="row-radio">
-              <div class="circle">
-                <div class="point" ></div>
+            <el-col :span="6" class="row-radio">
+              <div class="circle" v-show="itemSon.hasChecked" @click="chooseItem(index,indexSon)">
+                <div class="point" v-show="itemSon.isChecked" ></div>
               </div>
             </el-col>
-            <el-col :span="16">{{itemSon.TrueName||'无'}}</el-col>
+            <el-col :span="14">{{itemSon.TrueName||'无'}}</el-col>
           </el-row>
         </el-col>
         <el-col :span="3">{{itemSon.PhoneNum||'无'}}</el-col>
@@ -98,19 +98,26 @@
           >添加成员</div>
         </el-col>
         <el-col :span="3">
-          <div class="base-btn-111" >批量管理</div>
+          <div class="base-btn-111" @click="Manage(index)" >批量管理</div>
         </el-col>
+        <el-col :span="4"></el-col>
         <el-col :offset="1" :span="8">
-          <el-row >
-              <el-col :span="8"><div class="base-btn-111">全选</div></el-col>
+          <el-row v-if="item.isManage">
+              <el-col :span="8"><div class="base-btn-111" @click=chooseAll(index) >全选</div></el-col>
               <el-col :span="8">
-                <div class="base-btn-111">移动分组</div></el-col>
+                <div class="base-btn-111" @click="openMoveAll(index)" >移动分组</div></el-col>
               <el-col :span="8">
-                <div class="base-btn-111">
+                <div class="base-btn-111" @click="delAll(index)" >
                   删除
                 </div>
               </el-col>
           </el-row>
+          <el-row v-else>
+            <el-col style="color: #fff">.</el-col>
+          </el-row>
+        </el-col>
+        <el-col :span="3" :offset="5">
+          <div class="base-btn-111">修改分类</div>
         </el-col>
       </el-row>
     </div>
@@ -390,6 +397,7 @@
                 label: '满减劵'
               }
             ],
+            isManage:false,//是否批量管理
             jobPopup:{
                 width:645,
                 height:766,
@@ -467,10 +475,34 @@
             }
           })
         },
-
+        //点击选择人员
+        chooseItem(index,indexSon){
+          console.log(index, indexSon);
+          let old=this.groupList[index]
+          old.UsersList.Items[indexSon].isChecked=!old.UsersList.Items[indexSon].isChecked
+          this.groupList.splice(index,1,old)
+        },
+        //全选人员
+        chooseAll(index){
+          console.log(index);
+          function check(age){
+            console.log(age);
+            console.log(age.isChecked);
+            return age.isChecked===false
+          }
+          let abc=this.groupList[index].UsersList.Items.every(check)
+          let old=this.groupList[index]
+          if(abc){
+            old.UsersList.Items.forEach(item=>{
+              item.isChecked=true
+            })
+            this.groupList.splice(index,1,old)
+          }
+        },
         // 删除
         del(i,is){
-            this.delUserId.push(this.groupList[i].UsersList.Items[is].UserId)
+            let arr=[]
+            arr.push(this.groupList[i].UsersList.Items[is].UserId)
             this.$util.confirm(this).then(()=>{
                   this.$http.post(this.$api.delPerson,{userIds:this.delUserId}).then(json=>{
                     let data=json.data;
@@ -483,6 +515,27 @@
                     }
                   })
             })
+        },
+        delAll(index){
+          let arr=[]
+          this.groupList[index].UsersList.Items.forEach(item=>{
+            if(item.isChecked){
+              arr.push(item.UserId)
+            }
+          })
+          console.log(arr);
+          this.$util.confirm(this).then(()=>{
+            this.$http.post(this.$api.delPerson,{userIds:this.delUserId}).then(json=>{
+              let data=json.data;
+              if(data.isSuc=true){
+                this.groupList[i].UsersList.Items.splice(is,1)
+                this.$message({
+                  message:'删除成功',
+                  icon:'success'
+                })
+              }
+            })
+          })
         },
         // 单个编辑
         editInfo(i,is){
@@ -512,6 +565,30 @@
           this.move.showModal=true;
           this.moveGroupPerson.push(this.groupList[i].UsersList.Items[is].TrueName)
           this.moveGroupId.push(this.groupList[i].UsersList.Items[is].UserId)
+        },
+        //批量移动
+        openMoveAll(index){
+          this.move.showModal=true;
+          let arr=[];
+          let arr2=[]
+          this.groupList[index].UsersList.Items.forEach(item=>{
+            if(item.isChecked){
+              this.moveGroupPerson.push(item.TrueName)
+              this.moveGroupId.push(item.UserId)
+            }
+          })
+
+
+        },
+        // 点击是否开始批量编辑
+        Manage(index){
+          console.log(index);
+          let old=this.groupList[index]
+          old.isManage=!old.isManage
+          old.UsersList.Items.forEach(item=>{
+            item.hasChecked=old.isManage
+          })
+          this.groupList.splice(index,1,old)
         },
         // 确认移动
         moveGroup(){
@@ -684,20 +761,19 @@
                     let i=0
                     this.groupList.forEach((item)=>{
                       if(item.UsersList.Items.length>0){
+                        item.isManage=false
                         item.UsersList.Items.forEach((itemSon,indexSon)=>{
-                          console.log(indexSon);
-                          let a=Math.floor(Math.random()*100)
-                          console.log(a);
-                          // let
-                          i++
+                          //循环添加选中按钮以及职位
                           itemSon.jobList=arr;
                           itemSon.job=itemSon.ShopRole;
+                          itemSon.hasChecked=false;
+                          itemSon.isChecked=false
+                          i++
                           if(itemSon.State==1){
                             itemSon.disable=true
                           }else {
                             itemSon.disable=false
                           }
-
                         })
                       }
                     })

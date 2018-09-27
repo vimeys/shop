@@ -1,8 +1,25 @@
+img {
+  object-fit: cover;
+}
+textarea {
+  resize: none;
+}
+.before::before {
+  content: '＊';
+  color: red;
+  height: 36px;
+  line-height: 36px;
+}
+.after::after {
+  content: '＊';
+  color: red;
+}
 .tips-font {
   font-size: 16px;
   color: #D0021B;
 }
 .base-btn-111 {
+  cursor: pointer;
   width: 111px;
   height: 38px;
   border-radius: 4px;
@@ -13,11 +30,14 @@
   text-align: center;
   display: inline-block;
 }
+.base-disable {
+  cursor: auto;
+}
 .base-input {
   width: 100%;
   height: 36px;
   background: #e5e5e5;
-  box-shadow: 0px 1px 3px 0px rgba(187, 187, 187, 0.5);
+  box-shadow: 0px 0px 3px rgba(187, 187, 187, 0.5) inset;
   border-radius: 4px;
   border: none;
   text-align: center;
@@ -26,5 +46,88 @@
 .none {
   color: #fff;
   font-size: 1px;
+}
+.small-title {
+  font-size: 20px;
+  color: #282828;
+  font-weight: 200;
+}
+.base-font {
+  font-size: 16px;
+}
+.base-row {
+  margin: 15px 0;
+}
+.base-row-36 {
+  margin: 15px 0;
+  height: 36px;
+  line-height: 36px;
+}
+.base-col {
+  height: 36px;
+  line-height: 36px;
+}
+.base-h3 {
+  width: 100px;
+  height: 28px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #282828;
+  margin: 30px 0;
+  line-height: 28px;
+}
+.small-row {
+  margin: 5px 0;
+}
+.mt15 {
+  margin-top: 15px;
+}
+.small-font {
+  font-size: 14px;
+  color: #8C8C8C;
+}
+.plus-btn {
+  width: 27px;
+  height: 27px;
+  display: inline-block;
+  text-align: center;
+  line-height: 27px;
+  background: #FFD736;
+  color: #fff;
+  border-radius: 2px;
+  font-size: 20px;
+}
+ /deep/ .el-pager li {
+  height: 31px;
+  width: 31px;
+  line-height: 31px;
+  color: #282828;
+  margin: 0 7px;
+  background: #d8d8d8;
+  border-radius: 2px;
+}
+ /deep/ .el-pager li.active {
+  background: #FFD736;
+}
+ /deep/ .el-pagination button {
+  width: 72px;
+  padding: 0 6px;
+  height: 31px !important;
+  text-align: center;
+  background: #d8d8d8;
+  border-radius: 2px;
+}
+ /deep/ .el-pagination .btn-next {
+  background: #FFD736;
+  color: #282828;
+  margin-left: 10px;
+}
+ /deep/ .el-pagination .btn-prev {
+  background: #FFD736;
+  color: #282828;
+  margin-right: 10px;
+}
+ /deep/ .el-pagination button:disabled {
+  background: #ccc!important;
 }
 /*# sourceMappingURL=mixin.css.map */
