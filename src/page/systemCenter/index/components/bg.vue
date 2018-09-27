@@ -89,18 +89,35 @@
           this.bannerImages.push(url)
         },
         upLoad(url){
-          console.log(url);
           this.bannerImages.push(url)
+          this.upServer()
         },
 
         //删除上传的图片
         delImage(index){
-
           this.$util.confirm(this).then(json=>{
-            console.log(json);
-            this.bannerImages.splice(index,1)
+            this.bannerImages.splice(index,1);
+            this.upServer()
+          })
+        },
+        //上传图片url到服务器
+        upServer(){
+          let str=this.bannerImages.join(',')
+          this.$util.post(this,this.$api.upBg,
+            {pics:str},
+            (data)=>{
+
+            })
+        },
+        getDetail(){
+          this.$util.post(this,this.$api.bgDetail,{},(data)=>{
+            // console.log(data);
+            this.bannerImages=data.Pics.split(',')
           })
         }
+      },
+      created(){
+          this.getDetail()
       }
 
     }

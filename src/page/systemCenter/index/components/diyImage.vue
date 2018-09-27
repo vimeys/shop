@@ -5,7 +5,7 @@
       <img src="@/assets/images/nav-image.png"/>
       <div class="swiper">
         <div class="border">
-          <img :src="upImage" alt="">
+          <img :src="upImage" alt="" style="width: 375px;height: 690px">
         </div>
       </div>
     </div>
@@ -18,10 +18,11 @@
               <ys-upload @imageUrl="upLoad"></ys-upload>
           </p>
           <img v-else :src="upImage" style="width: 120px;height: 120px" alt="">
-          <div>
+          <div v-show="upImage">
             跟换图片
+            <ys-upload style="position: relative;top:-36px; opacity: 0;" @imageUrl="upLoad"></ys-upload>
           </div>
-          <div @click="delImage">
+          <div @click="delImage" v-show="upImage">
             删除图片
           </div>
         </div>
@@ -77,13 +78,36 @@
           this.dialogImageUrl = file.url;
           this.dialogVisible = true;
         },
+
+
+        //todo 上传接口没有调通   后台接口
         // 上传
         upLoad(url) {
           this.upImage = url
+          this.up(url)
         },
         delImage(){
           this.upImage=''
+          this.up()
+        },
+        up(url){
+          this.Data.Logo=url;
+          this.$util.post(this,this.$api.bgDetail,{user:this.Data},(data)=>{
+            console.clear()
+            console.log(data);
+          })
+        },
+        getDetail(){
+          this.$util.post(this,this.$api.bgDetail,{},(data)=>{
+            // console.log(data);
+            this.Data=data;
+            // this.bannerImages=data.Pics.split(',')
+            this.upImage=data.Logo
+          })
         }
+      },
+      created(){
+        this.getDetail()
       }
     }
 </script>

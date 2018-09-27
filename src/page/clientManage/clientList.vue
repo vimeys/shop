@@ -332,7 +332,11 @@
 
 
 
-      <ys-pay @close="closePay" :showModel="payShowModel">
+      <ys-pay @close="closePay"
+              :showModel="payShowModel"
+              @payOk="payOk"
+              :image="codeImage"
+      >
 
       </ys-pay>
       <!--消费记录-->
@@ -618,7 +622,7 @@
             console.log(err);
           }
 
-          time=new Date(parseInt(time));
+          time=new Date(parseInt(time-8*60*60*1000));
           // return
           const year = time.getFullYear()
           const month = time.getMonth() + 1
@@ -669,6 +673,7 @@
             zIndex:1000,
             showModal:false
           },
+          codeImage:'',//二维码图片
           placeholder:'搜索对应标签',
           value5:'',
           options: [{
@@ -678,7 +683,8 @@
             value: '选项2',
             label: '双皮奶'
           }],
-          payShowModel:true,
+          resultData:'',
+          payShowModel:false,
           currentShopId:'',//当前店铺名称
           GameusersName:'',//会员名称
           PhoneNum:'',//会员电话
@@ -754,11 +760,13 @@
       methods:{
         getShop(e){
           this.currentShopId=e
+          this.getCardList(e)
           this.getVipList(e)
           this.getDefaultList(e)
         },
         selectShop(e){
           this.currentShopId=e
+          this.getCardList(e)
           this.getVipList(e);
           this.getDefaultList(e)
         },
@@ -872,17 +880,36 @@
           // })
           this.$util.post(this,this.$api.openVipCard,obj,(data)=>{
             this.opc.showModal=false;
-            this.payShowModel=true
+            this.resultData=data;
             this.getVipList(this.currentShopId)
             this.getDefaultList(this.currentShopId)
-
-            // this.
+            this.$util.post(this,this.$api.payCode,
+              data,
+              (data2)=>{
+                this.codeImage=data2
+              this.payShowModel=true
+            },true)
           })
+        },
+        // 其他支付方式
+        payOk(val){
+          let newObj=this.resultData;
+          newObj=Object.assign({},newObj,{payType:0})
+          newObj.GameUsersCardId=0
+          this.$util.post(this, this.$api.payMoney,
+            newObj,
+            (data) => {
+                this.payShowModel=false
+            }
+          )
         },
         //查看会员充值记录
         checkPayList(index,row){
           this.payHistory.showModal=true
-          this.$util.post(this,this.$api.getVipPriceList,{pageIndex:1, pageSize:100,gameUserId:row.GameUserId, type:2},(data)=>{
+          this.$util.post(this,
+            this.$api.getVipPriceList,
+            {pageIndex:1, pageSize:100,gameUserId:row.GameUserId, type:2},
+            (data)=>{
             this.vipPriceTable=data.Items;
             this.currentName=row.NickName
           })
@@ -896,13 +923,12 @@
             //   })
           this.$util.post(this,this.$api.getVipPriceList,{pageIndex:1, pageSize:100,gameUserId:row.GameUserId, type:1},(data)=>{
             this.vipPriceTable=data.Items;
-            this.currentName=row.NickName
+            this.currentName=row.NickName;
           })
         },
         //普通会员消费记录
         handledefault(index,row){
           this.history.showModal=true;
-
           this.$util.post(this,this.$api.getVipPriceList,{pageIndex:1, pageSize:100,gameUserId:row.GameUserId, type:2},(data)=>{
             this.vipPriceTable=data.Items;
             this.currentName=row.NickName
@@ -1009,11 +1035,12 @@
           })
         },
         //获取会员卡列表
-        getCardList(){
+        getCardList(shipId){
           let obj={}
           obj.pageIndex=1;
           obj.pageSize=10;
           obj.isEnable=-1;
+          obj.shopId=shipId
           this.$util.post(this,this.$api.memberCardList,obj,(data)=>{
             data.Items.forEach(item=>{
               item.hasChecked=false;
@@ -1028,7 +1055,7 @@
       mounted(){
           this.getTypeList();//获取分组列表
           // this.getVipList();//获取会员列表
-        this.getCardList()
+        // this.getCardList()
       }
     }
 </script>

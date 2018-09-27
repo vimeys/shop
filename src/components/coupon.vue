@@ -6,11 +6,11 @@
       <img  v-else src="@/assets/images/card03.png" alt="">
       <div v-if="card.Type==1" class="coupon-item-left-text">
         <h1>¥{{card.DiscountAmount}}</h1>
-        <h5>满{{card.Amount}}可用</h5>
+        <h5>满{{card.Amount||'无'}}可用</h5>
       </div>
       <div v-else-if="card.Type==2" class="coupon-item-left-text">
-        <h1>{{10-card.DiscountAmount}}折</h1>
-        <h5>满{{card.Amount}}可用</h5>
+        <h1>{{card.DiscountAmount||'无'}}折</h1>
+        <h5>满{{card.Amount||'无'}}可用</h5>
       </div>
       <div v-else class="coupon-item-left-text">
         <h1>¥{{card.Amount}}</h1>
@@ -31,7 +31,6 @@
         <span v-if="card.Type==1">{{card.storeName}}1</span>
         <span class="card02" v-else-if="card.Type==2">{{card.storeName}}1</span>
         <span class="card03" v-else="card.Type==3">{{card.storeName}}1</span>
-
         张
       </div>
       <div>

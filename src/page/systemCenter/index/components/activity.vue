@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-show="show" @back="back">
+    <div v-show="show" >
       <el-container v-if="isCardList">
         <el-header>
           <div class="active-header">
@@ -61,12 +61,10 @@
           </template>
 
         </el-main>
-
       </el-container>
+
       <div class="coupons-items" v-else>
-        <div
-                class="coupons-header"
-        >
+        <div class="coupons-header">
           <div class="block-btn" @click="goBack"> 返回</div>
           <div class="base-btn-111" @click="openPopup" > 新建优惠券</div>
           <div class="base-btn-111"> 管理</div>
@@ -224,6 +222,7 @@
             </el-col>
           </el-row>
 
+
         </div>
       </div>
       <div class="popup-slide-right">
@@ -338,7 +337,6 @@
               <el-select v-model="value" @change="change" placeholder="满减券" class="select">
                 <el-option
                   v-for="item in options"
-
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -962,9 +960,9 @@
       }
     }
   }
-  .base-btn-111{
-    margin-top: 30px;
-  }
+  /*.base-btn-111{*/
+    /*margin-top: 30px;*/
+  /*}*/
   .team-detail-li{
       height: 48px;
     line-height: 48px;

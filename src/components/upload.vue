@@ -1,7 +1,7 @@
 <template>
 	<div class="input-box">
-    <input class="fileInput" type="file" :multiple="multiple" @change="inputChange">
-    <span class="el-icon-plus"></span>
+    <input id="input1" class="fileInput" :ref="input" type="file" :multiple="multiple" @change="inputChange">
+    <span class="el-icon-plus" @click="upload"></span>
 	</div>
 
 </template>
@@ -31,6 +31,9 @@ export default {
     }
   },
   methods: {
+    upload(){
+      document.getElementById("input1").click();
+    },
     inputChange(event) {
       const that = this;
       if(event.target && event.target.files){
@@ -74,8 +77,8 @@ export default {
             result => {
               if (result.isSuc) {
                 //  + imageMogrStr
-                console.log(result.url,'****************');
-                console.log(that,'****************');
+                // console.log(result.url,'****************');
+                // console.log(that,'****************');
                 // that.$emit(
                 //   "imageUrl",
                 //   that.imgIndex,
@@ -89,7 +92,7 @@ export default {
                   // that.type
                 );
               } else {
-                that.$emit("imageUrl", that.imgIndex, "上传失败", that.type);
+                  that.$emit("imageUrl", that.imgIndex, "上传失败", that.type);
               }
             },
             message => {

@@ -622,7 +622,7 @@
         delGroup(index){
           let id=this.groupList[index].GroupId;
           this.$util.confirm(this).then(()=>{
-            this.$http.post(this.$api.delGroup,{groupId:id}).then(json=>{
+            this.$http.post(this.$api.delGroup,{groupId:id,shopId:this.currentShopId}).then(json=>{
               let data=json.data;
               if(data.isSuc==true){
                 this.groupList.splice(index,1)
@@ -652,9 +652,6 @@
         },
         //改变权限
         changeLimit(e,i,is){
-          console.log(e);
-          console.log(i);
-          console.log(is);
           let item=this.groupList[i].UsersList.Items[is];
           this.$http.post(this.$api.updataPerson,
             {user:{ShopRole:e,

@@ -25,7 +25,7 @@
         <!--width="105">-->
         <!--<template slot-scope="scope">-->
           <!--&lt;!&ndash;<i class="el-icon-time"></i>&ndash;&gt;-->
-          <!--<span style="margin-left: 10px">{{ scope.row.TrueName|| '无'}}</span>-->
+          <!--<span style="margin-left: 10px">{{ scope.row.GameUserName|| '无'}}</span>-->
         <!--</template>-->
       <!--</el-table-column>-->
       <!--<el-table-column-->
@@ -252,7 +252,7 @@
         <el-scrollbar style="width: 99.5%;height: 700px">
           <el-row class="row">
             <el-col :span="2" :offset="1">顾客名称</el-col>
-            <el-col :offset="12" :span="8">{{currentDetail.TrueName}}</el-col>
+            <el-col :offset="12" :span="8">{{currentDetail.GameUserName}}</el-col>
           </el-row>
           <el-row class="row">
             <el-col :span="2" :offset="1">联系方式</el-col>
@@ -272,32 +272,37 @@
           </el-row>
           <el-row class="row">
             <el-col :span="2" :offset="1">状态</el-col>
-            <el-col :offset="12" :span="8">{{currentDetail.state}}</el-col>
+            <el-col :offset="12" :span="8">{{currentDetail.State}}</el-col>
           </el-row>
-          <div style="background: #f5f5f5;margin-top: 5px" v-for="item in currentDetail.DetailList">
+          <div style="background: #f5f5f5;margin-top: 5px" v-for="item in currentDetail.list">
             <el-row class="row row-server">
               <el-col :span="2" :offset="1">服务名称</el-col>
               <el-col :offset="12" :span="8">{{item.GoodsName}}</el-col>
             </el-row>
             <el-row class="row row-server">
               <el-col :span="2" :offset="1">服务规格</el-col>
-              <el-col :offset="12" :span="8">{{currentDetail.GoodsSpecName}}</el-col>
+              <el-col :offset="12" :span="8">{{item.GoodsSpecName}}</el-col>
             </el-row>
             <el-row class="row row-server">
               <el-col :span="2" :offset="1">服务人员</el-col>
-              <el-col :offset="12" :span="8">{{currentDetail.servicePeople}}</el-col>
+              <el-col :offset="12" :span="8">
+                <span v-for="itemSon in item.GroupEmployee">
+                  {{itemSon.NickName}},
+                </span>
+                <!--{{currentDetail.servicePeople}}-->
+              </el-col>
             </el-row>
           </div>
 
           <el-row class="row">
             <el-col :span="2" :offset="1">备注</el-col>
             <el-col :offset="12" :span="8">
-              {{currentDetail.remark||'无'}}
+              {{currentDetail.Remark||'无'}}
             </el-col>
           </el-row>
           <el-row class="row">
             <el-col :span="2" :offset="1" class="none">.</el-col>
-            <el-col :offset="12" :span="8">
+            <el-col :offset="12" :span="8" v-if="currentDetail.remarkImage">
               <img :src="currentDetail.remarkImage"
                    alt=""
                    @click="openImage"
@@ -322,30 +327,107 @@
         </el-row>
         <el-row>
           <el-col :span="6" :offset="2">
-            顾客名称：李二狗
+            顾客名称：{{currentDetail.GameUserName}}
           </el-col>
-          <el-col :span="4">
-            15198023456
+          <el-col :span="5">
+            {{currentDetail.Tel}}
           </el-col>
         </el-row>
-        <el-row>
-            <el-col :span="8">服务及服务员</el-col>
-          <el-col :span="15">
+        <el-row style="margin-top: 10px">
+            <el-col :span="8" class="base-col">服务及服务员</el-col>
+          <el-col :span="16">
               <el-scrollbar class="make-order-scroll">
-                <template v-for="item in [1,2,2,3,3,3,3,3,3,3,3,3,3]">
-                  <el-row >
-                    <el-col style="font-size: 30px">
-                      lajsfljasdlfkjfal
+                <template v-for="item in currentDetail.list">
+                  <el-row v-if="item.UserIds" style="margin-right: 10px">
+                    <el-col class="server-card" >
+                      <el-row :gutter="10" class="server-li">
+                        <el-col :span="4" class="base-col">服务</el-col>
+                        <el-col :span="20" class="base-text">
+                          {{item.GoodsName}}
+                        </el-col>
+                      </el-row>
+                      <el-row :gutter="10" class="server-li">
+                        <el-col :span="4" class="base-col">规格</el-col>
+                        <el-col :span="20" class="base-text">
+                          {{item.GoodsSpecName}}
+                        </el-col>
+                      </el-row>
+                      <el-row :gutter="10" class="server-li">
+                        <el-col :span="4" class="base-col">人员</el-col>
+                        <el-col :span="20" class="base-text">
+                          <el-select size="small">
+                            <el-option></el-option>
+                          </el-select>
+                        </el-col>
+                      </el-row>
+
+                    </el-col>
+                  </el-row>
+                  <el-row v-else style="margin-right: 10px">
+                    <el-col class="server-card" >
+                      <el-row :gutter="10" class="server-li">
+                        <el-col :span="4" class="base-col">服务</el-col>
+                        <el-col :span="20" >
+                          <el-select v-model="item.serverNameValue"
+                                     filterable
+                                     size="small"
+                                     placeholder="请输入您想搜索的服务">
+                            <el-option
+                              v-for="itemSon in item.serverNameValue"
+                              :key="itemSon.GoodsId"
+                              :label="itemSon.Name"
+                              :value="itemSon.GoodsId"
+                            >
+                            </el-option>
+                          </el-select>
+                        </el-col>
+                      </el-row>
+                      <el-row :gutter="10" class="server-li">
+                        <el-col :span="4" class="base-col">规格</el-col>
+                        <el-col :span="20" >
+                          <el-select v-model="item.serverNameValue"
+                                     size="small"
+                                     placeholder="请选择该服务的规格">
+                            <el-option
+                              v-for="itemSon in item.serverNameValue"
+                              :key="itemSon.GoodsId"
+                              :label="itemSon.Name"
+                              :value="itemSon.GoodsId"
+                            >
+                            </el-option>
+                          </el-select>
+                        </el-col>
+                      </el-row>
+                      <el-row :gutter="10" class="server-li">
+                        <el-col :span="4" class="base-col">人员</el-col>
+                        <el-col :span="20" >
+                          <el-select size="small">
+                            <el-option></el-option>
+                          </el-select>
+                        </el-col>
+                      </el-row>
+                      <span class="el-icon-error del-btn" ></span>
                     </el-col>
                   </el-row>
                 </template>
-
+                <el-row>
+                  <el-col>
+                    <span class="plus" @click="addServer">+</span>
+                  </el-col>
+                </el-row>
               </el-scrollbar>
           </el-col>
         </el-row>
-        <el-row>
+        <el-row class="server-count">
           <el-col :span="6" :offset="2">
-
+            共计金额：<span class="server-money">￥399</span>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col>
+            <div class="confirm">
+              收款
+            </div>
           </el-col>
         </el-row>
       </div>
@@ -394,7 +476,7 @@ import ysSelectShop from '@/components/selectShop'
           console.debug(err);
         }
 
-         time=new Date(parseInt(time));
+         time=new Date(parseInt(time-8*60*60*1000));
         const year = time.getFullYear()
         const month = time.getMonth() + 1
         const day = time.getDate()
@@ -435,7 +517,8 @@ import ysSelectShop from '@/components/selectShop'
         Data2:[],
         currentDetail:'',//详情
         orderServerList:[{goods:'',size:'',people:'',hasPlus:true}],
-        currentShopId:''
+        currentShopId:'',
+        serverData:'',//所有服务的数据
       }
     }, methods: {
       // 获取到店铺
@@ -446,7 +529,9 @@ import ysSelectShop from '@/components/selectShop'
       //打开付款弹窗
       handleEdit(index, row) {
         this.order.showModal=true;
-
+        this.$util.post(this,this.$api.orderDetail,{goodsOrderFormId:row.GoodsOrderFormId},(data)=>{
+          this.currentDetail=data
+        })
       },
       //关闭付款弹窗
       closeOrder(){
@@ -486,6 +571,16 @@ import ysSelectShop from '@/components/selectShop'
                 // })
             }
           )
+      },
+      //添加服务
+      addServer(){
+        this.$util.post(this,this.$api.getAllServerList,{pageIndex:1, pageSize:100,name:''},(data)=>{
+              this.serverData=data
+        })
+        let obj={}
+          obj.server='';
+          obj.serverNameValue='';//当前服务的服务名称
+          this.currentDetail.list.push(obj)
       },
       exportExcel(){
         this.$util.post(this,this.$api.getOrderList,{shopId:this.currentShopId,pageIndex:1,pageSize:100000,state:-1,key:''},(data)=>{
@@ -549,6 +644,12 @@ import ysSelectShop from '@/components/selectShop'
   }
   /deep/ .el-table th > .cell.highlight{
     color:#282828;
+  }
+  /deep/ .el-select--small{
+    width: 100%;
+  }
+  /deep/ input{
+    text-align: center;
   }
   .box {
     width: 1200px;
@@ -623,12 +724,58 @@ import ysSelectShop from '@/components/selectShop'
     width: 100%;
     .make-order-scroll{
       width: 100%;
-      height: 270px;
+      height: 330px;
+    }
+    .plus{
+      display: inline-block;
+      width:27px;
+      height:27px;
+      background:rgba(255,215,54,1);
+      text-align: center;
+      line-height: 27px;
+      color: #fff;
+      border-radius:4px;
+      margin-top: 20px;
+    }
+    .server-card{
+      background: #F5F5F5;
+      padding: 20px;
+      margin-top: 20px;
+      position: relative;
+      .server-li{
+        margin: 5px 0;
+      }
+      .del-btn{
+        display:inline-block;
+        width: 14px;
+        height: 14px;
+        position: absolute;
+        top:0;
+        right: 0;
+      }
+    }
+    .server-count{
+      margin-top: 20px;
+      margin-bottom: 20px;
+      .server-money{
+        color:#D0021B;
+        font-size: 20px;
+      }
+    }
+    .confirm{
+      .base-btn(400px);
+      margin-top: 20px;
+    }
+    .base-text{
+      height: 36px;
+      background: #fff;
+      text-align: center;
+      line-height: 36px;
+        font-size: 16px;
+      border-radius: 4px;
     }
   }
-  /*/deep/ .el-pagination button:disabled{*/
-    /*background: #ccc!important;*/
-  /*}*/
+
   .page-size-box{
     margin-top: 50px;
   }

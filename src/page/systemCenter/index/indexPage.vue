@@ -113,7 +113,8 @@
         window.addEventListener("beforeunload",()=>{
           sessionStorage.setItem("index",this.activeName)
         })
-      }
+      },
+
     }
 </script>
 

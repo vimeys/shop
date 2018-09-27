@@ -25,10 +25,17 @@
     updataPerson:head+'user/updateusername',//更新权限名字职位
 
 
+
+
     //店铺分组
     addGroup:head+'group/add',//添加分组
     updateGroup:head+'group/update',//修改分组
     delGroup:head+'group/delete',//删除分组
+
+    //添加背景
+    upBg:head+'user/version/userByPics',//添加背景
+
+    bgDetail:head+'user/versionweb/userByPicsdetails',//回显图片
 
 
     //管理分类
@@ -77,7 +84,8 @@
     getVipList:head+'gameuser/version3/list4web',//获取会员列表
     getVipCardList:head+'membershipCard/version3/webcurrentUserVip',//获取单个会员卡片
     getVipPriceList:head+'gameusersmoneylog/version3/list ',//查询充值消费记录
-
+    payCode:head+'MembershipCard/version3/payqrcode',//支付二维码
+    payMoney:head+'MembershipCard/version3/checkOut',//其他支付方式
 
 
     //挂单
@@ -90,7 +98,7 @@
     getAppOrderList:head+'subscribe/list ',//预约订单
     delAppOrder:head+'subscribe/delete',//删除预约订单
     appOrderDetail:head+'subscribe/detail ',//预约详情
-
+    getAllServerList:head+'settleAccounts/version3/goodsList',//获取店铺下的所有服务
 
     //添加活动
     activeList:head+'usergame/list',//新建活动列表
@@ -110,7 +118,7 @@
     getGoodsCheck:head+"evaluate/version3/list4serverperson",//单个已审核商品评价
     doGoodsCheck:head+"evaluate/version3/updatestate",//对商品进行审核
     // getPeople:head+'Users/version/shopByuser',//获取当前店铺下所有员工
-    getPeople:head+'user/version/userByPics',//获取当前店铺下所有员工
+    getPeople:head+'Users/version/shopByuser',//获取当前店铺下所有员工
   };
 
 
