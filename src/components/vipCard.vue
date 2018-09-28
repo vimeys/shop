@@ -10,11 +10,19 @@
     <div class="content">
       <div class="name">
         {{detail.MembershipName}}（通用）
-        <span class="sale-name">已售：100</span>
+        <span class="sale-name">已售：{{detail.sold||0}}</span>
       </div>
       <div class="detail">
         <div>
-          服务范围：美发类
+
+          <el-popover
+            placement="top-start"
+            width="250"
+            trigger="hover"
+            content="这是一段内容。这是一段内容。这是一段内容。">
+            <!--<el-button slot="reference">hover 激活</el-button>-->
+            <div slot="reference" style="width: 200px">服务范围：美发类</div>
+          </el-popover>
         </div>
         <div>具体权益：美发类享受8折优惠</div>
       </div>

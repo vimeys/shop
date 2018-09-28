@@ -9,7 +9,7 @@
         <!--</div>-->
         <van-swipe :autoplay="3000" >
           <van-swipe-item v-for="(image, index) in bannerImages" :key="index">
-            <img :src="image" />
+            <img :src="image" style="width: 100%;" />
           </van-swipe-item>
         </van-swipe>
         <div class="logo-box"  v-show="upImage">
@@ -44,7 +44,7 @@
           <!--</p>-->
 
           <div v-show="upImage">
-            跟换图片
+            更换图片
             <ys-upload style="position: relative;top:-36px; opacity: 0;" @imageUrl="upLoad"></ys-upload>
           </div>
           <div @click="delImage" v-show="upImage">
@@ -95,6 +95,7 @@
           this.dialogVisible = true;
         },
         upLoad(url){
+          //限制图片大小start
           let img= new Image()
           img.src=url;
           img.onload =()=>{
@@ -110,12 +111,12 @@
             }
           };
           this.upImage = url;
+          //限制图片大小end
           this.up(url)
         },
 
         up(url){
-          this.Data.Logo=url;
-          this.$util.post(this,this.$api.bgDetail,{user:this.Data},(data)=>{
+          this.$util.post(this,this.$api.upLogo,{logo:url},(data)=>{
             console.clear()
             console.log(data);
           })
@@ -129,7 +130,23 @@
             // console.log(data);
             this.Data=data;
             this.bannerImages=data.Pics.split(',')
-            this.upImage=data.Logo
+            console.log(data.Logo);
+            let img= new Image()
+            img.src=data.Logo;
+            img.onload =()=>{
+              // alert('width:'+img.width+',height:'+img.height);
+              if(img.width>img.height){
+                this.width='120px'
+                let size=img.width/120;
+                this.height=img.height/size+'px'
+              }else{
+                this.height='120px'
+                let size=img.height/120;
+                this.width=img.width/size+'px'
+              }
+            };
+            this.upImage =data.Logo;
+            // this.upImage=img
           })
         }
       },

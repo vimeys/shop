@@ -28,9 +28,9 @@
       </div>
       <div>
         库存:
-        <span v-if="card.Type==1">{{card.storeName}}1</span>
-        <span class="card02" v-else-if="card.Type==2">{{card.storeName}}1</span>
-        <span class="card03" v-else="card.Type==3">{{card.storeName}}1</span>
+        <span v-if="card.Type==1">{{card.Number}}</span>
+        <span class="card02" v-else-if="card.Type==2">{{card.Number}}</span>
+        <span class="card03" v-else="card.Type==3">{{card.Number}}</span>
         张
       </div>
       <div>

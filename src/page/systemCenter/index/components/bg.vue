@@ -6,7 +6,7 @@
       <div class="swiper">
         <van-swipe :autoplay="3000">
           <van-swipe-item v-for="(image, index) in bannerImages" :key="index">
-            <img :src="image" />
+            <img :src="image" style="width: 100%" />
           </van-swipe-item>
         </van-swipe>
       </div>
@@ -146,7 +146,7 @@
         border-top: 1px solid #E9E9E9;
         img{
           width: 100%;
-          height: 609px;
+          /*height: 609px;*/
         }
       }
     }

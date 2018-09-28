@@ -1,6 +1,6 @@
 <template>
 	<div class="input-box">
-    <input id="input1" class="fileInput" :ref="input" type="file" :multiple="multiple" @change="inputChange">
+    <input id="input1" class="fileInput"  type="file" :multiple="multiple" @change="inputChange">
     <span class="el-icon-plus" @click="upload"></span>
 	</div>
 

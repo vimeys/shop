@@ -51,6 +51,7 @@
                           <img v-if="form.Pics" :src="form.Pics" class="avatar">
                           <i v-else class="el-icon-plus avatar-uploader-icon logo"></i>
                         </el-upload>
+                        店铺封面设置
                       </el-col>
                       <el-col :span="10">
                         <!--<img :src="imageUrl" alt="">-->
@@ -60,15 +61,16 @@
                           :show-file-list="false"
                           :on-success="handleAvatarSuccess2"
                           :before-upload="beforeAvatarUpload">
-                          <img v-if="form.logo" :src="form.logo" class="avatar">
+                          <img v-if="form.Logo" :src="form.Logo" class="avatar">
                           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
+                        店铺头像设置
                       </el-col>
                   </el-row>
                 </el-col>
               </el-row>
               <el-row class="row-margin">
-                <el-col :span="6">标题</el-col>
+                <el-col :span="6" class="base-col">标题</el-col>
                 <el-col :span="16" ><input type="text"
                                            class="base-input"
                                            placeholder="请输入标题"
@@ -81,7 +83,7 @@
                 <!--<el-col :span="2" class="after"></el-col>-->
               <!--</el-row>-->
               <el-row class="row-margin">
-                <el-col :span="6">简介</el-col>
+                <el-col :span="6" class="base-col">简介</el-col>
                 <el-col :span="16" >
                   <textarea name=""
                             placeholder="请输入简介"
@@ -93,7 +95,7 @@
                 <el-col :span="2" class="after"></el-col>
               </el-row>
               <el-row class="row-margin">
-                <el-col :span="6">店名</el-col>
+                <el-col :span="6" class="base-col">店名</el-col>
                 <el-col :span="16" ><input  class="base-input"
                                             type="text"
                                             v-model="form.Name"
@@ -101,7 +103,7 @@
                 <el-col :span="2" class="after"></el-col>
               </el-row>
               <el-row class="row-margin">
-                <el-col :span="6">地址</el-col>
+                <el-col :span="6" class="base-col">地址</el-col>
                 <el-col :span="16" ><input  class="base-input"
                                             type="text"
                                             v-model="form.Address"
@@ -109,7 +111,7 @@
                 <el-col :span="2" class="after"></el-col>
               </el-row>
               <el-row class="row-margin">
-                <el-col :span="6">电话</el-col>
+                <el-col :span="6" class="base-col">电话</el-col>
                 <el-col :span="16" ><input  class="base-input"
                                             type="text"
                                             v-model="form.Tel"
@@ -117,7 +119,7 @@
                 <el-col :span="2" class="after"></el-col>
               </el-row>
               <el-row class="row-margin">
-                <el-col :span="6">员工数量</el-col>
+                <el-col :span="6" class="base-col">员工数量</el-col>
                 <el-col :span="16" ><input type="text"
                                            v-model.number="form.EmployeesNumber"
                                            class="base-input"
@@ -125,7 +127,7 @@
                 <el-col :span="2" class="after"></el-col>
               </el-row>
               <el-row class="row-margin">
-                <el-col :span="6">营业时间</el-col>
+                <el-col :span="6" class="base-col">营业时间</el-col>
                 <el-col :span="16" >
                   <el-time-picker
                     is-range
@@ -140,7 +142,7 @@
                 <el-col :span="2" class="after"></el-col>
               </el-row>
               <el-row class="row-margin">
-                <el-col :span="6">午休时间</el-col>
+                <el-col :span="6" class="base-col">午休时间</el-col>
                 <el-col :span="16" ><el-time-picker
                   is-range
                   v-model="value5"
@@ -161,7 +163,7 @@
                   <el-col :span="24" :offset="0">成都市高新区天府五街MCI公司</el-col>
               </el-row>
               <el-row class="row-margin">
-                <el-col :span="6">门店详情</el-col>
+                <el-col :span="6" class="base-col">门店详情</el-col>
                 <el-col :span="16" class="content-btns">
                   <el-row>
                     <el-col :span="12"> <div  class="base-btn-111">闪电编辑</div></el-col>
@@ -187,10 +189,10 @@
 <script>
   import  shopDetail from '@/components/shopDetail';
   import  ysPopup from '@/components/popup'
-
   import upload from '@/components/upload'
   import {emptyObj} from "../../assets/script/util";
   import api from "@/assets/script/url"
+  import {mapGetters, mapMutations} from 'vuex'
   export default {
     name: "shopSetting",
     components:{
@@ -198,9 +200,10 @@
       ysPopup,
       upload
     },
+
     data(){
       return{
-
+        ...mapMutations({saveShop:'SET_SHOP'}),
         showModal:false,
         pWidth:1200,
         pHeight:830,
@@ -209,7 +212,7 @@
         isEdit:false,
         form:{
           Pics:'',
-          logo:'',
+          Logo:'',
           Title:'',
           Content:'',
           Name:'',
@@ -240,7 +243,7 @@
       },
       // 头像上传
       handleAvatarSuccess2(res, file) {
-        this.form.logo=file.response.url;
+        this.form.Logo=file.response.url;
         // this.form.logo= URL.createObjectURL(file.raw);
 
       },
@@ -265,7 +268,7 @@
             model: {
               UserShopId:form.UserShopId,
               Pics: form.Pics,
-              Logo: form.logo,
+              Logo: form.Logo,
               Name: form.Name,
               Content: form.Content,
               Address: form.Address,
@@ -309,7 +312,7 @@
           let obj = {
             model: {
               Pics: form.Pics,
-              Logo: form.logo,
+              Logo: form.Logo,
               Name: form.Name,
               Content: form.Content,
               Address: form.Address,
@@ -356,15 +359,18 @@
       // 删除店铺
       delShop(id,index){
         console.log(id);
-        this.$http.post(api.delShop,{userShopId:id.UserShopId}).then(json=>{
-          let data=json.data
-          if(data.isSuc==true){
-            this.shopList.splice(index,1);
-            this.$message({
-              message:'成功'
-            })
-          }
+        this.$util.confirm(this,'error','删除该店铺会清空该店铺下所有数据',).then(()=>{
+          this.$http.post(api.delShop,{userShopId:id.UserShopId}).then(json=>{
+            let data=json.data
+            if(data.isSuc==true){
+              this.shopList.splice(index,1);
+              this.$message({
+                message:'成功'
+              })
+            }
+          })
         })
+
       },
       // 修改
       modify(item,index){
@@ -391,6 +397,7 @@
         // })
         this.$util.post(this,this.$api.shopList,{},(data)=>{
           this.shopList=data;
+          this.saveShop(data)
               this.$message({
                 message: '恭喜你，这是一条成功消息',
                 type: 'warning'
@@ -403,7 +410,8 @@
     computed:{
         Role(){
             return this.$store.state.Role
-        }
+        },
+      ...mapGetters(['shop']),
     },
     mounted(){
       this.getShopList()

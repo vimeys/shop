@@ -4,7 +4,6 @@
 */
 <template>
     <div class="fodder-box">
-      素材中心
       <el-tabs v-model="activeName" @tab-click="handleClick" value="first">
         <el-tab-pane label="分类" name="first">
           <!--<router-view></router-view>-->
@@ -37,35 +36,38 @@
       },
       data(){
           return {
-            handleClick(){
-              switch (this.activeName) {
-                case  'first':
-                  this.$router.replace({
-                    path:'/fodderCenter/fodder/fodder'
-                  });
-                  break
-                case 'second':
-                  this.$router.replace({
-                    path: '/centerIndex/indexPage/logo'
-                  });
-                  break;
-                case 'third':
-                  this.$router.replace({
-                    path: '/centerIndex/indexPage/diyImage'
-                  });
-                  break;
-                case 'fourth':
-                  this.$router.push({
-                    path: '/centerIndex/indexPage/activity'
-                  });
-                  break;
-                case 'fifth':
-                  this.$router.replace({
-                    path:'/centerIndex/indexPage/cardList'
-                  })
-              }
-            }
+            activeName:'first'
           }
+      },
+      methods:{
+        handleClick(){
+          switch (this.activeName) {
+            case  'first':
+              this.$router.replace({
+                path:'/fodderCenter/fodder/fodder'
+              });
+              break
+            case 'second':
+              this.$router.replace({
+                path: '/centerIndex/indexPage/logo'
+              });
+              break;
+            case 'third':
+              this.$router.replace({
+                path: '/centerIndex/indexPage/diyImage'
+              });
+              break;
+            case 'fourth':
+              this.$router.push({
+                path: '/centerIndex/indexPage/activity'
+              });
+              break;
+            case 'fifth':
+              this.$router.replace({
+                path:'/centerIndex/indexPage/cardList'
+              })
+          }
+        }
       }
     }
 </script>

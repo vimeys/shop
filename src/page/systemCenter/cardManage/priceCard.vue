@@ -282,7 +282,7 @@
         obj.Amount = this.Amount;
         obj.DiscountAmount = this.DiscountAmount ? this.DiscountAmount : 0;
         obj.Details = this.Details;
-        obj.SourceType = 2;
+        obj.SourceType = this.type2;
         obj.ServiceType = 2;
         obj.Number=this.Num;
         obj.ActivityType = this.type2;

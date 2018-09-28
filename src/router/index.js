@@ -79,7 +79,7 @@ export default new Router({
   routes: [
     {
       path:'/',
-      redirect:'/moneyManage/target',
+      redirect:'/shop/staffSetting',
     },
     // 运营管理总页面
     {
@@ -238,7 +238,8 @@ export default new Router({
           name:'push',
           component:push
         }
-      ]
+      ],
+      redirect:'/fodderCenter/fodder/fodder'
     },
     //财务管理
     {

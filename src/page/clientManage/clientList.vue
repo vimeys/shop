@@ -210,6 +210,7 @@
           </el-row>
         </div>
       </ys-popup>
+        <!--会员持有会员卡-->
        <ys-popup
         :width="vipCard.width"
         :height="vipCard.height"
@@ -226,8 +227,10 @@
            <el-row>
              <el-col>
                <el-scrollbar class="vip-card-scroll">
-                <template v-for="item in [123,3,3,3,3,3]">
-                  <ys-vip-card></ys-vip-card>
+                <template v-for="item in vipHasList">
+                  <ys-vip-card
+                    :detail="item"
+                  ></ys-vip-card>
                 </template>
 
                </el-scrollbar>
@@ -599,11 +602,12 @@
 
 <script>
   import ysSearch from '@/components/search';
-  import  ysPay from '@/components/pay'
-  import  ysSelectShop from '@/components/selectShop'
-  import  ysPopup from '@/components/popup'
-  import  ysVipCard from "@/components/vipCard"
-    export default {
+  import ysPay from '@/components/pay'
+  import ysSelectShop from '@/components/selectShop'
+  import ysPopup from '@/components/popup'
+  import ysVipCard from "@/components/vipCard"
+
+  export default {
       name: "clientList",
       components: {
         ysSearch,
@@ -754,7 +758,8 @@
           cardListType:[],//会员卡列表
           currentMoban:"",//当前选中的模板
           isUserMoban:false,//是否使用当前模板
-          currentName:''//当前查看人员的名字
+          currentName:'',//当前查看人员的名字
+          vipHasList:[],//会员持有的会员卡
         }
       },
       methods:{
@@ -784,13 +789,8 @@
           //     break;
           // }
         },
-        filterTag(){
-
-        },
-        change(){},
-
         closePay(){
-
+            this.payShowModel=false
         },
         closePayHistory(){
           this.payHistory.showModal=false
@@ -917,14 +917,13 @@
         //查询会员消费记录
         handleHistory(index,row){
             this.history.showModal=true;
-            // this.$http.post('http://rap2api.taobao.org/app/mock/84341/vipPriceList',{})
-            //   .then(json=>{
-            //     this.vipPriceTable=json.data.table;
-            //   })
-          this.$util.post(this,this.$api.getVipPriceList,{pageIndex:1, pageSize:100,gameUserId:row.GameUserId, type:1},(data)=>{
-            this.vipPriceTable=data.Items;
-            this.currentName=row.NickName;
-          })
+
+          this.$util.post(this, this.$api.getVipPriceList,
+            {pageIndex: 1, pageSize: 100, gameUserId: row.GameUserId, type: 1},
+            (data) => {
+              this.vipPriceTable = data.Items;
+              this.currentName = row.NickName;
+            })
         },
         //普通会员消费记录
         handledefault(index,row){
@@ -941,14 +940,12 @@
           this.vipCard.showModal=true
           this.$util.post(this,this.$api.getVipCardList,{gameusersId:row.GameUserId,shopId:this.currentShopId},(data)=>{
             console.log(data);
+            this.vipHasList=data
           })
         },
         closeVipCard(){
             this.vipCard.showModal=false
         },
-        // pay(){
-        //   this.
-        // },
 
 
         //弹起开卡弹窗

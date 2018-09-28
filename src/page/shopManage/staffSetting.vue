@@ -41,7 +41,7 @@
           <el-col :span="2">密码</el-col>
           <el-col :span="11">管理</el-col>
         </el-row>
-      <el-row class="row" v-for="(itemSon,indexSon ) in item.UsersList.Items" :key="itemSon.GroupId">
+      <el-row v-if="item.UsersList.Items.length" class="row" v-for="(itemSon,indexSon ) in item.UsersList.Items" :key="itemSon.GroupId">
         <el-col :span="4">
           <el-row>
             <el-col :span="6" class="row-radio">
@@ -90,7 +90,10 @@
             </el-row>
         </el-col>
       </el-row>
-      <el-row class="table-btns" :gutter="20">
+      <el-row v-else>
+        <el-col class="table-none">暂无人员</el-col>
+      </el-row>
+      <el-row class="table-btns" :gutter="20" >
         <el-col :span="3">
           <div class="base-btn-111"
                :class="{'disable':item.isEdit}"
@@ -117,9 +120,10 @@
           </el-row>
         </el-col>
         <el-col :span="3" :offset="5">
-          <div class="base-btn-111">修改分类</div>
+          <div class="base-btn-111" @click="editGroup(index)">修改分类</div>
         </el-col>
       </el-row>
+
     </div>
 
     <!--*********添加分组********-->
@@ -357,6 +361,8 @@
               height:387,
               showModal:false
             },
+            isEditGroup:false,
+            editCurrentGroup:'',//当前编辑的分组
             edit:{//编辑资料
                 width:645,
               height:445,
@@ -518,6 +524,7 @@
         },
         delAll(index){
           let arr=[]
+          debugger
           this.groupList[index].UsersList.Items.forEach(item=>{
             if(item.isChecked){
               arr.push(item.UserId)
@@ -525,10 +532,10 @@
           })
           console.log(arr);
           this.$util.confirm(this).then(()=>{
-            this.$http.post(this.$api.delPerson,{userIds:this.delUserId}).then(json=>{
+            this.$http.post(this.$api.delPerson,{userIds:arr}).then(json=>{
               let data=json.data;
               if(data.isSuc=true){
-                this.groupList[i].UsersList.Items.splice(is,1)
+                this.groupList[index].UsersList.Items.splice(is,1)
                 this.$message({
                   message:'删除成功',
                   icon:'success'
@@ -537,6 +544,10 @@
             })
           })
         },
+
+
+
+
         // 单个编辑
         editInfo(i,is){
             this.edit.showModal=true;
@@ -678,6 +689,8 @@
         },
         //添加分组
         addGroup(){
+          debugger
+          if(!this.isEditGroup){
             let obj={
               group:{
                 GroupName:this.groupName,
@@ -686,14 +699,48 @@
                 Charge:this.Charge
               }
             }
-          console.log(obj);
-          this.$http.post(this.$api.addGroup,obj).then(json=>{
+            // console.log(obj);
+            this.$http.post(this.$api.addGroup,obj).then(json=>{
               let data=json.data;
               if(data.isSuc==true){
-               this.getGroupList(this.currentShopId);
-               this.group.showModal=false
+                this.getGroupList(this.currentShopId);
+                this.group.showModal=false
+                this.groupName="";
+                this.Charge=""
               }
             })
+          }else{
+            let obj={
+              group:{
+                GroupName:this.groupName,
+                GroupId:this.editCurrentGroup.GroupId,
+                Charge:this.Charge
+              }
+            }
+            // console.log(obj);
+            this.$http.post(this.$api.updataType,obj).then(json=>{
+              let data=json.data;
+              if(data.isSuc==true){
+                this.getGroupList(this.currentShopId);
+                this.groupName="";
+                this.Charge=""
+                this.isEditGroup=false
+                this.group.showModal=false
+              }
+            })
+          }
+        },
+        // 修改分类
+        editGroup(index){
+          this.group.showModal=true;
+          let obj={}
+          obj.group=this.groupList[index].GroupName;
+          obj.GroupId=this.groupList[index].GroupId;
+          // this.$util.post(this,this.$api.updateGroup,{})
+          this.editCurrentGroup=obj;
+          this.groupName=obj.group;
+          this.isEditGroup=true;
+          this.Charge=this.groupList[index].Charge
         },
         //删除分组
         delGroup(index){
@@ -919,6 +966,7 @@
       .table-btn{
         width: 73px;
         height: 36px;
+        cursor: pointer;
         line-height: 36px;
         background: @bs-color;
         .text-center(36px);
@@ -1010,4 +1058,12 @@
 .disable{
     background: #E5E5E5;
 }
+  .table-none{
+      height:50px;
+    text-align: center;
+    line-height: 50px;
+    font-size: 16px;
+    width: 100%;
+    background: #fff;
+  }
 </style>

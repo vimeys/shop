@@ -1,5 +1,5 @@
-  // const head='http://test.csmen.cc/services/';//线上
-  const head='/shop/';//跨域
+  const head='http://test.csmen.cc/services/';//线上
+  // const head='/shop/';//跨域
   // const head='http://192.168.0.135:8073/services/';//陈林本地
 
   const url={
@@ -34,7 +34,8 @@
 
     //添加背景
     upBg:head+'user/version/userByPics',//添加背景
-
+    upLogo:head+'user/version/userByLogo',//添加logo
+    updiyImage:head+'user/version/userByBg',//添加自定义图片
     bgDetail:head+'user/versionweb/userByPicsdetails',//回显图片
 
 
@@ -118,7 +119,15 @@
     getGoodsCheck:head+"evaluate/version3/list4serverperson",//单个已审核商品评价
     doGoodsCheck:head+"evaluate/version3/updatestate",//对商品进行审核
     // getPeople:head+'Users/version/shopByuser',//获取当前店铺下所有员工
-    getPeople:head+'Users/version/shopByuser',//获取当前店铺下所有员工
+    getPeople:head+'User/version/shopByuser',//获取当前店铺下所有员工
+
+    //素材中心
+       //分类管理
+    addFodderGroup:head+'Channel/version3/addChannel',//添加分类接口
+    fodderGroupList:head+'Channel/version3/list',//分类接口列表
+    updataGroup:head+'Channel/update4admin',//更新分类
+    sortGroup:head+'Channel/setorder'
+
   };
 
 

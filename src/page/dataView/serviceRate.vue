@@ -30,8 +30,6 @@
                 <!--//评价窗口-->
 
               </el-tab-pane>
-
-
             <el-tab-pane label="店员" name="second">
               <!--<div class="rate-goods-btn">-->
                 <!--<div class="base-btn-111 {'noActive':isActive}" @click="getRated">已审核</div>-->
@@ -40,7 +38,7 @@
               <div class="water-items">
                 <div class="water-item" v-for="(item,index) in waterList">
                   <div class="box-image">
-                    <img :src="src" alt="">
+                    <img :src="item.Avatar||src" alt="">
 
                     <div class="box-btns">
                       <div class="box-btns-edit" @click="peopleChecked(index)">已审核</div>
@@ -51,10 +49,10 @@
                     <!--</div>-->
                   </div>
                   <div class="water-name">
-                    <div>Tony老师 #135</div>
+                    <div>{{item.NickName}}</div>
                     <div>
                       <el-rate
-                        v-model="rateValue"
+                        v-model="item.Level||0"
                         disabled
                         show-score
                         text-color="#ff9900"
@@ -69,6 +67,8 @@
             </el-tab-pane>
 
           </el-tabs>
+
+        <!--评价-->
         <ys-popup
           :width="water.width"
           :height="water.height"
@@ -123,6 +123,8 @@
             </el-row>
           </div>
         </ys-popup>
+
+
         <ys-popup
           :width="Rate.width"
           :height="Rate.height"
@@ -345,6 +347,7 @@
       getPeopleList(shopId){
             this.$util.post(this,this.$api.getPeople,{shopId:shopId,pageIndex :1,pageSize:1000},(data)=>{
               console.log(data);
+              this.waterList=data.Items
             })
       }
 

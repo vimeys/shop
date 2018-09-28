@@ -199,6 +199,13 @@
         ysVipCard,
         ysPopup
       },
+      // computed:{
+      //   Discount(){
+      //       if(isNaN(this.Discount)){
+      //         return ''
+      //       }
+      //   }
+      // },
       data(){
           return{
             value: '',
@@ -324,21 +331,14 @@
           obj.Frequency=this.Frequency?this.Frequency:0;
           obj.BuyAmount=this.buyMoney?this.buyMoney:0;
           obj.Discount=this.Discount?this.Discount:0;
+          if(this.carlType!=3){
+            this.Minimum=this.buyMoney?this.buyMoney:0;
+          }
+          obj.CardType=2;
+          obj.IsEnable=0;
           if(!this.isWuxian){
               this.Frequency=-1
           }
-            // this.$http.post(api.addMemberCard,{goodsTypeIds:this.value11,model:obj,shopIds:this.valueShop}).then(json=>{
-            //   console.log(json);
-            //   let data=json.data;
-            //   if(data.isSuc==true){
-            //       this.showModal=false;
-            //       this.carlType=1;
-            //       this.yearNum=1;
-            //       this.Frequency='';
-            //       this.buyMoney='';
-            //       this.Discount='';
-            //   }
-            // })
           this.$util.post(this,this.$api.addMemberCard,{goodsTypeIds:this.value11,model:obj,shopIds:this.valueShop},()=>{
             this.getCardList();
                   this.showModal=false;
@@ -439,6 +439,13 @@
           }).catch(err=>{
             console.log(err);
           })
+        }
+      },
+      watch:{
+        Discount(){
+          if(isNaN(this.Discount)){
+            this.Discount=''
+          }
         }
       },
       created(){
