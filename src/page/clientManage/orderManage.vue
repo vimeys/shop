@@ -15,91 +15,91 @@
 
 
     <!--下载整个表单-->
-    <!--<el-table-->
-      <!--:data="Data2"-->
-      <!--id="test-table"-->
-      <!--class="table"-->
-      <!--style="width: 100%;position: fixed;top:-10000px">-->
-      <!--<el-table-column-->
-        <!--label="顾客名称"-->
-        <!--width="105">-->
-        <!--<template slot-scope="scope">-->
-          <!--&lt;!&ndash;<i class="el-icon-time"></i>&ndash;&gt;-->
-          <!--<span style="margin-left: 10px">{{ scope.row.GameUserName|| '无'}}</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-      <!--<el-table-column-->
-        <!--label="联系方式"-->
-        <!--width="125">-->
-        <!--<template slot-scope="scope">-->
-          <!--&lt;!&ndash;<i class="el-icon-time"></i>&ndash;&gt;-->
-          <!--<span style="margin-left: 10px">{{ scope.row.Tel||'13350900722' }}</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-      <!--<el-table-column-->
-        <!--label="门店名称"-->
-        <!--width="127">-->
-        <!--<template slot-scope="scope">-->
-          <!--&lt;!&ndash;<el-popover trigger="hover" placement="top">&ndash;&gt;-->
-          <!--&lt;!&ndash;<p>姓名: {{ scope.row.name }}</p>&ndash;&gt;-->
-          <!--&lt;!&ndash;<p>住址: {{ scope.row.address }}</p>&ndash;&gt;-->
-          <!--&lt;!&ndash;<div slot="reference" class="name-wrapper">&ndash;&gt;-->
-          <!--&lt;!&ndash;<el-tag size="medium">{{ scope.row.StoreName||'成都店' }}</el-tag>&ndash;&gt;-->
-          <!--&lt;!&ndash;</div>&ndash;&gt;-->
-          <!--&lt;!&ndash;</el-popover>&ndash;&gt;-->
-          <!--<span style="margin-left: 10px">{{ scope.row.StoreName||'成都店' }}</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-      <!--<el-table-column-->
-        <!--label="订单编号"-->
-        <!--width="145">-->
-        <!--<template slot-scope="scope">-->
-          <!--&lt;!&ndash;<i class="el-icon-time"></i>&ndash;&gt;-->
-          <!--<span style="margin-left: 10px">{{ scope.row.OrderNo||'123' }}</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-      <!--<el-table-column-->
-        <!--label="创建时间"-->
-        <!--width="139">-->
-        <!--<template slot-scope="scope">-->
-          <!--&lt;!&ndash;<i class="el-icon-time"></i>&ndash;&gt;-->
-          <!--<span style="margin-left: 10px">{{ scope.row.CreateDate|dateChange}}</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-      <!--<el-table-column-->
-        <!--label="挂单人"-->
-        <!--width="106">-->
-        <!--<template slot-scope="scope">-->
-          <!--&lt;!&ndash;<i class="el-icon-time"></i>&ndash;&gt;-->
-          <!--<span style="margin-left: 10px">{{ scope.row.SinglePersonName||'无' }}</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-      <!--<el-table-column-->
-        <!--label="金额"-->
-        <!--width="77">-->
-        <!--<template slot-scope="scope">-->
-          <!--&lt;!&ndash;<i class="el-icon-time"></i>&ndash;&gt;-->
-          <!--<span style="margin-left: 10px">{{ scope.row.AmountPrice||'0' }}</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-      <!--<el-table-column-->
-        <!--label="状态"-->
-        <!--prop="tap"-->
-        <!--:filters="[{ text: '待服务', value: '待服务' }, { text: '已服务', value: '已服务' }]"-->
-        <!--:filter-method="filterTag"-->
-        <!--width="100">-->
-        <!--<template slot-scope="scope">-->
-          <!--<span style="margin-left: 10px;color:red;" >{{ scope.row.State }}</span>-->
-          <!--&lt;!&ndash;<el-popover trigger="hover" placement="top">&ndash;&gt;-->
-          <!--&lt;!&ndash;<p>姓名: {{ scope.row.name }}</p>&ndash;&gt;-->
-          <!--&lt;!&ndash;<p>住址: {{ scope.row.address }}</p>&ndash;&gt;-->
-          <!--&lt;!&ndash;<div slot="reference" class="name-wrapper">&ndash;&gt;-->
-          <!--&lt;!&ndash;<el-tag size="medium">{{ scope.row.State }}</el-tag>&ndash;&gt;-->
-          <!--&lt;!&ndash;</div>&ndash;&gt;-->
-          <!--&lt;!&ndash;</el-popover>&ndash;&gt;-->
-        <!--</template>-->
-      <!--</el-table-column>-->
-    <!--</el-table>-->
+    <el-table
+      :data="Data2"
+      id="test-table"
+      class="table"
+      style="width: 100%;position: fixed;top:-10000px">
+      <el-table-column
+        label="顾客名称"
+        width="105">
+        <template slot-scope="scope">
+          <!--<i class="el-icon-time"></i>-->
+          <span style="margin-left: 10px">{{ scope.row.TrueName|| '无'}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="联系方式"
+        width="125">
+        <template slot-scope="scope">
+          <!--<i class="el-icon-time"></i>-->
+          <span style="margin-left: 10px">{{ scope.row.Tel||'13350900722' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="门店名称"
+        width="127">
+        <template slot-scope="scope">
+          <!--<el-popover trigger="hover" placement="top">-->
+          <!--<p>姓名: {{ scope.row.name }}</p>-->
+          <!--<p>住址: {{ scope.row.address }}</p>-->
+          <!--<div slot="reference" class="name-wrapper">-->
+          <!--<el-tag size="medium">{{ scope.row.StoreName||'成都店' }}</el-tag>-->
+          <!--</div>-->
+          <!--</el-popover>-->
+          <span style="margin-left: 10px">{{ scope.row.StoreName||'成都店' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="订单编号"
+        width="145">
+        <template slot-scope="scope">
+          <!--<i class="el-icon-time"></i>-->
+          <span style="margin-left: 10px">{{ scope.row.OrderNo||'123' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="创建时间"
+        width="139">
+        <template slot-scope="scope">
+          <!--<i class="el-icon-time"></i>-->
+          <span style="margin-left: 10px">{{ scope.row.CreateDate|dateChange}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="挂单人"
+        width="106">
+        <template slot-scope="scope">
+          <!--<i class="el-icon-time"></i>-->
+          <span style="margin-left: 10px">{{ scope.row.SinglePersonName||'无' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="金额"
+        width="77">
+        <template slot-scope="scope">
+          <!--<i class="el-icon-time"></i>-->
+          <span style="margin-left: 10px">{{ scope.row.AmountPrice||'0' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="状态"
+        prop="tap"
+        :filters="[{ text: '待服务', value: '待服务' }, { text: '已服务', value: '已服务' }]"
+        :filter-method="filterTag"
+        width="100">
+        <template slot-scope="scope">
+          <span style="margin-left: 10px;color:red;" >{{ scope.row.State }}</span>
+          <!--<el-popover trigger="hover" placement="top">-->
+          <!--<p>姓名: {{ scope.row.name }}</p>-->
+          <!--<p>住址: {{ scope.row.address }}</p>-->
+          <!--<div slot="reference" class="name-wrapper">-->
+          <!--<el-tag size="medium">{{ scope.row.State }}</el-tag>-->
+          <!--</div>-->
+          <!--</el-popover>-->
+        </template>
+      </el-table-column>
+    </el-table>
     <!--下载整个表单-->
 
     <el-table

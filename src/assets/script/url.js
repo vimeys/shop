@@ -1,5 +1,5 @@
-  const head='http://test.csmen.cc/services/';//线上
-  // const head='/shop/';//跨域
+  // const head='http://test.csmen.cc/services/';//线上
+  const head='/shop/';//跨域
   // const head='http://192.168.0.135:8073/services/';//陈林本地
 
   const url={
@@ -55,13 +55,13 @@
     goodsList:head+'goods/version3/list4web',
     moveGoods:head+'goods/version3/batchmove',//移动
     sortGoods:head+'goods/setorder',//排序
-    hotGoods:head+'goods/version3/updateGoodsByIsSelected',//精选商品
-    hotGoodsList:head+'goods/version3/webgoodsByIsSelected',//精选商品
+    hotGoods:head+'goods/version3/updateGoodsByIsSelected',//添加精选商品
+    hotGoodsList:head+'goods/version3/webgoodsByIsSelected',//精选商品列表
 
 
     //添加优惠券
     addCoupon:head+'couponBook/version3/add',//添加优惠券
-    updataCoupon:head+'couponBook/version3/update',//跟新优惠券
+    updataCoupon:head+'couponBook/version3/update',//更新优惠券
     delCoupon:head+'couponBook/version3/delete',//删除优惠券
     couponList:head+'couponBook/version3/list',//优惠券列表
 
@@ -104,7 +104,12 @@
     //添加活动
     activeList:head+'usergame/list',//新建活动列表
       //一元买卷
-    addOne:head+'usergame/version3/addtype3',
+    addOne:head+'usergame/version3/addUserGame',
+
+
+    //分销
+    openLikes:head+'usergame/version3/addZan',//开启集赞活动
+
 
     //目标管理
     addTarget:head+'SalesTarget/add',//新增目标

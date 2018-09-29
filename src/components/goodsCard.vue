@@ -6,13 +6,16 @@
   <div class="item">
     <div class="box-image">
       <img class="box-images" :src="detail.Pic" alt="">
-      <div class="box-btns" v-if="one">
-        <div class="box-btns-edit" @click="edit">编辑服务</div>
-        <div class="box-btns-del" @click="del"> 删除服务</div>
+      <div v-show="noneBtn">
+        <div class="box-btns" v-if="one">
+          <div class="box-btns-edit" @click="edit">编辑服务</div>
+          <div class="box-btns-del" @click="del"> 删除服务</div>
+        </div>
+        <div class="box-btns" v-else>
+          <div class="box-btns-edit" @click="check">查看评价</div>
+        </div>
       </div>
-      <div class="box-btns" v-else>
-        <div class="box-btns-edit" @click="check">查看评价</div>
-      </div>
+
       <div class="coupon-radio" @click="choose(index)" v-show="detail.hasChecked">
         <div class="coupon-radio-point" v-show="detail.isChecked"></div>
       </div>
@@ -44,6 +47,12 @@
     name: "goodsCard",
     props: {
       index: Number,
+      noneBtn:{
+        type:Boolean,
+        default(){
+         return true
+        }
+      },
       one: {
         type: Boolean,
         default() {

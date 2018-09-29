@@ -5,9 +5,11 @@
     <div class="box">
       <ul class="header">
         <!--<li v-for="(item,index) in nav" @click="href(index)">{{item.name}}</li>-->
-        <router-link tag="li" :to="item.path" v-for="(item,index) in nav"  :key="index" > {{item.name}}</router-link>
+        <router-link tag="li" :to="item.path" v-for="(item,index) in nav"  :key="index" > {{item.name}}
+        <span class="el-icon-caret-top"></span>
+        </router-link>
       </ul>
-      <div>{{Role}}</div>
+      <!--<div>{{Role}}</div>-->
     </div>
 </template>
 
@@ -68,10 +70,23 @@
       flex: 1;
       color: #fff;
       cursor: pointer;
+      span{
+        display: none;
+      }
     }
+
     .active{
       font-size: 20px;
       color:#FFD736;
+      position: relative;
+      span{
+        font-size: 40px;
+        color:#fff;
+        display: inline-block;
+        position: absolute;
+        top:20px;
+        left: calc(50% - 20px);
+      }
     }
 
   }

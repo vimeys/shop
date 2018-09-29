@@ -20,7 +20,7 @@
     <ys-popup
       v-if="showModal"
       :width="pWidth"
-      :heigth="pHeight"
+      :height="pHeight"
       @close="closePop"
     >
       <div class="addShop">
@@ -206,7 +206,7 @@
         ...mapMutations({saveShop:'SET_SHOP'}),
         showModal:false,
         pWidth:1200,
-        pHeight:830,
+        pHeight:850,
         value4: [new Date(2018, 9, 10, 8, 40), new Date(2018, 9, 10, 9, 40)],
         value5: [new Date(2018, 9, 10, 8, 40), new Date(2018, 9, 10, 9, 40)],
         isEdit:false,

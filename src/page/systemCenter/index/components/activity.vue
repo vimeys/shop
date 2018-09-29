@@ -101,19 +101,19 @@
       </div>
       <div class="popup-slide-right">
         <div class="content">
-          <div class="card-select">
-            <div>优惠券分类</div>
-            <div>
-              <el-select v-model="value" @change="change" placeholder="满减券" class="select">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </div>
-          </div>
+          <!--<div class="card-select">-->
+            <!--<div>优惠券分类</div>-->
+            <!--<div>-->
+              <!--<el-select v-model="value" @change="change" placeholder="满减券" class="select">-->
+                <!--<el-option-->
+                  <!--v-for="item in options"-->
+                  <!--:key="item.value"-->
+                  <!--:label="item.label"-->
+                  <!--:value="item.value">-->
+                <!--</el-option>-->
+              <!--</el-select>-->
+            <!--</div>-->
+          <!--</div>-->
           <div class="form">
               <div class="modal">
                 <div class="modal-btn" :class="{'disabled':one.isDiy}" @click="toggleDiy">填写模板Banner信息</div>
@@ -179,7 +179,7 @@
 
     <!--//团购-->
     <ys-popup
-        v-show="activeValue==2"
+        v-show="!activeValue==2"
         @close="closeTeam"
     >
       <div class="popup-slide-left">
@@ -489,7 +489,7 @@
             }else{
               obj.Name=this.one.bannerWord;
             }
-            this.$http.post(this.$api.addOne,{userGame:obj,couponBookList:[]}).then(json=>{
+            this.$http.post(this.$api.addOne,{model:obj}).then(json=>{
               console.log(json);
               let data=json.data;
               if(json.isSuc==true){

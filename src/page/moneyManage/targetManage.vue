@@ -38,7 +38,7 @@
       </el-row>
       <template v-for="item in targetListValue">
         <el-row class="target-progress">
-          <el-col :offset="1" span="12" style="height: 52px;line-height: 52px;padding: 20px">
+          <el-col :offset="1" :span="12" style="height: 52px;line-height: 52px;padding: 20px">
             <van-progress :percentage="item.Quantity " :color="redP" v-if="item.Standard==1"/>
             <van-progress :percentage="item.Quantity " :color="greenp" v-else />
           </el-col>

@@ -1,4 +1,5 @@
-  <!--卡券列表-->
+  <!--精选商品-->
+
 <template>
   <div>
     <div class="header">
@@ -46,9 +47,10 @@
       <!--&lt;!&ndash;</template>&ndash;&gt;-->
     <!--</div>-->
     <div class="goods-list">
-      <template v-for="(item,index) in goodsList">
+      <template v-for="(item,index) in hotGoodsList">
         <ys-goods-card :detail="item"
                     :index="index"
+                       :noneBtn="false"
                     :isSort="isSort"
                     @up="upSort"
                     @down="downSort"
@@ -57,6 +59,8 @@
       </template>
     </div>
     <!--<ys-goods-card></ys-goods-card>-->
+
+    <!--选择精选商品-->
     <ys-popup
       v-show="showModal"
       :height="height"
@@ -108,7 +112,7 @@
                         <div>
                           <h4>{{item.Name}}</h4>
                           <div class="price-old">原价：{{item.Price}}</div>
-                          <div class="price-new">现价：￥{{discountPrice||0}}</div>
+                          <div class="price-new">现价：￥{{item.discountPrice||0}}</div>
                         </div>
                         <div class="circle" v-show="item.hasChecked" @click="choose(index)">
                           <div class="point" v-show="item.isChecked" ></div>
@@ -150,6 +154,7 @@
           width:880,
           height:855,
           isSort:false,
+          allChoosed:false,
           typeList:[],//分类列表
           disableAdd:false,//是否禁用
           disableManage:true,//批量管理
@@ -179,10 +184,6 @@
           console.log(e);
         }
 
-
-
-        console.log(a);
-
       }
     },
     methods:{
@@ -192,7 +193,7 @@
       },
       chooseCurrent1(index,state){
         console.log(index, state);
-        this.goodsList[index].isChecked=state;
+        this.hotGoodsList[index].isChecked=state;
       },
       reMake(e){
         console.log(e);
@@ -232,6 +233,20 @@
         console.log(e);
         this.getGoodsList(this.valueFirstType,e)
       },
+      //全选按钮
+      chooseAll(){
+          if(this.allChoosed){
+            this.hotGoodsList.forEach(item=>{
+              item.isChecked=false
+              this.allChoosed=false
+            })
+          }else{
+            this.hotGoodsList.forEach(item=>{
+              item.isChecked=true
+              this.allChoosed=true
+            })
+          }
+      },
       choose(index){
         console.log(index);
         this.goodsList[index].isChecked=!this.goodsList[index].isChecked
@@ -248,9 +263,10 @@
           })
         this.$util.post(this,this.$api.hotGoods,{goodsIds:arr,isSelected:1},()=>{
           this.showModal=false;
+          this.hotGoodsList()
           this.valueSecondType="";
           this.valueFirstType="";
-        })
+        },true)
       },
       //批量管理
       manage(){
@@ -259,7 +275,7 @@
           this.disableAdd=false
           this.disableSort=true
           this.isSort=false
-          this.goodsList.forEach(item=>{
+          this.hotGoodsList.forEach(item=>{
             item.hasChecked=false
           })
         }else{//是禁止状态
@@ -267,10 +283,24 @@
           this.disableAdd=true;
           this.isSort=false
           this.disableSort=true;
-          this.goodsList.forEach(item=>{
+          this.hotGoodsList.forEach(item=>{
             item.hasChecked=true
           })
         }
+      },
+      //删除精选商品
+      delGoods(){
+        let arr=[]
+        this.hotGoodsList.forEach((item,index)=>{
+          if(item.isChecked){
+            arr.push(this.hotGoodsList[index].GoodsId)
+          }
+        })
+        this.$util.post(this,this.$api.hotGoods,{goodsIds:arr,isSelected:0},
+          (data)=>{
+              this.disableManage=false
+               this.getHotGoods()
+        },true)
       },
       // 开始排序
       Sort(){
@@ -279,7 +309,7 @@
           this.disableAdd=false;
           this.disableManage=true;
           this.disableSort=true
-          this.goodsList.forEach(item=>{
+          this.hotGoodsList.forEach(item=>{
             item.hasChecked=false
           })
         }else{
@@ -287,7 +317,7 @@
           this.disableAdd=true;
           this.disableManage=true;
           this.disableSort=false
-          this.goodsList.forEach(item=>{
+          this.hotGoodsList.forEach(item=>{
             item.hasChecked=false
           })
         }
@@ -295,28 +325,28 @@
       //todo 修改排序请求接口
       upSort(index){
         let obj={
-          firstid:this.goodsList[index-1].GoodsId,
-          secondid:this.goodsList[index].GoodsId
+          firstid:this.hotGoodsList[index-1].GoodsId,
+          secondid:this.hotGoodsList[index].GoodsId
         }
         this.$util.post(this,this.$api.sortGoods,obj,()=>{
-          let old1=this.goodsList[index-1]
-          let old2=this.goodsList[index]
-          this.goodsList.splice(index-1,1,old2)
-          this.goodsList.splice(index,1,old1)
+          let old1=this.hotGoodsList[index-1]
+          let old2=this.hotGoodsList[index]
+          this.hotGoodsList.splice(index-1,1,old2)
+          this.hotGoodsList.splice(index,1,old1)
         })
 
       },
       //todo 修改排序单位请求接口
       downSort(index){
         let obj={
-          firstid:this.goodsList[index].GoodsId,
-          secondid:this.goodsList[index+1].GoodsId
+          firstid:this.hotGoodsList[index].GoodsId,
+          secondid:this.hotGoodsList[index+1].GoodsId
         }
         this.$util.post(this,this.$api.sortGoods,obj,()=>{
-          let old1=this.goodsList[index]
-          let old2=this.goodsList[index+1]
-          this.goodsList.splice(index,1,old2)
-          this.goodsList.splice(index+1,1,old1)
+          let old1=this.hotGoodsList[index]
+          let old2=this.hotGoodsList[index+1]
+          this.hotGoodsList.splice(index,1,old2)
+          this.hotGoodsList.splice(index+1,1,old1)
         })
       },
       close(e){
@@ -341,16 +371,18 @@
       },
       getHotGoods(){
           this.$util.post(this,this.$api.hotGoodsList,{pageIndex:1, pageSize:100},(data)=>{
-            this.hotGoodsList=data
+            data.Items.forEach(item=>{
+              item.hasChecked=false;
+              item.isChecked=false
+            })
+            this.hotGoodsList=data.Items
           })
       },
       //获取商品列表
       // @param
       getGoodsList(p=0,c=0){
         this.$http.post(this.$api.goodsList,{ pageIndex:1, pageSize:10, goodTypeParentId:p, goodsTypeId:c}).then(json=>{
-          console.log(json);
           let data=json.data;
-
           if(data.isSuc==true){
             let arr=[];
             data.result.Items.forEach(item=>{

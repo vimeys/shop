@@ -18,7 +18,7 @@
       </div>
 
     </div>
-    <div class="coupons-item-right">
+    <div class="coupons-item-right" :class="{'hasBorder':hasBorder}">
       <div>
         <div v-if="card.Type==1">{{Type}}</div>
         <div class="card02" v-else-if="card.Type==2">{{Type}}</div>
@@ -36,17 +36,38 @@
       <div>
         {{StartTime}}
       </div>
-      <div class="reBtn" v-if="card.Type==1"  @click="reMake(index)">修改</div>
-      <div class="reBtn reBtn02" v-else-if="card.Type==2"  @click="reMake(index)">修改</div>
-      <div class="reBtn reBtn03" v-else="card.Type==3"  @click="reMake(index)">修改</div>
+      <!--<div v-show="isShowEdit">-->
+        <div class="reBtn" v-if="card.Type==1"  @click="reMake(index)">修改</div>
+        <div class="reBtn reBtn02" v-else-if="card.Type==2"  @click="reMake(index)">修改</div>
+        <div class="reBtn reBtn03" v-else="card.Type==3"  @click="reMake(index)">修改</div>
+      <!--</div>-->
+
       <div>
         <div>
           <span>详细信息</span>
-          <span class="el-icon-arrow-down" :class="{'el-icon-arrow-up':toggleData}" @click="toggle"></span>
+          <!--<span class="el-icon-arrow-down"-->
+                <!--:class="{'el-icon-arrow-up':toggleData}"-->
+                <!--@click="toggle">-->
+          <!--</span>-->
+          <el-popover
+            placement="top"
+            width="200"
+            trigger="click"
+            :content="card.Details">
+            <span class="el-icon-arrow-down"
+                 slot="reference"
+                  @click="toggle"
+                  :class="{'el-icon-arrow-up':toggleData}">
+          </span>
+          </el-popover>
+
+
         </div>
-        <div class="coupon-detail" style="border-top: none;padding-right: 20px;background: #fff" v-show="toggleData">
-            {{card.Details}}
-        </div>
+        <!--<div class="coupon-detail"-->
+             <!--style="border-top: none;padding-right: 20px;background: #fff"-->
+             <!--v-show="toggleData">-->
+            <!--{{card.Details}}-->
+        <!--</div>-->
       </div>
     </div>
     <div class="coupon-radio" @click="choose(index)" v-show="card.hasChecke">
@@ -80,7 +101,21 @@
           }
         }
       },
+      //是否有边框
+      hasBorder:{
+        type:Boolean,
+        default(){
+          return false
+        }
+    },
       index: Number,
+      //是否显示修改按钮
+      isShowEdit:{
+        type:Boolean,
+        default(){
+          return true
+        }
+      },
       // 是否有选择框
       hasChecke: {
         type: Boolean,
@@ -228,6 +263,7 @@
       }
     }
     .coupons-item-right{
+      border: 1px #fff solid;
       display: flex;
       flex: 1;
       flex-direction: column;
@@ -236,6 +272,7 @@
       position: relative;
       .reBtn{
         position: absolute;
+        text-align: center;
         top:48px;
         right: 24px;
         width:55px;
@@ -324,6 +361,10 @@
         height: 30px;
         line-height: 30px;
       }
+    }
+    .hasBorder{
+      border: 1px solid #d8d8d8;
+      border-left: 1px solid #fff;
     }
     .coupon-detail{
       width: 360px;

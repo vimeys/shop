@@ -53,6 +53,10 @@
         <el-pagination
           prev-text="上一页"
           next-text="下一页"
+          @prev-click="prev"
+          :page-size="pageSize"
+          @next-click="next"
+          @current-change="current"
           layout="prev, pager, next"
           class="page"
           :total="total">
@@ -79,48 +83,43 @@
             pHeight:800,
             zIndex:1000,
             showModal2:false,
-            total:100,
+            currentShopId:"",
+            pageSize:5,
+            total:"",
             placeholder:'输入名称、电话',
-            tableData: [{
-              date: '2016-05-02',
-              name: '王小虎',
-              address: '上海市普陀区金沙江路 1518 弄',
-              tag:'已服务'
-            }, {
-              date: '2016-05-04',
-              name: '王小虎',
-              address: '上海市普陀区金沙江路 1517 弄',
-              tag:'已服务'
-            }, {
-              date: '2016-05-01',
-              name: '王小虎',
-              address: '上海市普陀区金沙江路 1519 弄',
-              tag:'待服务'
-            }, {
-              date: '2016-05-03',
-              name: '王小虎',
-              address: '上海市普陀区金沙江路 1516 弄',
-              tag:'待服务'
-            }],
             list:[],//分销人员列表
           }
       },
       methods:{
         getShop(e){
+          this.currentShopId=e
             this.getSalesman(e)
         },
         selectShop(e){
+          this.currentShopId=e
           this.getSalesman(e)
         },
         handleEdit(index,data){
           console.log(data);
           console.log(index);
         },
+        prev(e){
+          this.getSalesman(this.currentShopId,e,5)
+        },
+        next(e){
+          this.getSalesman(this.currentShopId,e,5)
+        },
+        current(e){
+          this.getSalesman(this.currentShopId,e,5)
+        },
+
         //获取经销商列表
-        getSalesman(shopId){
+        getSalesman(shopId,index=1,size=10){
             let obj={
               query:{
-                pageIndex:1, pageSize:10, key:'',
+                pageIndex:index,
+                pageSize:size,
+                key:'',
                 shopId:shopId
               }
             };
@@ -177,5 +176,8 @@
   }
   .full-btn{
     background:@bs-color;
+  }
+  .page-size-box{
+    margin-top: 30px;
   }
 </style>

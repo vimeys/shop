@@ -515,7 +515,7 @@
   }
 
   .card-list {
-    height: 1000px;
+    min-height: 1000px;
   }
 
   .form {

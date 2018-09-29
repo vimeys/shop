@@ -16,7 +16,7 @@
             </el-select>
           </el-col>
           <el-col :span="2" class="base-col">总数：{{allPeople}}人</el-col>
-          <el-col :span="6" :offset="12"> <div><ys-search></ys-search></div></el-col>
+          <el-col :span="6" :offset="12"> <div><ys-search @search="search" :placeholder="placeholder"></ys-search></div></el-col>
         </el-row>
       </div>
     <div class="btns">
@@ -242,6 +242,12 @@
             <input type="file" class="importFile" @change="importf">
           </el-col>
         </el-row>
+        <el-row>
+          <el-col>
+            <!--<a class="mf-addElementPopUp-download" download="" :href="require('../../assets/file/excel.xls')">下载excel模板</a>-->
+            <div @click="download" class="mf-addElementPopUp-download" >下载excel模板</div>
+          </el-col>
+        </el-row>
       </div>
     </ys-popup>
 
@@ -261,7 +267,7 @@
           <el-col :span="16"> {{moveGroupPersonfn}} </el-col>
         </el-row>
         <el-row :gutter="20" class="add-form">
-          <el-col :span="6">分组人员：</el-col>
+          <el-col :span="6">移动至：&nbsp; &nbsp;</el-col>
           <el-col :span="16">
             <el-select v-model="value" placeholder="请选择" size="small">
               <el-option
@@ -446,11 +452,20 @@
           this.getGroupList(this.currentShopId)
           // alert(e)
         },
+        // download(){
+        //   window.location.href = '../../assets/file/excel.xls';
+        // },
       //往分组下添加新的成员
         addNewPeople(index){
           this.add.showModal=true;
           this.currentGroupId=this.groupList[index].GroupId;
         },
+        //搜索
+        search(val){
+          console.log(val);
+        },
+
+
         //发送邀请
         sendMessage(){
           //todo 添加成员
@@ -718,7 +733,7 @@
               }
             }
             // console.log(obj);
-            this.$http.post(this.$api.updataType,obj).then(json=>{
+            this.$http.post(this.$api.updateGroup,obj).then(json=>{
               let data=json.data;
               if(data.isSuc==true){
                 this.getGroupList(this.currentShopId);
@@ -795,7 +810,6 @@
           let obj3=Object.assign({},{value:3,label:'店员'})
           let obj4=Object.assign({},{value:4,label:'收银'})
           let arr=[];
-
           arr.push(obj1)
           arr.push(obj2)
           arr.push(obj3)
@@ -851,7 +865,7 @@
               let firstShopId=data.result[0].UserId;
               this.currentShopId=firstShopId
               this.getGroupList(this.currentShopId)
-              this.value=firstShopId;
+              // this.value=firstShopId;
               this.$message({
                 message: '恭喜你，这是一条成功消息',
                 type: 'warning'

@@ -108,6 +108,9 @@
     }
     .right{
       font-size: 15px;
+      div:first-child{
+        margin-top: 50px;
+      }
       .text{
         margin-top: 20px;
         margin-left: 10px;
@@ -141,8 +144,9 @@
         margin-left: -20px;
       }
       .active span{
+        margin-top: 5px;
         display: inline-block;
-        font-size: 25px;
+        font-size: 28px;
       }
       span{
         display: none;
