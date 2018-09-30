@@ -1,5 +1,5 @@
-  // const head='http://test.csmen.cc/services/';//线上
-  const head='/shop/';//跨域
+  const head='http://test.csmen.cc/services/';//线上
+  // const head='/shop/';//跨域
   // const head='http://192.168.0.135:8073/services/';//陈林本地
 
   const url={
@@ -132,8 +132,8 @@
     addFodderGroup:head+'Channel/version3/addChannel',//添加分类接口
     fodderGroupList:head+'Channel/version3/list',//分类接口列表
     updataGroup:head+'Channel/update4admin',//更新分类
-    sortGroup:head+'Channel/setorder'
-
+    sortGroup:head+'Channel/setorder',//排序
+    delFodderGroup:head+'Channel/delete4admin',//删除
   };
 
 

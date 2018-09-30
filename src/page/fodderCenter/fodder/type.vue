@@ -142,9 +142,11 @@
             this.groupName=this.groupList[index].ChannelName;
         },
         //删除分类
-        del(){
+        del(index){
           this.$util.confirm(this,).then(()=>{
-            // this
+            this.$util.post(this,this.$api.delFodderGroup,{channelId:this.groupList[index].ChannelId},()=>{
+              this.getGroupList()
+            })
           })
         },
         up(index){
