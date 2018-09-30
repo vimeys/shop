@@ -69,7 +69,7 @@
           <div class="base-btn-111" @click="openPopup" > 新建优惠券</div>
           <div class="base-btn-111"> 管理</div>
         </div>
-        <div class="coupons-item">
+        <div class="coupons-item" style="display: flex;">
           <div  class="coupon-card" v-for="(item,index) in oneCouponList">
             <ys-coupon
               :detail="item"

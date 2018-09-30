@@ -1,5 +1,5 @@
-  const head='http://test.csmen.cc/services/';//线上
-  // const head='/shop/';//跨域
+  // const head='http://test.csmen.cc/services/';//线上
+  const head='/shop/';//跨域
   // const head='http://192.168.0.135:8073/services/';//陈林本地
 
   const url={
@@ -135,9 +135,5 @@
     sortGroup:head+'Channel/setorder',//排序
     delFodderGroup:head+'Channel/delete4admin',//删除
   };
-
-
-
-
 
 export default url
