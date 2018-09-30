@@ -244,8 +244,7 @@
         </el-row>
         <el-row>
           <el-col>
-            <!--<a class="mf-addElementPopUp-download" download="" :href="require('../../assets/file/excel.xls')">下载excel模板</a>-->
-            <div @click="download" class="mf-addElementPopUp-download" >下载excel模板</div>
+            <a class="download" download=""  style=""  href="../../../static/excel.xls">下载excel模板</a>
           </el-col>
         </el-row>
       </div>
@@ -452,9 +451,9 @@
           this.getGroupList(this.currentShopId)
           // alert(e)
         },
-        // download(){
-        //   window.location.href = '../../assets/file/excel.xls';
-        // },
+        download(){
+          location.href = require('../../assets/images/card02.png');
+        },
       //往分组下添加新的成员
         addNewPeople(index){
           this.add.showModal=true;
@@ -1010,8 +1009,8 @@
     width: 100%;
       padding: 50px;
       .header{
-        margin-top: 30px;
-        margin-bottom: 30px;
+        margin-top: 20px;
+        margin-bottom: 20px;
         &-word{
           font-size: 20px;
         }
@@ -1025,17 +1024,28 @@
       width: 100%;
     }
     &-tips{
-      margin-top: 30px;
-      margin-bottom: 30px;
+      margin-top: 20px;
+      margin-bottom: 10px;
       font-size:14px;
       color:rgba(154,154,154,1);
     }
     &-btn{
       margin-top: 30px;
+      margin-bottom: 20px;
     }
     .confirm-btn{
       margin-top: 100px;
-      .base-btn(200px)
+      .base-btn(200px);
+
+    }
+    .download{
+      margin-top: 30px;
+      width:90px;
+      height:20px;
+      font-size:14px;
+      font-weight:400;
+      color:rgba(72,155,247,1);
+      line-height:20px;
     }
   }
 

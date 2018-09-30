@@ -82,14 +82,14 @@
           label="联系方式"
           width="140">
           <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.Phone }}</span>
+            <span style="margin-left: 10px">{{ scope.row.ContactNumber }}</span>
           </template>
         </el-table-column>
         <el-table-column
           label="服务编号"
-          width="180">
+          width="210">
           <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.OrderNum }}</span>
+            <span style="margin-left: 10px">{{ scope.row.OrderNo }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -97,7 +97,7 @@
           width="180">
 
           <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.OrderTime }}</span>
+            <span style="margin-left: 10px">{{ scope.row.CreateDate|dateChange }}</span>
 
           </template>
         </el-table-column>
@@ -112,11 +112,11 @@
         <el-table-column
           label="状态"
           prop="tap"
-          :filters="[{ text: '待服务', value: '待服务' }, { text: '已服务', value: '已服务' }]"
+          :filters="[{ text: '待服务', value: '3' }, { text: '已服务', value: '6' }]"
           :filter-method="filterTag"
           width="140">
           <template slot-scope="scope">
-            <span style="margin-left: 10px;color:red;" >{{ scope.row.State }}</span>
+            <span style="margin-left: 10px;color:red;" >{{ scope.row.State|state }}</span>
 
           </template>
         </el-table-column>
@@ -124,9 +124,11 @@
           <template slot-scope="scope">
             <el-button
               size="mini"
+              class="bs-btn"
               @click="handleEdit(scope.$index, scope.row.SubscribeId)">删除</el-button>
             <el-button
               size="mini"
+              class="bs-btn"
               @click="handleDelete(scope.$index, scope.row.SubscribeId)">详情</el-button>
           </template>
         </el-table-column>
@@ -151,15 +153,15 @@
         </el-row>
         <el-row class="row">
           <el-col :span="2" :offset="1">联系方式</el-col>
-          <el-col :offset="12" :span="8">{{currentDetail.Phone}}</el-col>
+          <el-col :offset="12" :span="8">{{currentDetail.ContactNumber}}</el-col>
         </el-row>
         <el-row class="row">
           <el-col :span="2" :offset="1">服务单号</el-col>
-          <el-col :offset="12" :span="8">{{currentDetail.OrderNum}}</el-col>
+          <el-col :offset="12" :span="8">{{currentDetail.OrderNo}}</el-col>
         </el-row>
         <el-row class="row">
           <el-col :span="2" :offset="1">预约时间</el-col>
-          <el-col :offset="12" :span="8">{{currentDetail.OrderTime}}</el-col>
+          <el-col :offset="12" :span="8">{{currentDetail.CreateDate|dateChange}}</el-col>
         </el-row>
         <el-row class="row">
           <el-col :span="2" :offset="1">价格</el-col>
@@ -167,7 +169,7 @@
         </el-row>
         <el-row class="row">
           <el-col :span="2" :offset="1">状态</el-col>
-          <el-col :offset="12" :span="8">{{currentDetail.State}}</el-col>
+          <el-col :offset="12" :span="8">{{currentDetail.State|state}}</el-col>
         </el-row>
         <el-row class="row">
           <el-col :span="2" :offset="1">服务名称</el-col>
@@ -223,6 +225,48 @@
         ysPopup,
         ysSelectShop
       },
+      computed:{
+
+      },
+      filters:{
+        //转换时间
+        state(val){
+          let str
+          if(val==6){
+            str='已服务'
+          }else{
+            str='未服务'
+          }
+          return str
+        },
+
+        //转换时间
+        dateChange(val){
+          try{
+            var first =val.indexOf('(');
+            var last =val.indexOf(')');
+            var time=val.substring(first+1,last)
+            // console.debug(123);
+            // console.log(123);
+          }catch(err){
+            console.debug(err);
+          }
+
+          time=new Date(parseInt(time-8*60*60*1000));
+          const year = time.getFullYear()
+          const month = time.getMonth() + 1
+          const day = time.getDate()
+          const hour = time.getHours()
+          const minute = time.getMinutes()
+          const second = time.getSeconds()
+          const formatNumber = n => {
+            n = n.toString()
+            return n[1] ? n : '0' + n
+          }
+          return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute].map(formatNumber).join(':')
+
+        }
+      },
       data(){
           return {
             isLeft:true,
@@ -273,18 +317,23 @@
           this.currentShopId=id
           this.getOrderList(id)
         },
+
+        //删除订单
         handleEdit(index, id) {
           console.log(index, id);
           this.$util.confirm(this).then(()=>{
             this.$util.post(this,this.$api.delAppOrder,{subscribeId:id},(data)=>{
               console.log(data);
+              this.getOrderList(this,currentShopId)
             })
           })
         },
-
+      //查看订单详情
         handleDelete(index, id) {
           this.showModal=true
-
+          this.$util.post(this,this.$api.appOrderDetail,{subscribeId:id},(data)=>{
+            this.currentDetail=data
+          })
         },
 
 
@@ -417,6 +466,13 @@
   }
 
 }
+  .bs-btn{
+    background: @bs-color;
+    border:none
+  }
+  /deep/.el-button:hover, .el-button:focus {
+    color: #282828;
+  }
   .img-detail{
     width: 500px;
     height: 500px;

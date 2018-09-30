@@ -460,9 +460,7 @@ import ysSelectShop from '@/components/selectShop'
           str='未收款'
         }
         return str
-       // switch (val) {
-       //   case -1
-       // }
+
       },
       //转换时间
       dateChange(val){

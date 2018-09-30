@@ -292,14 +292,14 @@
         if(this.isEdit){//是否是修改
           obj.CouponBookId=this.couponList[this.currentIndex].CouponBookId;
           obj.Guid=this.couponList[this.currentIndex].Guid;
-          this.$util.post(this,this.$api.updataCoupon,obj,function (that) {
-            that.showModal=false;
-            that.isEdit=false;
+          this.$util.post(this,this.$api.updataCoupon,{couponBook:obj}, (that)=> {
+            this.showModal=false;
+            this.isEdit=false;
             this.getCouponList()
-            that.$notify({
+            this.$notify({
               title:'修改成功',
               message:""
-            })
+            });
             this.type=1;
             this.Amount=''
             this.DiscountAmount=''

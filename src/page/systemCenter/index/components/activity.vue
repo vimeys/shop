@@ -70,7 +70,13 @@
           <div class="base-btn-111"> 管理</div>
         </div>
         <div class="coupons-item">
-            <ys-coupon></ys-coupon>
+          <div  class="coupon-card" v-for="(item,index) in oneCouponList">
+            <ys-coupon
+              :detail="item"
+              :index="index"
+              :isShowEdit="true"
+              :marginBottom="0"></ys-coupon>
+          </div>
         </div>
       </div>
     </div>
@@ -334,26 +340,30 @@
           <div class="card-select">
             <div>优惠券分类</div>
             <div>
-              <el-select v-model="value" @change="change" placeholder="满减券" class="select">
+              <el-select v-model="typeValue" @change="change" placeholder="满减券" class="select">
                 <el-option
-                  v-for="item in options"
+                  v-for="item in type"
                   :key="item.value"
-                  :label="item.label"
+                  :label="item.name"
                   :value="item.value">
                 </el-option>
               </el-select>
             </div>
           </div>
           <el-scrollbar class="coupon-scroll">
-            <div  class="coupon-card" v-for="item in [1,2,3,3,4]">
-              <ys-coupon :marginBottom="0"></ys-coupon>
-              <div class="coupon-circle">
-                <div class="coupon-point"></div>
+            <div  class="coupon-card" v-for="(item,index) in couponList[typeValue]">
+              <ys-coupon
+                :detail="item"
+                :index="index"
+                :isShowEdit="true"
+                :marginBottom="0"></ys-coupon>
+              <div class="coupon-circle" @click="chooseCoupon(index)">
+                <div class="coupon-point" v-show="item.isChecked"></div>
               </div>
             </div>
           </el-scrollbar>
           <div>
-            <div class="btn">确认</div>
+            <div class="btn" @click="confirmCoupon">确认</div>
           </div>
         </div>
         <!--<el-button type="text" @click="open5">点击打开 Message Box</el-button>-->
@@ -413,6 +423,23 @@
             value: 4,
             label: '幸运大抽奖'
           }],
+          typeValue:1,
+          type:[
+            {
+              name:'满减劵',
+              value:1
+            },
+            {
+              name:'折扣卷',
+              value:2
+            }, {
+              name:'现金卷',
+              value:3
+            }
+          ],
+          couponList:[],//优惠券列表
+          checkCouponList:[],//选中的卡卷
+          oneCouponList:[],//一元买卷下的卡卷列表
           show:true,
           // 上传组件的按钮
           dialogImageUrl: '',
@@ -521,7 +548,33 @@
           }
 
         },
+        //选中卡片
+        chooseCoupon(index){
+          let value=this.couponList[this.typeValue];
+          value[index].isChecked=!value[index].isChecked
+          this.couponList.splice(this.typeValue,1,value);
+        },
+        //确选中的优惠券
+        confirmCoupon(){
+          let arr2=[];
+          for(let i=1;i<4;i++){
+            this.couponList[i].forEach(item=>{
+              if(item.isChecked){
+                // let obj={}
+                // obj.Type=i;
+                // obj.CouponBookId=item.CouponBookId;
+                arr2.push(item.CouponBookId);
 
+              }
+            })
+          }
+          // this.showModel=false;
+          this.$util.post(this,this.$api.addOneCoupon,
+            {userGameId:999,couponBookList:arr2},
+            (data)=>{
+              console.log(data);
+            })
+        },
         // 上传组件的事件
         handleRemove(file, fileList) {
           console.log(file, fileList);
@@ -552,9 +605,40 @@
             item.isChoose=false;
           })
           this.activeCardList=data;
+        },
+        //获取优惠券列表
+        getCouponList(type){
+          this.$util.post(this,this.$api.couponList,
+            {query:{ PageIndex:1,PageSize:10,Key:'',Type:type}},
+            (data)=>{
+              console.log(data)
+              data.Items.forEach(item=>{
+                item.StartTime = this.$util.getTime(item.StartTime)//后台时间转时间撮
+                item.EndTime = this.$util.getTime(item.EndTime)//后台时间转时间错
+                item.isChecked=false
+              })
+              this.couponList[type]=data.Items;
+            })
+        },
+        //获取一元买卷下面的优惠券列表
+        getOneCouponList(){
+            this.$util.post(this,this.$api.oneCouponList,{pageIndex:1,pageSize:10},(data)=>{
+              // console.log(data);
+              data.Items.forEach(item=>{
+                item.StartTime = this.$util.getTime(item.StartDate)//后台时间转时间撮
+                item.EndTime = this.$util.getTime(item.EndDate)//后台时间转时间错
+                item.hasChecked=false;
+                item.isChecked=false;
+              })
+              this.oneCouponList=data.Items;
+            })
         }
       },
       mounted(){
+        this.getCouponList(1);
+        this.getCouponList(2);
+        this.getCouponList(3);
+        this.getOneCouponList();
           this.getActiveCardList()
       }
 

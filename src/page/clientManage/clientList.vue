@@ -821,7 +821,7 @@
         //开卡
         confirm(tab, event) {
           // this.opc.showModal=true;
-          if(this.currentMoban){
+          if(this.currentMoban){//是否使用模板卡
               var obj={
                 model:{
                   MembershipCardId:this.currentMoban.MembershipCardId,
@@ -830,7 +830,7 @@
                 },
                 shopId:this.currentShopId
               }
-          }else {
+          }else {//不使用模板卡
             var obj = {
               model:
                 {
@@ -860,26 +860,9 @@
             }
           }
 
-          // try{
-          //   let arr=[];
-          //     this.typeNum.forEach(item=>{
-          //         arr.push({GoodsTypeId:item})
-          //     })
-          //   obj.model.GoodsType=arr;
-          // }catch (err) {
-          //   console.log(err);
-          // }
-          // console.log(obj);
-          // console.log('执行到这里');
-          // return
-          // this.$http.post(this.$api.openVipCard, obj).then(json => {
-          //   let data = json.data
-          //   if (data.isSuc == true) {
-          //
-          //   }
-          // })
           this.$util.post(this,this.$api.openVipCard,obj,(data)=>{
             this.opc.showModal=false;
+            this.resize()
             this.resultData=data;
             this.getVipList(this.currentShopId)
             this.getDefaultList(this.currentShopId)
@@ -890,6 +873,17 @@
               this.payShowModel=true
             },true)
           })
+        },
+        //充值填写的内容
+        resize(){
+          this.GameusersName='';
+          this.PhoneNum='';
+          this.carlType=0;
+          this.yearNum=1;
+          this.Frequency='';
+          this.buyMoney="";
+          this.Discount="";
+          this.typeNum='2'
         },
         // 其他支付方式
         payOk(val){
@@ -961,6 +955,7 @@
           // this.code.showModal=e;
           this.opc.showModal=e;
           this.history.showModal=e;
+          this.resize()
         },
         //获取分类(服务范围)
         getTypeList(){

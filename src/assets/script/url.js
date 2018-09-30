@@ -104,8 +104,9 @@
     //添加活动
     activeList:head+'usergame/list',//新建活动列表
       //一元买卷
-    addOne:head+'usergame/version3/addUserGame',
-
+    addOne:head+'usergame/version3/addUserGame',//新建一元买卷
+    addOneCoupon:head+'usergame/version3/addcouponBookList',//添加一元买卷优惠券
+    oneCouponList:head+'usergame/version3Web/userGameByList',//一元买卷下的优惠券列表
 
     //分销
     openLikes:head+'usergame/version3/addZan',//开启集赞活动

@@ -164,7 +164,8 @@
             <el-row>
               <el-col>
                 <el-scrollbar class="coupon-scroll">
-                  <div  class="coupon-card" v-for="(item,index) in couponList[typeValue]">
+                  <div  class="coupon-card"
+                        v-for="(item,index) in couponList[typeValue]">
                     <ys-coupon
                       :detail="item"
                       :index="index"
@@ -258,12 +259,9 @@
 
         //选中卡片
         chooseCoupon(index){
-          // console.log(index);
-          // console.log(this.couponList[this.typeValue][index].isChecked);
           let value=this.couponList[this.typeValue];
           value[index].isChecked=!value[index].isChecked
           this.couponList.splice(this.typeValue,1,value);
-          // this.couponList[this.typeValue][index].isChecked=!this.couponList[this.typeValue][index].isChecked;
         },
         //确选中的优惠券
         confirmCoupon(){
