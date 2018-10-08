@@ -19,7 +19,7 @@
                  @click="checkCoupon"
                  :data="0">
               <img src="../../../../assets/images/oneBg.png" alt="" v-if="!item.Name">
-              <img :src="item.Qrcode" alt="" v-else>
+              <img :src="item.BannerIco" alt="" v-else>
               <div class="active-text" v-show="!item.Name"> 12:00-13:00 限／时／抢／购</div>
               <div class="active-radio"  @click.stop="choose(index)" v-show="item.hasChoose">
                 <div class="active-radio-point" v-show="item.isChoose"></div>
@@ -161,7 +161,7 @@
                 end-placeholder="结束日期">
               </el-date-picker></div>
             </div>
-            <div class="word">
+            <div class="word" v-if="!one.isDiy">
               <el-row>
                 <el-col :span="6">文案</el-col>
                 <el-col :span="16">
@@ -570,7 +570,7 @@
           }
           // this.showModel=false;
           this.$util.post(this,this.$api.addOneCoupon,
-            {userGameId:999,couponBookList:arr2},
+            {userGameId:909,couponBookList:arr2},
             (data)=>{
               console.log(data);
             })
@@ -622,8 +622,10 @@
         },
         //获取一元买卷下面的优惠券列表
         getOneCouponList(){
-            this.$util.post(this,this.$api.oneCouponList,{pageIndex:1,pageSize:10},(data)=>{
-              // console.log(data);
+          //TODO  写死一个userGameId
+            this.$util.post(this,this.$api.oneCouponList,
+              {pageIndex:1,pageSize:10,userGameId:909},
+              (data)=>{
               data.Items.forEach(item=>{
                 item.StartTime = this.$util.getTime(item.StartDate)//后台时间转时间撮
                 item.EndTime = this.$util.getTime(item.EndDate)//后台时间转时间错
@@ -659,7 +661,7 @@
       height: 37px;
       background: #FFD736;
       font-size: 14px;
-      line-height: 44px;
+      line-height: 37px;
       text-align: center;
       margin-right: 30px;
     }

@@ -4,9 +4,9 @@
 
   const url={
     // 登录
-    logincom:head+'user/loginbyphonenum',//登录企业
-    login:head+'user/login',//登录个人
-
+    // logincom:head+'user/loginbyphonenum',//登录企业
+    // login:head+'user/login',//登录个人
+    login:head+'User/webadminlogin',//登录
 
     //添加店铺
     addUserShop:head+'usershop/addUserShop',//添加店铺post
@@ -16,6 +16,7 @@
 
     //店铺成员管理
     addWaiter:head+'user/reg2',//添加成员
+    addWaiterList:head+'user/reglist',//批量上传
     groupList:head+'group/list',//获取分组列表
     waterGroupList:head+'group/list2',//分组下面的列表
     freeze:head+'user/stop',//冻结成员
@@ -106,7 +107,7 @@
       //一元买卷
     addOne:head+'usergame/version3/addUserGame',//新建一元买卷
     addOneCoupon:head+'usergame/version3/addcouponBookList',//添加一元买卷优惠券
-    oneCouponList:head+'usergame/version3Web/userGameByList',//一元买卷下的优惠券列表
+    oneCouponList:head+'CouponBook/version3/gameUsersCouponBooklist',//一元买卷下的优惠券列表
 
     //分销
     openLikes:head+'usergame/version3/addZan',//开启集赞活动

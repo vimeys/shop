@@ -287,7 +287,7 @@
                     </template>
 
                   </el-row>
-                  <el-row>
+                  <el-row v-if="shopList.length!=aPeople.length">
                     <el-col :span="18" :offset="2">
                       <span class="plus" @click="addPeople">+</span>
                     </el-col>
@@ -458,6 +458,7 @@
         disableManage:true,//批量管理
         disableSort:true,//
         allChoosed:false,
+        isEdit:false,//控制图片显示的顺序
         type: {//控制分类
           showModal: false,
           width: 670,
@@ -788,6 +789,7 @@
           SecKillHour: this.hoursValue,
           Type: 2,
         };
+        //是否选择二级分类
         if (this.valueSecondType !== 0) {
           obj.GoodsTypeId = this.valueSecondType;
           obj.GoodsTypeParentId = this.valueFirstType;
@@ -799,8 +801,10 @@
         this.aPeople.forEach(item => {
           id.push(item.valuePerson.join(','))
         })
+        console.clear();
+        console.log(id);
         let sId = id.join(',');
-        let Addgoodsspec = []
+        let Addgoodsspec = [];//
         this.aSize.forEach(item => {
           Addgoodsspec.push({
             UserId: this.UserId,
@@ -808,9 +812,8 @@
             Price: item.sizePrice,
             Pic: ''
           })
-        })
+        });
 
-        // this.aS
         obj.CommissionGroupId = sId;
         obj.Goodsspec = Addgoodsspec;
         console.log(obj);
@@ -840,7 +843,6 @@
             let obj2 = {valuePerson: [], groupList: a,shopValue:[]};
             this.aSize.push(obj);
             this.aPeople.push(obj2);
-
             this.goods.showModal = false;
             this.getGoodsList();
           } else {

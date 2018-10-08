@@ -120,7 +120,7 @@ export const  fodderCenter=[
   {
     name:'素材中心',
     active:true,
-    router:'/fodderCenter/fodder'
+    router:'/fodderCenter/fodders'
   },
   {
     name:'客户列表',

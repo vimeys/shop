@@ -105,14 +105,31 @@
         }
       },
       created(){
-        if(sessionStorage.getItem("index")){
-          this.activeName=sessionStorage.getItem('index')
+        // if(sessionStorage.getItem("index")){
+        //   this.activeName=sessionStorage.getItem('index')
+        // }
+        console.log(this.$route );
+        let path=this.$route.fullPath
+        switch (path) {
+          case '/centerIndex/indexPage/bg':
+            this.activeName='first';
+            break;
+          case '/centerIndex/indexPage/logo':
+            this.activeName='second';
+            break;
+          case '/centerIndex/indexPage/diyImage':
+            this.activeName='third';
+            break;
+          case '/centerIndex/indexPage/activity':
+            this.activeName='fourth';
+            break;
+          case '/centerIndex/indexPage/cardList':
+            this.activeName='fifth';
+            break;
         }
-
-
-        window.addEventListener("beforeunload",()=>{
-          sessionStorage.setItem("index",this.activeName)
-        })
+        // window.addEventListener("beforeunload",()=>{
+        //   sessionStorage.setItem("index",this.activeName)
+        // })
       },
 
     }

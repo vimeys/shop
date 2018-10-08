@@ -20,11 +20,12 @@
       name: "ysHeader",
       components: {},
       computed:{
-        ...mapGetters(['userId','Role','shop']),
-        Role(){
-          // console.log(this.shop);
-          this.nav.splice(4,0)
-        }
+        ...mapGetters(['Role','shopRole']),
+        // Role(){
+        //   // console.log(this.shop);
+        //   console.log(123);
+        //   this.nav.splice(4,0)
+        // }
       },
       data(){
           return {
@@ -32,7 +33,7 @@
               {name:'门店/员工管理',path:'/shop',active:true},
               {name:'运营管理',path:'/centerIndex',active:false},
               {name:'客户管理',path:'/clientIndex',active:false},
-              {name:'素材中心',path:'/fodderCenter/fodder',active:false},
+              {name:'素材中心',path:'/fodderCenter/fodders',active:false},
               {name:'财务管理',path:'/moneyManage',active:false},
               {name:'运营数据',path:'/dataView',active:false},
               {name:'个人中心',path:'/cardManage',active:false},
@@ -41,18 +42,17 @@
       },
       methods:{
           href(index){
-              // let path=this.nav[index].path;
-              // this.$router.push({path:path})
               this.$emit('chooseNav',index)
           },
 
       },
       watch:{
-        Role(){
-          // this.nav.splice(4,1)
-        }
       },
       mounted(){
+        //4是财务管理
+        if(this.shopRole==4){//判断登录权限
+          this.nav.splice(4,1)//如果是收银隐藏财务管理
+        }
       }
     }
 </script>

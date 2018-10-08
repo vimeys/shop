@@ -12,7 +12,7 @@
     <!--下载表格-->
     <div class="table" style="position: fixed;top:-10000px">
       <el-table
-        :data="table"
+        :data="table2"
         id="test-table"
         style="width: 100%">
         <el-table-column
@@ -26,14 +26,14 @@
           label="联系方式"
           width="140">
           <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.Phone }}</span>
+            <span style="margin-left: 10px">{{ scope.row.ContactNumber }}</span>
           </template>
         </el-table-column>
         <el-table-column
           label="服务编号"
           width="180">
           <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.OrderNum }}</span>
+            <span style="margin-left: 10px">{{ scope.row.OrderNo }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -41,7 +41,7 @@
           width="180">
 
           <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.OrderTime }}</span>
+        <span style="margin-left: 10px">{{ scope.row.CreateDate|dateChange }}</span>
 
           </template>
         </el-table-column>
@@ -49,7 +49,6 @@
           label="价格"
           width="120">
           <template slot-scope="scope">
-
             <span style="margin-left: 10px">{{ scope.row.Price }}</span>
           </template>
         </el-table-column>
@@ -60,7 +59,7 @@
           :filter-method="filterTag"
           width="140">
           <template slot-scope="scope">
-            <span style="margin-left: 10px;color:red;" >{{ scope.row.State }}</span>
+            <span style="margin-left: 10px;color:red;" >{{ scope.row.State|state }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -133,6 +132,20 @@
           </template>
         </el-table-column>
       </el-table>
+    </div>
+    <div class="page-size-box">
+      <el-pagination
+        prev-text="上一页"
+        next-text="下一页"
+        :page-size="pageSize"
+        @size-change="changeSize"
+        @prev-click="prev"
+        @next-click="next"
+        @current-change="current"
+        layout="prev, pager, next"
+        class="page"
+        :total="total">
+      </el-pagination>
     </div>
 
     <!--详情-->
@@ -278,28 +291,10 @@
             pWidth2:500,
             pHeight2:500,
             zIndex2:1000,
+            total:2,
+            pageSize:5,
             placeholder:'输入客户名称，电话或订单号',
-            tableData: [{
-              date: '2016-05-02',
-              name: '王小虎',
-              address: '上海市普陀区金沙江路 1518 弄',
-              tag:'已服务'
-            }, {
-              date: '2016-05-04',
-              name: '王小虎',
-              address: '上海市普陀区金沙江路 1517 弄',
-              tag:'已服务'
-            }, {
-              date: '2016-05-01',
-              name: '王小虎',
-              address: '上海市普陀区金沙江路 1519 弄',
-              tag:'待服务'
-            }, {
-              date: '2016-05-03',
-              name: '王小虎',
-              address: '上海市普陀区金沙江路 1516 弄',
-              tag:'待服务'
-            }],
+            tableData: [],
             table:[],
             table2:[],
             currentShopId:'',
@@ -367,7 +362,7 @@
             this.table2=data.Items
           })
           setTimeout(()=>{
-            var wb = XLSX.utils.table_to_book(document.querySelector('#test-table'))
+            var wb = XLSX.utils.table_to_book(document.querySelector('#test-table'),{raw:true});
             /* get binary string as output */
             var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
             try {
@@ -379,7 +374,6 @@
         },
         // 获取店铺列表
         getShopList(){
-
           this.$http.post(this.$api.shopList,{}).then(json=>{
             let data=json.data
             if(data.isSuc==true){
@@ -420,6 +414,21 @@
   }
   /deep/ .el-col-offset-1{
     text-align: left;
+  }
+  /deep/ .el-scrollbar__wrap{
+    overflow-x: hidden;
+  }
+  /deep/.el-button:hover, .el-button:focus {
+    color: #282828;
+  }
+  /deep/ .el-table th > .cell.highlight{
+    color:#282828;
+  }
+  /deep/ .el-select--small{
+    width: 100%;
+  }
+  /deep/ input{
+    text-align: center;
   }
   .box{
     width: 1200px;

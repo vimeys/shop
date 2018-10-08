@@ -166,7 +166,7 @@
                 <el-col :span="6" class="base-col">门店详情</el-col>
                 <el-col :span="16" class="content-btns">
                   <el-row>
-                    <el-col :span="12"> <div  class="base-btn-111">闪电编辑</div></el-col>
+                    <el-col :span="12"> <div  class="base-btn-111" @click="hrefPower">闪电编辑</div></el-col>
                     <el-col :span="12"> <div class="base-btn-111">选择文章</div> </el-col>
                   </el-row>
                 </el-col>
@@ -182,6 +182,11 @@
     <!--<div style="width: 100px;height: 100px;border: 1px solid red;">-->
       <!--<upload></upload>-->
     <!--</div>-->
+    <ys-popup
+      v-show=""
+    >
+
+    </ys-popup>
   </div>
 </template>
 
@@ -352,8 +357,13 @@
                 });
           })
         }
-
-
+      },
+      //跳转闪电编辑
+      hrefPower(){
+        let win=window.open('_blank')
+        if(win){
+          win.location = "http://www.tuwen.la/mdtokenlogin.aspx?token=";
+        }
       },
 
       // 删除店铺

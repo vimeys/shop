@@ -44,7 +44,7 @@
           switch (this.activeName) {
             case  'first':
               this.$router.replace({
-                path:'/fodderCenter/fodder/fodder'
+                path:'/fodderCenter/fodders/fodder'
               });
               break
             case 'second':

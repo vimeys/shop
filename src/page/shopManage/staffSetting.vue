@@ -29,7 +29,7 @@
         <div class="title">{{item.GroupName}}({{item.UsersList.Items.length}}人  提成比例：{{item.Charge}}%)
           <i class="el-icon-delete"
              @click="delGroup(index)"
-             style="position: relative; right: -440px"></i>
+             style="position: relative; right: -440px;cursor: pointer"></i>
         </div>
         <el-row class="table-title">
           <!--<el-col></el-col>-->
@@ -196,6 +196,11 @@
       @close="closeAdd"
     >
       <div class="add">
+        <!--<el-row>-->
+          <!--<el-col>-->
+            <!--<div id="demo"></div>-->
+          <!--</el-col>-->
+        <!--</el-row>-->
         <el-row  class="header" justify="start">
           <el-col :span="4"><h3>添加成员</h3></el-col>
         </el-row>
@@ -244,7 +249,7 @@
         </el-row>
         <el-row>
           <el-col>
-            <a class="download" download=""  style=""  href="../../../static/excel.xls">下载excel模板</a>
+            <a class="download" download=""  style=""  href="./static/excel.xls">下载excel模板</a>
           </el-col>
         </el-row>
       </div>
@@ -666,6 +671,7 @@
         },
         //导入excel
         importf(event) {
+          let that=this
           let obj=event.target;
           if(!obj.files) {
             return;
@@ -685,7 +691,31 @@
             }
             //this.wb.SheetNames[0]是获取Sheets中第一个Sheet的名字
             //this.wb.Sheets[Sheet名]获取第一个Sheet的数据
-            document.getElementById("demo").innerHTML= JSON.stringify( XLSX.utils.sheet_to_json(this.wb.Sheets[this.wb.SheetNames[0]]) );
+            // document.getElementById("demo").innerHTML= JSON.stringify( XLSX.utils.sheet_to_json(this.wb.Sheets[this.wb.SheetNames[0]]) );
+            let execlData=XLSX.utils.sheet_to_json(this.wb.Sheets[this.wb.SheetNames[0]]);
+            let obj2={
+              GroupId:that.currentGroupId,
+              UserShopId:that.currentShopId,
+              RefUserId:that.currentShopId
+            }
+            let list=[]
+            execlData.forEach(item=>{
+              console.log(item['职位']);
+              obj2.UserName=item['成员手机号'];
+              obj2.TrueName=item['成员姓名']
+              obj2.JobTitle=item['职位']
+              // Object.assign({},obj2)
+              list.push(Object.assign({},obj2))
+            })
+            console.log(list);
+            that.$util.post(that,that.$api.addWaiterList,{list:list},(data)=>{
+              that.getGroupList(that.currentShopId)
+              that.UserName='';
+              that.TrueName='';
+              that.JobTitle='';
+              that.add.showModal=false
+            })
+
           };
           if(this.rABS) {
             reader.readAsArrayBuffer(f);

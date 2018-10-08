@@ -263,7 +263,7 @@
             <el-col :offset="12" :span="8">{{currentDetail.OrderNo}}</el-col>
           </el-row>
           <el-row class="row">
-            <el-col :span="2" :offset="1">预约时间</el-col>
+            <el-col :span="2" :offset="1">下单时间</el-col>
             <el-col :offset="12" :span="8">{{currentDetail.CreateDate|dateChange}}</el-col>
           </el-row>
           <el-row class="row">
@@ -584,10 +584,11 @@ import ysSelectShop from '@/components/selectShop'
         this.$util.post(this,this.$api.getOrderList,{shopId:this.currentShopId,pageIndex:1,pageSize:100000,state:-1,key:''},(data)=>{
             this.Data2=data.Items
           setTimeout(()=>{
-            var wb = XLSX.utils.table_to_book(document.querySelector('#test-table'))
+            var wb = XLSX.utils.table_to_book(document.querySelector('#test-table'),{raw:true})
             /* get binary string as output */
-            var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
+            var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array'})
             try {
+              // self.saveAs(xlsxUtils.format2Blob(wb), fileName +".xlsx");
               FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '订单.xlsx')
             } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
             return wbout

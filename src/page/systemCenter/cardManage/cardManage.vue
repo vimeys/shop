@@ -6,7 +6,6 @@
   <div class="card-box">
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="优惠券" name="first">
-
       </el-tab-pane>
       <el-tab-pane label="会员卡" name="second">
         <!--<router-view> </router-view>-->
@@ -52,13 +51,23 @@
       //
       // }
       created(){
-        if(sessionStorage.getItem("cardManage")){
-          this.activeName=sessionStorage.getItem('cardManage')
-        }
+        // if(sessionStorage.getItem("cardManage")){
+        //   this.activeName=sessionStorage.getItem('cardManage')
+        // }
+        //
+        // window.addEventListener("beforeunload",()=>{
+        //   sessionStorage.setItem("cardManage",this.activeName)
+        // })
 
-        window.addEventListener("beforeunload",()=>{
-          sessionStorage.setItem("cardManage",this.activeName)
-        })
+        let path=this.$route.fullPath
+        switch (path) {
+          case '/centerIndex/cardManage/priceCard':
+            this.activeName='first';
+            break;
+          case '/centerIndex/indexPage/vipCard':
+            this.activeName='second';
+            break;
+        }
       }
     }
 </script>

@@ -114,7 +114,7 @@ export default new Router({
               //   }
               // ]
             },
-            // 促销活动里面的卡券
+            // 精选商品
             {
               path:'cardList',
               name:cardList,
@@ -222,7 +222,7 @@ export default new Router({
       component:fodderCenter,
       children:[
         {
-          path:'fodder',
+          path:'fodders',
           name:'fodder',
           component:fodder,
           children:[
@@ -231,7 +231,8 @@ export default new Router({
               name:"type",
               component:type
             }
-          ]
+          ],
+          redirect:'/fodderCenter/fodders/fodder'
         },
         {
           path:'push',
@@ -239,7 +240,7 @@ export default new Router({
           component:push
         }
       ],
-      redirect:'/fodderCenter/fodder/fodder'
+      redirect:'/fodderCenter/fodders'
     },
     //财务管理
     {
@@ -253,7 +254,7 @@ export default new Router({
         path:'target',
         component:target
       }],
-      redirect:'/moneyManage/data'
+      redirect:'/moneyManage/target'
     },
     // //服务评价
     // {
