@@ -6,7 +6,7 @@
   <div class="box">
     <div class="order-header">
       <div class="base-btn-111" @click="exportExcel"> 导出excel</div>
-      <ys-search></ys-search>
+      <ys-search :placeholder="placeholder" @search="search"></ys-search>
       <ys-select-shop
         :marginLeft="500"
         @getShop="getShop"
@@ -509,6 +509,7 @@ import ysSelectShop from '@/components/selectShop'
           disable:false,
           address: '上海市普陀区金沙江路 1518 弄'
         }],
+        placeholder:'输入客户、服务人员名称，电话或订单号',
         total:11,
         pageSize:5,
         Data:[],//表格数据
@@ -517,12 +518,32 @@ import ysSelectShop from '@/components/selectShop'
         orderServerList:[{goods:'',size:'',people:'',hasPlus:true}],
         currentShopId:'',
         serverData:'',//所有服务的数据
+        searchVal:'',//搜索数据
       }
-    }, methods: {
+    },
+    methods: {
       // 获取到店铺
       getShop(e){
         this.currentShopId=e
           this.getOrderList(e)
+      },
+      selectShop(id){
+        this.currentShopId=id
+        this.getOrderList(id)
+      },
+
+      search(val){
+        this.searchVal=val
+        this.$util.post(this,this.$api.getOrderList,
+          {shopId:this.currentShopId,pageIndex:1,pageSize:10,state:-1,key:val},
+          (data)=>{
+            this.Data=data.Items;
+            this.total=data.TotalItems
+            // this.Data.forEach(item=>{
+            //   item.CreateDate=this.$util.
+            // })
+          }
+        )
       },
       //打开付款弹窗
       handleEdit(index, row) {
@@ -538,10 +559,7 @@ import ysSelectShop from '@/components/selectShop'
       },
 
 
-      selectShop(id){
-        this.currentShopId=id
-        this.getOrderList(id)
-      },
+
       filterTag(value,row){
         console.log(value);
         console.log(row);
@@ -581,18 +599,22 @@ import ysSelectShop from '@/components/selectShop'
           this.currentDetail.list.push(obj)
       },
       exportExcel(){
-        this.$util.post(this,this.$api.getOrderList,{shopId:this.currentShopId,pageIndex:1,pageSize:100000,state:-1,key:''},(data)=>{
-            this.Data2=data.Items
-          setTimeout(()=>{
-            var wb = XLSX.utils.table_to_book(document.querySelector('#test-table'),{raw:true})
-            /* get binary string as output */
-            var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array'})
-            try {
-              // self.saveAs(xlsxUtils.format2Blob(wb), fileName +".xlsx");
-              FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), '订单.xlsx')
-            } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
-            return wbout
-          },2000)
+        this.$util.post(this, this.$api.getOrderList,
+          {shopId: this.currentShopId, pageIndex: 1, pageSize: 100000, state: -1, key: ''},
+          (data) => {
+            this.Data2 = data.Items
+            setTimeout(() => {
+              var wb = XLSX.utils.table_to_book(document.querySelector('#test-table'), {raw: true})
+              /* get binary string as output */
+              var wbout = XLSX.write(wb, {bookType: 'xlsx', bookSST: true, type: 'array'})
+              try {
+                // self.saveAs(xlsxUtils.format2Blob(wb), fileName +".xlsx");
+                FileSaver.saveAs(new Blob([wbout], {type: 'application/octet-stream'}), '订单.xlsx')
+              } catch (e) {
+                if (typeof console !== 'undefined') console.log(e, wbout)
+              }
+              return wbout
+            }, 2000)
 
           }
         )

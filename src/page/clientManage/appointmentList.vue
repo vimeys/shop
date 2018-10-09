@@ -6,8 +6,9 @@
   <div class="box">
     <div class="header">
       <div class="btn" @click="exportExcel">导出EXCEL</div>
-      <ys-search :isLeft="isLeft" :placeholder="placeholder"></ys-search>
-      <ys-select-shop :marginLeft="500" @getShop="getShop" @selectShop="selectShop"></ys-select-shop>
+      <ys-search :isLeft="isLeft" @search="search" :placeholder="placeholder"></ys-search>
+      <ys-select-shop :marginLeft="500" @getShop="getShop" @selectShop="selectShop">
+      </ys-select-shop>
     </div>
     <!--下载表格-->
     <div class="table" style="position: fixed;top:-10000px">
@@ -293,14 +294,16 @@
             zIndex2:1000,
             total:2,
             pageSize:5,
-            placeholder:'输入客户名称，电话或订单号',
+
+            placeholder:'输入客户、服务人员名称，电话或订单号',
             tableData: [],
             table:[],
             table2:[],
             currentShopId:'',
             list:[1,2,3],
             currentDetail:"",
-            shopList:''
+            shopList:'',
+            searchVal:''//搜索的接口
           }
       },
       methods:{
@@ -312,6 +315,16 @@
           this.currentShopId=id
           this.getOrderList(id)
         },
+
+        //搜索
+        search(val){
+          this.searchVal='val'
+          this.$util.post(this,this.$api.getAppOrderList,{shopId:this.currentShopId,pageIndex:1,pageSize:10,state:-1,key:this,searchVal},(data)=>{
+            this.table=data.Items
+          })
+        },
+
+
 
         //删除订单
         handleEdit(index, id) {

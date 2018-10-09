@@ -11,7 +11,11 @@ export default {
     // console.log(state.shop);
   },
   //设置店铺信息
-  [types.SET_ROLE](state,shopRole){
+  [types.SET_ROLE](state,Role){
+    state.Role=Role
+  },
+  //设置权限信息
+  [types.SET_SHOPROLE](state,shopRole){
     state.shopRole=shopRole
   },
   //设置用户信息

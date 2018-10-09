@@ -8,6 +8,7 @@
         <router-link tag="li" :to="item.path" v-for="(item,index) in nav"  :key="index" > {{item.name}}
         <span class="el-icon-caret-top"></span>
         </router-link>
+        <li @click="loginOut">退出</li>
       </ul>
       <!--<div>{{Role}}</div>-->
     </div>
@@ -41,10 +42,15 @@
           }
       },
       methods:{
+        ...mapMutations({saveShop:'SET_SHOP',}),
           href(index){
               this.$emit('chooseNav',index)
           },
-
+          //退出
+          loginOut(){
+            // localStorage.removeItem('');
+            this.saveShop('')
+          }
       },
       watch:{
       },

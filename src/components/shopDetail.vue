@@ -50,7 +50,7 @@
      width: 100%;
      img{
        width: 100%;
-       height: 190px;
+       height: 170px;
      }
      h4{
        margin: 15px 0 10px;

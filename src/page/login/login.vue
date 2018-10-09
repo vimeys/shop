@@ -30,7 +30,7 @@
         }
       },
       methods:{
-        ...mapMutations({saveShop:'SET_SHOP',saveRole:'SET_ROLE',saveUserInfo:'SET_USER'}),
+        ...mapMutations({saveShop:'SET_SHOP',saveRole:'SET_ROLE',saveShopRole:'SET_ROLE',saveUserInfo:'SET_USER'}),
         //请求店铺信息
         getShopList(){
           console.log(api.shopList);
@@ -55,7 +55,8 @@
         login(){
           this.$emit('login',true)
           this.$util.post(this,this.$api.login,{username:this.phone,password:this.psw},(data)=>{
-            this.saveRole(data.ShopRole);
+            this.saveShopRole(data.ShopRole);
+            this.saveRole(data.Role)
             this.saveUserInfo(data)
             this.getShopList()
           })

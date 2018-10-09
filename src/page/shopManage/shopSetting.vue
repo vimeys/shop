@@ -30,7 +30,7 @@
               <el-scrollbar class="scroll">
                 <!--员工卡片-->
                 <shop-detail :shop="form"></shop-detail>
-                <iframe src="http://test.csmen.cc/c/6/index.html?userId=755&v=432537"  class="iframe" frameborder="0"></iframe>
+                <iframe :src="TuwenUrl"  class="iframe" frameborder="0"></iframe>
               </el-scrollbar>
             </el-col>
             <!--//from表单-->
@@ -133,6 +133,7 @@
                     is-range
                     v-model="value4"
                     editable
+                    format="HH:mm"
                     range-separator="-"
                     start-placeholder="开始时间"
                     end-placeholder="结束时间"
@@ -145,6 +146,7 @@
                 <el-col :span="6" class="base-col">午休时间</el-col>
                 <el-col :span="16" ><el-time-picker
                   is-range
+                  format="HH:mm"
                   v-model="value5"
                   range-separator="-"
                   start-placeholder="开始时间"
@@ -166,8 +168,18 @@
                 <el-col :span="6" class="base-col">门店详情</el-col>
                 <el-col :span="16" class="content-btns">
                   <el-row>
-                    <el-col :span="12"> <div  class="base-btn-111" @click="hrefPower">闪电编辑</div></el-col>
-                    <el-col :span="12"> <div class="base-btn-111">选择文章</div> </el-col>
+                    <el-col :span="12">
+                      <div  class="base-btn-111"
+                            @click="hrefPower">
+                        闪电编辑
+                      </div>
+                    </el-col>
+                    <el-col :span="12">
+                      <div class="base-btn-111"
+                           @click="openArticle">
+                        选择文章
+                      </div>
+                    </el-col>
                   </el-row>
                 </el-col>
               </el-row>
@@ -179,12 +191,54 @@
         </el-row>
       </div>
     </ys-popup>
-    <!--<div style="width: 100px;height: 100px;border: 1px solid red;">-->
-      <!--<upload></upload>-->
-    <!--</div>-->
+
+    <!--选择文章-->
     <ys-popup
-      v-show=""
+      v-show="aShowModal"
+      :width="aWidth"
+      :height="aHeight"
+      :zIndex="zIndex"
+      @close="closeArticle"
     >
+      <div class="article-box">
+        <div class="article-items">
+          <div class="article-item"
+               :class="{chosed:item.isChosed}"
+               @click="chooseArticle(index)"
+               v-for="(item,index) in articleList">
+            <div class="article-left"><img :src="item.CoverImg" alt="" class="head-img"></div>
+            <div class="article-right">
+              <div class="article-right-title">{{item.Title}}</div>
+              <div class="article-right-content">{{item.content}}</div>
+              <div class="article-right-time">
+                {{item.CreateDate|dateChange}}
+              </div>
+            </div>
+          </div>
+        </div>
+       <div>
+         <div class="page-size-box">
+           <el-pagination
+             prev-text="上一页"
+             next-text="下一页"
+             :page-size="pageSize"
+             @size-change="changeSize"
+             @prev-click="prev"
+             @next-click="next"
+             @current-change="current"
+             layout="prev, pager, next"
+             class="page"
+             :total="total">
+           </el-pagination>
+         </div>
+       </div>
+        <div class="btns">
+          <el-row>
+            <el-col :span="12"><div class="base-btn-111" @click="closeArticle">取消</div></el-col>
+            <el-col :span="12"><div class="base-btn-111" @click="confirm">确定</div></el-col>
+          </el-row>
+        </div>
+      </div>
 
     </ys-popup>
   </div>
@@ -212,6 +266,10 @@
         showModal:false,
         pWidth:1200,
         pHeight:850,
+        aWidth:550,
+        aHeight:880,
+        aShowModal:false,//文章弹窗
+        zIndex:1000,
         value4: [new Date(2018, 9, 10, 8, 40), new Date(2018, 9, 10, 9, 40)],
         value5: [new Date(2018, 9, 10, 8, 40), new Date(2018, 9, 10, 9, 40)],
         isEdit:false,
@@ -229,7 +287,35 @@
           LunchEndDate:'',
           EmployeesNumber:''
         },
-        shopList:[]
+        shopList:[],
+        articleList:[],//文章列表
+        articleIndex:'',
+        TuwenUrl:''//图文链接
+      }
+    },
+    filters:{
+      dateChange(val){
+        try{
+          var first =val.indexOf('(');
+          var last =val.indexOf(')');
+          var time=val.substring(first+1,last)
+        }catch(err){
+          console.debug(err);
+        }
+
+        time=new Date(parseInt(time-8*60*60*1000));
+        const year = time.getFullYear()
+        const month = time.getMonth() + 1
+        const day = time.getDate()
+        const hour = time.getHours()
+        const minute = time.getMinutes()
+        const second = time.getSeconds()
+        const formatNumber = n => {
+          n = n.toString()
+          return n[1] ? n : '0' + n
+        }
+        return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute].map(formatNumber).join(':')
+
       }
     },
     methods:{
@@ -237,25 +323,34 @@
         // this.$http.post('/shop',{userId:1007})
         this.showModal=true
       },
+
       closePop(e){
-        this.showModal=false
+        this.showModal=false;
+        this.reset()
       },
+      closeArticle(){
+        this.aShowModal=false;
+        this.articleList.forEach(item=>{
+          item.isChosed=false
+        })
+      },
+
       handleAvatarSuccess1(res, file){
         console.log(file);
         // this.form.Pics=URL.createObjectURL(file.raw);
         this.form.Pics=file.response.url;
         console.log(this.form.Pics);
       },
+
       // 头像上传
       handleAvatarSuccess2(res, file) {
         this.form.Logo=file.response.url;
-        // this.form.logo= URL.createObjectURL(file.raw);
 
       },
+
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg';
         const isLt2M = file.size / 1024 / 1024 < 2;
-
         if (!isJPG) {
           this.$message.error('上传头像图片只能是 JPG 格式!');
         }
@@ -285,7 +380,7 @@
               LunchEndDate: this.value5[1].toString().substr(16, 5),
               //todo死数据
               Position: '116.381847,39.98109',
-              TuwenUrl: 'http://mdimg.yilianchuang.cn/uploadimage3.ashx',
+              TuwenUrl: this.TuwenUrl,
               EmployeesNumber: form.EmployeesNumber
             }
           }
@@ -303,8 +398,10 @@
           // }).catch(err => {
           //   console.log(err);
           // })
+
           this.$util.post(this,this.$api.updataShop,obj,(data)=>{
             this.showModal=false;
+            this.reset()
             this.getShopList()
             this.form = emptyObj(this.form);
                 this.$message({
@@ -349,6 +446,7 @@
           // })
           this.$util.post(this,this.$api.addUserShop,obj,(data)=>{
                 this.showModal = false;
+            this.reset()
                 this.getShopList()
                 this.form = emptyObj(this.form);
                 this.$message({
@@ -358,14 +456,56 @@
           })
         }
       },
-      //跳转闪电编辑
-      hrefPower(){
-        let win=window.open('_blank')
-        if(win){
-          win.location = "http://www.tuwen.la/mdtokenlogin.aspx?token=";
+      //清空表单
+      reset(){
+          this.form={
+          Pics:'',
+            Logo:'',
+            Title:'',
+            Content:'',
+            Name:'',
+            Address:'',
+            Tel:'',
+            ShopStartDate:'',
+            ShopEndDate:'',
+            LunchStartDate:'',
+            LunchEndDate:'',
+            EmployeesNumber:''
         }
+        this.TuwenUrl=''
+        this.value4= [new Date(2018, 9, 10, 8, 40), new Date(2018, 9, 10, 9, 40)];
+          this.value5= [new Date(2018, 9, 10, 8, 40), new Date(2018, 9, 10, 9, 40)];
       },
 
+      //跳转闪电编辑
+      hrefPower(){
+        window.open("http://www.tuwen.la/mdtokenlogin.aspx?token="+this.userInfo.EditorToken,'_blank')
+      },
+      //选择文章
+      openArticle(){
+        console.log(this.$util);
+        this.$util.post(this,'http://www.tuwen.la/api/article/list4md',{PageIndex: 1,
+          PageSize: 10,
+          token:this.userInfo.EditorToken},(data)=>{
+          data.Items.forEach(item=>{
+            item.isChosed=false
+          })
+          this.articleList=data.Items;
+          this.aShowModal=true
+        })
+      },
+      chooseArticle(index){
+        this.articleList.forEach(item=>{
+          item.isChosed=false
+        })
+          this.articleList[index].isChosed=true;
+        this.articleIndex=index
+      },
+      confirm(){
+          this.TuwenUrl=this.articleList[this.articleIndex].PublishUrl
+        this.articleList.isChosed=false
+        this.aShowModal=false
+      },
       // 删除店铺
       delShop(id,index){
         console.log(id);
@@ -388,23 +528,18 @@
         this.form=shopData;
         this.showModal=true;
         this.isEdit=true
+        this.TuwenUrl=this.shopList[index].TuwenUrl
+        //回显时间
 
+        let le=this.shopList[index].LunchEndDate.split(':')
+        let ls=this.shopList[index].LunchStartDate.split(':')
+        let os=this.shopList[index].ShopStartDate.split(':')
+        let oe=this.shopList[index].ShopEndDate.split(':')
+        this.value4=[new Date(2018, 9, 10, ls[0],ls[1]),new Date(2018, 9, 10, le[0],le[1])]
+        this.value5=[new Date(2018, 9, 10, os[0],os[1]),new Date(2018, 9, 10, oe[0],oe[1])]
       },
       // 获取列表
       getShopList(){
-        console.log(api.shopList);
-        // this.$http.post(api.shopList,{}).then(json=>{
-        //   let data=json.data
-        //   if(data.isSuc==true){
-        //     this.shopList=data.result;
-        //     this.$message({
-        //       message: '恭喜你，这是一条成功消息',
-        //       type: 'warning'
-        //     })
-        //   }
-        // }).catch(error=>{
-        //   console.log(error);
-        // })
         this.$util.post(this,this.$api.shopList,{},(data)=>{
           this.shopList=data;
           this.saveShop(data)
@@ -421,7 +556,7 @@
         Role(){
             return this.$store.state.Role
         },
-      ...mapGetters(['shop']),
+      ...mapGetters(['shop','userInfo']),
     },
     mounted(){
       this.getShopList()
@@ -471,7 +606,7 @@
       width:239px;
       height:37px;
       line-height: 37px;
-      margin: 0 auto;
+      /*margin: 0 auto;*/
       background:@bs-color;
       font-size: 14px;
       color:@bs-font-color;
@@ -490,7 +625,7 @@
   }
   /*弹窗内容*/
   .scroll{
-    height: 700px;
+    height: 900px;
     width: 100%;
     overflow: hidden;
   }
@@ -572,12 +707,80 @@
   }
 
   .avatar {
+    width: 216px;
+    height: 94px;
+    display: block;
+  }
+  .avatar-logo{
     width: 94px;
     height: 94px;
     display: block;
   }
   .logo{
-    width: 188px;
+    width: 216px;
+  }
+
+  //选择文章弹窗
+  .article-box{
+    padding: 70px 50px 0;
+    background:#F9F9F9;
+  }
+  .article-items{
+    height: 640px;
+  }
+
+  .article-item{
+    display: flex;
+    padding: 18px;
+    background: #fff;
+    margin-bottom: 20px;
+    border: 2px solid #fff;
+    .head-img{
+      width: 108px;
+      height: 108px;
+    }
+    .article-right{
+      width: 303px;
+      margin-left: 30px;
+      &-title{
+        width:303px;
+        height:22px;
+        font-size:16px;
+        font-weight:600;
+        color:rgba(40,40,40,1);
+        line-height:22px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      &-content{
+        width:303px;
+        max-height:44px;
+        height: 44px;
+        font-size:12px;
+        color:rgba(40,40,40,1);
+        line-height:22px;
+        overflow: hidden;
+        color: #8C8C8C;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
+        margin-bottom: 13px;
+        margin-top: 14px;
+      }
+      &-time{
+        font-size: 16px;
+        text-align: left;
+      }
+
+    }
+  }
+  .chosed{
+    border: 2px solid @bs-color;
+  }
+  .btns{
+    margin-top: 50px;
   }
 
 </style>

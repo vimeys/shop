@@ -52,7 +52,7 @@
     updataGoods:head+'goods/version3/update',
     delGoods:head+'goods/delete',
     delAllGoods:head+'goods/batchdelete',//批量删除
-    goodsDetail:head+'goods/version3/detail',
+    goodsDetail:head+'goods/detail',
     goodsList:head+'goods/version3/list4web',
     moveGoods:head+'goods/version3/batchmove',//移动
     sortGoods:head+'goods/setorder',//排序

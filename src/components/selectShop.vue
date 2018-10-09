@@ -2,7 +2,7 @@
 *   Created By  YS  on 2018/9/12
 */
 <template>
-        <div :style="[{marginLeft:marginLeft+'px'}]" v-if="shopRole==1">
+        <div :style="[{marginLeft:marginLeft+'px'}]" v-if="Role==1">
           <el-select v-model="value"
                      placeholder="请选择"
                      @change="chooseShop"
@@ -28,7 +28,7 @@
         }
       },
       computed: {
-        ...mapState(['shop','shopRole'])
+        ...mapState(['shop','shopRole','Role'])
       },
       data() {
         return {

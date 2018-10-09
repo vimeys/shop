@@ -16,7 +16,11 @@
             </el-select>
           </el-col>
           <el-col :span="2" class="base-col">总数：{{allPeople}}人</el-col>
-          <el-col :span="6" :offset="12"> <div><ys-search @search="search" :placeholder="placeholder"></ys-search></div></el-col>
+          <el-col :span="6" :offset="12">
+            <div>
+              <ys-search @search="search" :placeholder="placeholder"></ys-search>
+            </div>
+          </el-col>
         </el-row>
       </div>
     <div class="btns">
@@ -509,15 +513,17 @@
         },
         //全选人员
         chooseAll(index){
-          console.log(index);
           function check(age){
-            console.log(age);
-            console.log(age.isChecked);
-            return age.isChecked===false
+            return age.isChecked===true
           }
           let abc=this.groupList[index].UsersList.Items.every(check)
           let old=this.groupList[index]
           if(abc){
+            old.UsersList.Items.forEach(item=>{
+              item.isChecked=false
+            })
+            this.groupList.splice(index,1,old)
+          }else{
             old.UsersList.Items.forEach(item=>{
               item.isChecked=true
             })

@@ -50,7 +50,7 @@ export function confirm(that,type='warning',info='您确定要删除吗?',title=
 //     })
 //   }
 // }
-//分装的ajax
+//封装的ajax
 export  function post(that,url,params,suc,isLoad,err) {
   if(isLoad){//判断是否有loading状态
     var  loading = that.$loading({

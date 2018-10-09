@@ -30,8 +30,8 @@
         <div class="active-image">
           <img v-if="detail.FlagId==1" src="@/assets/images/icon/activeNum.png" alt="">
           <img v-else-if="detail.FlagId==2" src="@/assets/images/icon/activePrice.png" alt="">
-          <img v-else-if="detail.FlagId==3" src="@/assets/images/icon/activeTeam.png" alt="">
-          <img v-else src="@/assets/images/icon/activeTime.png" alt="">
+          <img v-else-if="detail.FlagId==3" src="@/assets/images/icon/activeTime.png" alt="">
+          <img v-else src="@/assets/images/icon/activeTeam.png" alt="">
         </div>
       </div>
     </div>
@@ -193,6 +193,7 @@
         width: 175px;
         height: 175px;
         display: flex;
+        margin-top: 5px;
         flex-direction: column;
           .name{
             /*width: 100%;*/
@@ -200,35 +201,39 @@
             line-height: 20px;
             text-align: left;
             font-size: 13px;
+            font-weight: 400;
             text-overflow: ellipsis;
             overflow: hidden;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical
           }
-          .main{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            .price{
-              height: 40px;
-              .price-old{
-                  line-height: 20px;
-                text-decoration: line-through;
-                color:#B4B4B4;
-                font-size: 12px;
-              }
-
+        .main {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .price {
+            height: 40px;
+            .price-old {
+              line-height: 20px;
+              text-decoration: line-through;
+              color: #B4B4B4;
+              font-size: 12px;
+              text-align: left;
             }
-            .price-new{
-                font-size: 12px;
-              color:#222;
-              span{
-                color:#D0021B;
-                font-size: 15px;
-              }
+
+          }
+          .price-new {
+            font-size: 12px;
+            color: #222;
+            font-weight: 500;
+            span {
+              color: #D0021B;
+              font-size: 15px;
+              text-align: left;
             }
           }
+        }
         .active-image{
             width: 54px;
           height: 54px;

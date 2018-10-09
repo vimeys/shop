@@ -14,7 +14,7 @@
             <div class="manage" :class="{'disable':disableManage}" @click="manage">批量管理</div>
             <div class="del" :class="{'disable':disableSort}" @click="Sort">排序</div>
           </div>
-          <ys-search></ys-search>
+          <ys-search @search="search"></ys-search>
         </div>
         <el-row class="edit-btns" v-if="!disableManage">
           <el-col :span="4">
@@ -281,7 +281,6 @@
                         <span class=" base-col el-icon-delete"
                               v-if="index>0"
                               @click="delGoodsApeople(index)">
-
                         </span>
                       </el-col>
                     </template>
@@ -296,7 +295,7 @@
                 <!--<el-col :span="1" class="before base-col"></el-col>-->
               </el-row>
               <el-row class="mt15">
-                <el-col :span="4">分销佣金</el-col>
+                <el-col :span="4" class="base-col">分销佣金</el-col>
                 <el-col :span="19">
                   <el-row>
                     <el-col :span="11">
@@ -319,10 +318,10 @@
             </el-row>
           <el-row class="base-row">
             <el-col :span="6" :offset="6">
-              <div  class="base-btn-111 block">选择现有</div>
+              <div  class="base-btn-111 block" @click="openArticle">选择现有</div>
             </el-col>
             <el-col :span="6" :offset="2">
-                <div class="base-btn-111 block">
+                <div class="base-btn-111 block" @click="hrefPower">
                   创建
                 </div>
             </el-col>
@@ -428,6 +427,56 @@
       </div>
 
     </ys-popup>
+
+    <!--//选择文章-->
+    <ys-popup
+      v-show="aShowModal"
+      :width="aWidth"
+      :height="aHeight"
+      :zIndex="zIndex"
+      @close="closeArticle"
+    >
+      <div class="article-box">
+        <div class="article-items">
+          <div class="article-item"
+               :class="{chosed:item.isChosed}"
+               @click="chooseArticle(index)"
+               v-for="(item,index) in articleList">
+            <div class="article-left"><img :src="item.CoverImg" alt="" class="head-img"></div>
+            <div class="article-right">
+              <div class="article-right-title">{{item.Title}}</div>
+              <div class="article-right-content">{{item.content}}</div>
+              <div class="article-right-time">
+                {{item.CreateDate|dateChange}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="page-size-box">
+            <el-pagination
+              prev-text="上一页"
+              next-text="下一页"
+              :page-size="pageSize"
+              @size-change="changeSize"
+              @prev-click="prev"
+              @next-click="next"
+              @current-change="current"
+              layout="prev, pager, next"
+              class="page"
+              :total="total">
+            </el-pagination>
+          </div>
+        </div>
+        <div class="btns">
+          <el-row>
+            <el-col :span="12"><div class="base-btn-111" @click="closeArticle">取消</div></el-col>
+            <el-col :span="12"><div class="base-btn-111" @click="confirm">确定</div></el-col>
+          </el-row>
+        </div>
+      </div>
+
+    </ys-popup>
   </div>
 
 </template>
@@ -438,7 +487,7 @@
   import ysPopup from '@/components/popup'
   import api from '@/assets/script/url'
   import {comfirm} from '@/assets/script/util'
-
+  import {mapGetters, mapMutations} from 'vuex'
   export default {
     name: "goodsList",
     components: {
@@ -448,6 +497,10 @@
     },
     data() {
       return {
+        aWidth:550,
+        aHeight:880,
+        aShowModal:false,//文章弹窗
+        zIndex:1000,
         goods: {
           showModal: false,
           width: 900,
@@ -518,11 +571,46 @@
         hasAddBtn:true,//是否有添加按钮
         allTypeList:'',//所有的分类
         isSort:false,//是否是排序
+        articleList:[],//闪电文章列表
+        TuwenUrl:'',//选择闪电图文
+        articleIndex:'',//当前index
+      }
+    },
+    computed:{
+      ...mapGetters(['shop','userInfo']),
+    },
+    filters:{
+      dateChange(val){
+        try{
+          var first =val.indexOf('(');
+          var last =val.indexOf(')');
+          var time=val.substring(first+1,last)
+        }catch(err){
+          console.debug(err);
+        }
+
+        time=new Date(parseInt(time-8*60*60*1000));
+        const year = time.getFullYear()
+        const month = time.getMonth() + 1
+        const day = time.getDate()
+        const hour = time.getHours()
+        const minute = time.getMinutes()
+        const second = time.getSeconds()
+        const formatNumber = n => {
+          n = n.toString()
+          return n[1] ? n : '0' + n
+        }
+        return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute].map(formatNumber).join(':')
+
       }
     },
     methods: {
       choose() {
         console.log(123);
+      },
+      //搜索
+      search(val){
+
       },
       //批量管理
       manage(){
@@ -567,7 +655,6 @@
             i=index
           }
         })
-        // debugger
         if(this.typeList[i].ChildGoodsType){
           this.SecondTypeList=this.typeList[i].ChildGoodsType
           this.SecondTypeValue=this.SecondTypeList[0].Name
@@ -722,7 +809,14 @@
       //编辑单个商品
       editGoods(id,index){
         this.goods.showModal=true;
-        console.log(this.goodsList[index]);
+        //获取商品详情
+        this.$util.post(this, this.$api.goodsDetail,
+          {goodsId: this.goodsList[index].GoodsId},
+          (data) => {
+            console.log(data);
+          }
+        );
+
         let data=this.goodsList[index];
         this.valueTips=data.FlagId;
         this.aPics=data.Pics.split(',');
@@ -750,7 +844,10 @@
             Name:'无'
           }]
         }
-        this.valueSecondType=data.GoodsTypeId;
+        if(data.GoodsTypeId){
+          this.valueSecondType=data.GoodsTypeId;
+        }
+
 
 
       },
@@ -771,6 +868,45 @@
 
       },
 
+      //跳转闪电编辑
+      hrefPower(){
+        window.open("http://www.tuwen.la/mdtokenlogin.aspx?token="+this.userInfo.EditorToken,'_blank')
+      },
+      //选择文章
+      openArticle(){
+        console.log(this.$util);
+        this.$util.post(this,'http://www.tuwen.la/api/article/list4md',{PageIndex: 1,
+          PageSize: 10,
+          token:this.userInfo.EditorToken},(data)=>{
+          data.Items.forEach(item=>{
+            item.isChosed=false
+          })
+          this.articleList=data.Items;
+          this.aShowModal=true
+        })
+      },
+      //选择文章
+      chooseArticle(index){
+        this.articleList.forEach(item=>{
+          item.isChosed=false
+        })
+        this.articleList[index].isChosed=true;
+        this.articleIndex=index
+      },
+      confirm(){
+        this.TuwenUrl=this.articleList[this.articleIndex].PublishUrl
+        this.articleList.isChosed=false
+        this.aShowModal=false
+      },
+      //关闭选择文章
+      closeArticle(){
+        this.aShowModal=false;
+        this.articleList.forEach(item=>{
+          item.isChosed=false
+        })
+      },
+
+
       //生成新的服务
       addGoods() {
         let obj = {
@@ -790,19 +926,20 @@
           Type: 2,
         };
         //是否选择二级分类
-        if (this.valueSecondType !== 0) {
-          obj.GoodsTypeId = this.valueSecondType;
+        if (this.valueSecondType == '') {
+          obj.GoodsTypeId = 0;
           obj.GoodsTypeParentId = this.valueFirstType;
         }else{
-          console.log(this.valueSecondType===0);
+          obj.GoodsTypeId = this.valueSecondType;
+          obj.GoodsTypeParentId = this.valueFirstType;
         }
 
+        // console.log(obj);
+        // return
         let id = []
         this.aPeople.forEach(item => {
           id.push(item.valuePerson.join(','))
         })
-        console.clear();
-        console.log(id);
         let sId = id.join(',');
         let Addgoodsspec = [];//
         this.aSize.forEach(item => {
@@ -875,18 +1012,15 @@
 
       //选择耽搁商品
       chooseCurrent1(index,state){
-        console.log(index, state);
         this.goodsList[index].isChecked=state;
       },
       // 删除商品
       delGoods(){
         let delArr=[]
-        console.log(123);
         if(this.allChoosed){//判断是否是全选
           this.goodsList.forEach(item=>{
             delArr.push(item.GoodsId)
           })
-          console.log(delArr);
           this.$util.confirm(this).then(()=>{
             this.$http.post(this.$api.delAllGoods,{goodsIds:delArr})
               .then(json=>{
@@ -903,7 +1037,6 @@
               delArr.push(item.GoodsId)
             }
           })
-          console.log(delArr);
           this.$util.confirm(this).then(()=>{
             this.$http.post(this.$api.delAllGoods,{goodsIds:delArr})
               .then(json=>{
@@ -1352,7 +1485,7 @@
       margin-left: 30px;
       li {
         text-align: left;
-        margin-top: 30px;
+        margin-bottom: 10px;
         display: flex;
         justify-content: space-between;
         width: 276px;
@@ -1542,5 +1675,68 @@
   /deep/ .el-tree-node__content{
     height: 30px;
     line-height: 30px;
+  }
+
+  //选择文章弹窗
+  .article-box{
+    padding: 70px 50px 0;
+    background:#F9F9F9;
+  }
+  .article-items{
+    height: 640px;
+  }
+
+  .article-item{
+    display: flex;
+    padding: 18px;
+    background: #fff;
+    margin-bottom: 20px;
+    border: 2px solid #fff;
+    .head-img{
+      width: 108px;
+      height: 108px;
+    }
+    .article-right{
+      width: 303px;
+      margin-left: 30px;
+      &-title{
+        width:303px;
+        height:22px;
+        font-size:16px;
+        font-weight:600;
+        color:rgba(40,40,40,1);
+        line-height:22px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      &-content{
+        width:303px;
+        max-height:44px;
+        height: 44px;
+        font-size:12px;
+        color:rgba(40,40,40,1);
+        line-height:22px;
+        overflow: hidden;
+        color: #8C8C8C;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
+        margin-bottom: 13px;
+        margin-top: 14px;
+      }
+      &-time{
+        font-size: 16px;
+        text-align: left;
+      }
+
+    }
+  }
+  .chosed{
+    border: 2px solid @bs-color;
+  }
+  .btns{
+    margin-top: 50px;
   }
 </style>
