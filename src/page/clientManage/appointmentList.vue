@@ -20,7 +20,7 @@
           label="顾客名称"
           width="120">
           <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.Name }}</span>
+            <span style="margin-left: 10px">{{ scope.row.GameUserName }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -75,7 +75,7 @@
           label="顾客名称"
           width="120">
           <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.Name }}</span>
+            <span style="margin-left: 10px">{{ scope.row.GameUserName }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -139,7 +139,6 @@
         prev-text="上一页"
         next-text="下一页"
         :page-size="pageSize"
-        @size-change="changeSize"
         @prev-click="prev"
         @next-click="next"
         @current-change="current"
@@ -163,7 +162,7 @@
         </el-row>
         <el-row class="row">
           <el-col :span="2" :offset="1">顾客名称</el-col>
-          <el-col :offset="12" :span="8">{{currentDetail.Name}}</el-col>
+          <el-col :offset="12" :span="8">{{currentDetail.GameUserName}}</el-col>
         </el-row>
         <el-row class="row">
           <el-col :span="2" :offset="1">联系方式</el-col>
@@ -200,16 +199,19 @@
         <el-row class="row">
           <el-col :span="2" :offset="1">备注</el-col>
           <el-col :offset="12" :span="8">
-            {{currentDetail.remark}}
+            {{currentDetail.Remark}}
           </el-col>
         </el-row>
         <el-row class="row">
           <el-col :span="2" :offset="1" class="none">.</el-col>
           <el-col :offset="12" :span="8">
-            <img :src="currentDetail.remarkImage"
-                 alt=""
-                 @click="openImage"
-                 class="image">
+            <template v-for="item in currentDetail.Picture">
+              <img :src="item"
+                   alt=""
+                   @click="openImage"
+                   class="image">
+            </template>
+
           </el-col>
         </el-row>
       </div>
@@ -294,8 +296,7 @@
             zIndex2:1000,
             total:2,
             pageSize:5,
-
-            placeholder:'输入客户、服务人员名称，电话或订单号',
+            placeholder:'输入人员名称，电话或订单号',
             tableData: [],
             table:[],
             table2:[],
@@ -318,9 +319,11 @@
 
         //搜索
         search(val){
-          this.searchVal='val'
-          this.$util.post(this,this.$api.getAppOrderList,{shopId:this.currentShopId,pageIndex:1,pageSize:10,state:-1,key:this,searchVal},(data)=>{
-            this.table=data.Items
+          this.searchVal=val
+          this.$util.post(this,this.$api.getAppOrderList,{shopId:this.currentShopId,pageIndex:1,pageSize:10,state:-1,key:this.searchVal},(data)=>{
+            this.table=data.Items;
+            this.total=data.TotalItems;
+            this.pageSize=data.ItemsPerPage
           })
         },
 
@@ -332,7 +335,7 @@
           this.$util.confirm(this).then(()=>{
             this.$util.post(this,this.$api.delAppOrder,{subscribeId:id},(data)=>{
               console.log(data);
-              this.getOrderList(this,currentShopId)
+              this.getOrderList(this.currentShopId)
             })
           })
         },
@@ -341,6 +344,7 @@
           this.showModal=true
           this.$util.post(this,this.$api.appOrderDetail,{subscribeId:id},(data)=>{
             this.currentDetail=data
+            this.currentDetail.Picture=data.Picture.split(',')
           })
         },
 
@@ -394,19 +398,32 @@
               // let firstShopId=data.result[0].UserId;
               // this.currentShopId=firstShopId
               // this.getGroupList(this.currentShopId)
-              this.$message({
-                message: '恭喜你，这是一条成功消息',
-                type: 'warning'
-              })
+
             }
           }).catch(err=>{
             console.log(err);
           })},
-
+        // 上一页
+        prev(e){
+          console.log(e);
+          this.getOrderList(this.currentShopId,e,10)
+        },
+        // 下一页
+        next(e){
+          console.log(e);
+          this.getOrderList(this.currentShopId,e,10)
+        },
+        // 当前页点击
+        current(e){
+          console.log(e);
+          this.getOrderList(this.currentShopId,e,10)
+        },
         //获取订单列表
         getOrderList(shopId,pageIndex=1,pageSize=10){
             this.$util.post(this,this.$api.getAppOrderList,{shopId:shopId,pageIndex,pageSize,state:-1,key:''},(data)=>{
               this.table=data.Items
+              this.total=data.TotalItems;
+              this.pageSize=data.ItemsPerPage
             })
         }
       },
@@ -442,6 +459,13 @@
   }
   /deep/ input{
     text-align: center;
+  }
+  .table /deep/ thead tr th:first-child{
+
+    border-top-left-radius: 4px;
+  }
+  .table /deep/ thead tr th:last-child{
+    border-top-right-radius: 4px;
   }
   .box{
     width: 1200px;
@@ -499,4 +523,45 @@
     width: 500px;
     height: 500px;
   }
+  .page-size-box{
+    margin-top: 50px;
+  }
+  //todo 修改分页器样式
+  /deep/ .el-pager li{
+    height: 31px;
+    width: 31px;
+    line-height: 31px;
+    color:#282828;
+    margin: 0 7px;
+    background: #d8d8d8;
+    border-radius: 2px;
+  }
+  /deep/ .el-pager li.active{
+    background: #FFD736;
+  }
+  /deep/ .el-pager li.active{
+    color:#282828;
+  }
+  /deep/.el-pagination button{
+    width:72px;
+    padding: 0 6px;
+    height:31px !important;
+    text-align: center;
+    background:rgba(216,216,216,1);
+    border-radius:2px;;
+  }
+  /deep/ .el-pagination .btn-next{
+    background: #FFD736;
+    color: #282828;
+    margin-left: 10px;
+  }
+  /deep/ .el-pagination .btn-prev{
+    background: #FFD736;
+    color: #282828;
+    margin-right: 10px;
+  }
+  /deep/ .el-pagination button:disabled{
+    background: #ccc!important;
+  }
+
 </style>

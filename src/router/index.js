@@ -68,6 +68,11 @@ import moneyDate from '@/page/moneyManage/moneyData'
 import target from '@/page/moneyManage/targetManage'
 
 //******************运营数据**************************
+
+
+// ***********************消息中心*********************
+import  message from '@/page/messages/message'
+
 import  serviceRate from '@/page/dataView/serviceRate'
 import  dataView from '@/page/dataView/dataView'
 import serviceData from '@/page/dataView/serviceData'
@@ -278,6 +283,11 @@ export default new Router({
           component:serviceData
         }
       ]
+    },
+    //消息中心
+    {
+      path:'/message',
+      component:message,
     }
 
   ]

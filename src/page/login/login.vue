@@ -30,7 +30,7 @@
         }
       },
       methods:{
-        ...mapMutations({saveShop:'SET_SHOP',saveRole:'SET_ROLE',saveShopRole:'SET_ROLE',saveUserInfo:'SET_USER'}),
+        ...mapMutations({saveShop:'SET_SHOP',saveRole:'SET_ROLE',saveShopRole:'SET_SHOPROLE',saveUserInfo:'SET_USER'}),
         //请求店铺信息
         getShopList(){
           console.log(api.shopList);
@@ -57,7 +57,8 @@
           this.$util.post(this,this.$api.login,{username:this.phone,password:this.psw},(data)=>{
             this.saveShopRole(data.ShopRole);
             this.saveRole(data.Role)
-            this.saveUserInfo(data)
+            this.saveUserInfo(data);
+            window.localStorage.setItem('token',data.Token)
             this.getShopList()
           })
         },

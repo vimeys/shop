@@ -509,9 +509,9 @@ import ysSelectShop from '@/components/selectShop'
           disable:false,
           address: '上海市普陀区金沙江路 1518 弄'
         }],
-        placeholder:'输入客户、服务人员名称，电话或订单号',
+        placeholder:'输入人员名称，电话或订单号',
         total:11,
-        pageSize:5,
+        pageSize:10,
         Data:[],//表格数据
         Data2:[],
         currentDetail:'',//详情
@@ -577,7 +577,7 @@ import ysSelectShop from '@/components/selectShop'
         })
       },
       //获取某店铺下的订单
-      getOrderList(shopId,pageIndex=1,pageSize=5){
+      getOrderList(shopId,pageIndex=1,pageSize=10){
           this.$util.post(this,this.$api.getOrderList,{shopId:shopId,pageIndex,pageSize,state:-1,key:''},
             (data)=>{
                 this.Data=data.Items;
@@ -633,17 +633,17 @@ import ysSelectShop from '@/components/selectShop'
       // 上一页
       prev(e){
         console.log(e);
-        this.getOrderList(this.currentShopId,e,5)
+        this.getOrderList(this.currentShopId,e,10)
       },
       // 下一页
       next(e){
         console.log(e);
-        this.getOrderList(this.currentShopId,e,5)
+        this.getOrderList(this.currentShopId,e,10)
       },
       // 当前页点击
       current(e){
         console.log(e);
-        this.getOrderList(this.currentShopId,e,5)
+        this.getOrderList(this.currentShopId,e,10)
       },
       addOrderServer(){
           this.orderServerList.forEach(item=>{
@@ -671,6 +671,19 @@ import ysSelectShop from '@/components/selectShop'
   }
   /deep/ input{
     text-align: center;
+  }
+  /deep/ .el-col-offset-12{
+    text-align: right;
+  }
+  /deep/ .el-col-offset-1{
+    text-align: left;
+  }
+  /deep/ .table  thead tr th:first-child{
+
+    border-top-left-radius: 4px;
+  }
+  /deep/ .table  thead tr th:last-child{
+    border-top-right-radius: 4px;
   }
   .box {
     width: 1200px;

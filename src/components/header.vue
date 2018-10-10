@@ -8,6 +8,10 @@
         <router-link tag="li" :to="item.path" v-for="(item,index) in nav"  :key="index" > {{item.name}}
         <span class="el-icon-caret-top"></span>
         </router-link>
+        <router-link tag="li" class="el-icon-message
+ message" :to="message.path">
+          <span class="el-icon-caret-top"></span>
+        </router-link>
         <li @click="loginOut">退出</li>
       </ul>
       <!--<div>{{Role}}</div>-->
@@ -38,7 +42,8 @@
               {name:'财务管理',path:'/moneyManage',active:false},
               {name:'运营数据',path:'/dataView',active:false},
               {name:'个人中心',path:'/cardManage',active:false},
-            ]
+            ],
+            message:{name:'消息中心',path:'/message',active:false},
           }
       },
       methods:{
@@ -94,7 +99,12 @@
         left: calc(50% - 20px);
       }
     }
-
+    /*.message{*/
+      /*width: 32px;*/
+      /*height: 32px;*/
+      /*border-radius: 50%;*/
+      /*background: #FFD736;*/
+    /*}*/
   }
 
 </style>

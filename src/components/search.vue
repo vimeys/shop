@@ -18,7 +18,7 @@
         placeholder:{
           type:String,
           default(){
-            return '输入服务名称、价格'
+            return '输入服务名称'
           }
         },
         isLeft:{//搜索框是否在左边

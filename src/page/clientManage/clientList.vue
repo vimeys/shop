@@ -1114,6 +1114,13 @@
       padding: 10px 0;
       background: #F5F5F5;
     }
+    .table /deep/ thead tr th:first-child{
+
+      border-top-left-radius: 4px;
+    }
+    .table /deep/ thead tr th:last-child{
+      border-top-right-radius: 4px;
+    }
     .table-btns{
       width: 100%;
       height: 90px;

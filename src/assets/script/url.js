@@ -1,5 +1,5 @@
-  // const head='http://test.csmen.cc/services/';//线上
-  const head='/shop/';//跨域
+  const head='http://test.csmen.cc/services/';//线上
+  // const head='/shop/';//跨域
   // const head='http://192.168.0.135:8073/services/';//陈林本地
 
   const url={
@@ -49,7 +49,7 @@
 
     //商品管理
     addGoods:head+'goods/version3/add',
-    updataGoods:head+'goods/version3/update',
+    updataGoods:head+'goods/version3/update',//更新
     delGoods:head+'goods/delete',
     delAllGoods:head+'goods/batchdelete',//批量删除
     goodsDetail:head+'goods/detail',

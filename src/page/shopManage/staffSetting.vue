@@ -6,7 +6,10 @@
       <div class="choose-title">
         <el-row>
           <el-col :span="4">
-            <el-select v-model="value" placeholder="请选择" size="small" @change="chooseShop" v-if="shopList.length">
+            <el-select v-model="value"
+                       placeholder="请选择"
+                       size="small" @change="chooseShop"
+                       v-if="shopList.length">
               <el-option
                 v-for="item in shopList"
                 :key="item.value"
@@ -352,6 +355,7 @@
     import ysSearch from '@/components/search';
     import  YsPopup from '@/components/popup'
     import api from "@/assets/script/url"
+    import {mapGetters, mapMutations} from 'vuex'
     import XLSX from 'xlsx'
     export default {
         name: "staffSetting",
@@ -425,7 +429,7 @@
             },
             job:'',
             jobList:[
-              {value:0,label:'管理员'},
+              // {value:0,label:'管理员'},
               {value:1,label:'店长'},
               {value:2,label:'总监'},
               {value:3,label:'高级'},
@@ -435,6 +439,7 @@
           }
       },
       computed:{
+        ...mapGetters(['shopRole']),
         moveGroupPersonfn(){
           if(this.moveGroupPerson.length>0){
             return this.moveGroupPerson.join('/')
@@ -558,14 +563,15 @@
           console.log(arr);
           this.$util.confirm(this).then(()=>{
             this.$http.post(this.$api.delPerson,{userIds:arr}).then(json=>{
-              let data=json.data;
-              if(data.isSuc=true){
-                this.groupList[index].UsersList.Items.splice(is,1)
-                this.$message({
-                  message:'删除成功',
-                  icon:'success'
-                })
-              }
+              // let data=json.data;
+              // if(data.isSuc=true){
+              //   this.groupList[index].UsersList.Items.splice(is,1)
+              //   this.$message({
+              //     message:'删除成功',
+              //     icon:'success'
+              //   })
+              // }
+              this.getGroupList(this.currentShopId)
             })
           })
         },
@@ -720,7 +726,7 @@
               that.TrueName='';
               that.JobTitle='';
               that.add.showModal=false
-            })
+            },true)
 
           };
           if(this.rABS) {
@@ -826,32 +832,57 @@
         },
         //改变权限
         changeLimit(e,i,is){
-          let item=this.groupList[i].UsersList.Items[is];
-          this.$http.post(this.$api.updataPerson,
-            {user:{ShopRole:e,
-              UserId:item.UserId,
-              TrueName:item.TrueName,
-              JobTitle:item.JobTitle}})
-            .then(json=>{
-              if(json.data.isSuc==true){
-                this.groupList[i].UsersList.Items.splice(is,1,item)
+          console.log(this.shopRole);
+          if(this.shopRole==4){
+            if(e==2){
+              this.groupList[i].UsersList.Items[is].job=e
+              console.log(this.groupList[i].UsersList.Items[is]);
+              this.$message({
+                  message: '你暂无权限修改',
+                  type: 'warning'
+                });
+
+              }else{
+                let item=this.groupList[i].UsersList.Items[is];
+                this.$http.post(this.$api.updataPerson,
+                  {user:{ShopRole:e,
+                      UserId:item.UserId,
+                      TrueName:item.TrueName,
+                      JobTitle:item.JobTitle}})
+                  .then(json=>{
+                    if(json.data.isSuc==true){
+                      this.groupList[i].UsersList.Items.splice(is,1,item)
+                    }
+                  })
               }
-            })
+          }else{
+            let item=this.groupList[i].UsersList.Items[is];
+            this.$http.post(this.$api.updataPerson,
+              {user:{ShopRole:e,
+                  UserId:item.UserId,
+                  TrueName:item.TrueName,
+                  JobTitle:item.JobTitle}})
+              .then(json=>{
+                if(json.data.isSuc==true){
+                  this.groupList[i].UsersList.Items.splice(is,1,item)
+                }
+              })
+          }
+
         },
         // 获取当前店铺分组的列表
         getGroupList(shopId){
-          let obj1=Object.assign({},{value:1,label:'管理员'})
+          // let obj1=Object.assign({},{value:1,label:'管理员'})
           let obj2=Object.assign({},{value:2,label:'店长'})
           let obj3=Object.assign({},{value:3,label:'店员'})
           let obj4=Object.assign({},{value:4,label:'收银'})
           let arr=[];
-          arr.push(obj1)
+          // arr.push(obj1)
           arr.push(obj2)
           arr.push(obj3)
           arr.push(obj4)
             this.$http.post(this.$api.waterGroupList,
               {pageindex:1,pagesize:10,userId:shopId}).then(json=>{
-              console.log(json);
                   if(json.data.isSuc==true){
                     this.groupList=json.data.result.Items;
                     let i=0
@@ -876,6 +907,31 @@
                     this.allPeople=i//计算总人数
                   }
             })
+          this.$util.post(this,this.$api.waterGroupList,
+            {pageindex:1,pagesize:10,userId:shopId},
+            (data)=>{
+              this.groupList=data.Items;
+              let i=0
+              this.groupList.forEach((item)=>{
+                if(item.UsersList.Items.length>0){
+                  item.isManage=false
+                  item.UsersList.Items.forEach((itemSon,indexSon)=>{
+                    //循环添加选中按钮以及职位
+                    itemSon.jobList=arr;
+                    itemSon.job=itemSon.ShopRole;
+                    itemSon.hasChecked=false;
+                    itemSon.isChecked=false
+                    i++
+                    if(itemSon.State==1){
+                      itemSon.disable=true
+                    }else {
+                      itemSon.disable=false
+                    }
+                  })
+                }
+              })
+              this.allPeople=i//计算总人数
+            },true)
         },
         // //打开弹窗
         // openJob(){
@@ -900,11 +956,7 @@
               let firstShopId=data.result[0].UserId;
               this.currentShopId=firstShopId
               this.getGroupList(this.currentShopId)
-              // this.value=firstShopId;
-              this.$message({
-                message: '恭喜你，这是一条成功消息',
-                type: 'warning'
-              })
+              this.value=firstShopId;
             }
           }).catch(err=>{
             console.log(err);

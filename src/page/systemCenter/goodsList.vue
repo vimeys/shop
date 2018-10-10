@@ -117,6 +117,7 @@
           <div class="content">
             <div class="img-list" >
               <el-upload
+                v-if="!isEditGoods"
                 action="http://mdimg.yilianchuang.cn/uploadimage3.ashx"
                 list-type="picture-card"
                 :on-success="handlePictureSuccess"
@@ -125,6 +126,21 @@
                 <!--<img v-if="aPics" :src="item" class="avatar" v-for="item in aPics">-->
                 <i class="el-icon-plus"></i>
               </el-upload>
+              <div class="images">
+                <template v-for="(item,index) in aPics">
+                  <div class="image-box">
+                    <img :src="item" alt="">
+                    <div class="image-del">
+                      <span class="el-icon-delete" @click="delImage(index)"></span>
+                    </div>
+                  </div>
+                </template>
+                <div class="up-box" >
+                  <ys-upload
+                    @imageUrl="upLoad"
+                  ></ys-upload>
+                </div>
+              </div>
             </div>
             <div class="page-size">{{aPics.length}}/5</div>
             <div content="goods-form">
@@ -189,7 +205,7 @@
                       v-for="(item,index) in hours"
                       :key="item.value"
                       :label="item.label"
-                      :value="index">
+                      :value="item.value">
                     </el-option>
                   </el-select>
                 </el-col>
@@ -312,10 +328,10 @@
           </div>
         </el-scrollbar>
         <div class="goods-detail" v-else>
-            <el-row class="base-row">
-              <el-col :span="4" :offset="1" class="base-col">商品详情</el-col>
-              <el-col :span="16" :offset="1"><input type="text " class="base-input" placeholder="请填写文章链接"></el-col>
-            </el-row>
+            <!--<el-row class="base-row">-->
+              <!--<el-col :span="4" :offset="1" class="base-col">商品详情</el-col>-->
+              <!--<el-col :span="16" :offset="1"><input type="text " class="base-input" placeholder="请填写文章链接"></el-col>-->
+            <!--</el-row>-->
           <el-row class="base-row">
             <el-col :span="6" :offset="6">
               <div  class="base-btn-111 block" @click="openArticle">选择现有</div>
@@ -454,18 +470,19 @@
         </div>
         <div>
           <div class="page-size-box">
-            <el-pagination
-              prev-text="上一页"
-              next-text="下一页"
-              :page-size="pageSize"
-              @size-change="changeSize"
-              @prev-click="prev"
-              @next-click="next"
-              @current-change="current"
-              layout="prev, pager, next"
-              class="page"
-              :total="total">
-            </el-pagination>
+            <!--todo-->
+            <!--<el-pagination-->
+              <!--prev-text="上一页"-->
+              <!--next-text="下一页"-->
+              <!--:page-size="pageSize"-->
+              <!--@size-change="changeSize"-->
+              <!--@prev-click="prev"-->
+              <!--@next-click="next"-->
+              <!--@current-change="current"-->
+              <!--layout="prev, pager, next"-->
+              <!--class="page"-->
+              <!--:total="total">-->
+            <!--</el-pagination>-->
           </div>
         </div>
         <div class="btns">
@@ -488,12 +505,14 @@
   import api from '@/assets/script/url'
   import {comfirm} from '@/assets/script/util'
   import {mapGetters, mapMutations} from 'vuex'
+  import ysUpload from '@/components/upload'
   export default {
     name: "goodsList",
     components: {
       goodsCard,
       ysSearch,
-      ysPopup
+      ysPopup,
+      ysUpload
     },
     data() {
       return {
@@ -574,6 +593,8 @@
         articleList:[],//闪电文章列表
         TuwenUrl:'',//选择闪电图文
         articleIndex:'',//当前index
+        isEditGoods:false,//是否是编辑
+        editGoodsId:'',//编辑的商品id
       }
     },
     computed:{
@@ -610,7 +631,14 @@
       },
       //搜索
       search(val){
-
+          this.$util.post(this,this.$api.goodsList,{ pageIndex:1, pageSize:100, goodTypeParentId:0, goodsTypeId:0,keyword:val},(data)=>{
+            let arr = [];
+            data.Items.forEach(item => {
+              item.hasChecked = false;
+              item.isChecked = false
+            })
+            this.goodsList = data.Items
+          })
       },
       //批量管理
       manage(){
@@ -697,6 +725,7 @@
       //关闭商品弹窗
       closeGoods(){
           this.goods.showModal=false;
+          this.isEditGoods=false;
         this.Name = '';
         this.Pic = '';
         this.Pics = '';
@@ -716,8 +745,22 @@
         this.aSize.push(obj);
         this.aPeople.push(obj2)
       },
-      //选择分类
+      //切换生成服务页面
       chooseGoodsItem(value){
+        if(value==1){
+          this.goods={
+            showModal:true,
+            width: 900,
+            height: 830
+          }
+        }else {
+          this.goods={
+            showModal:true,
+            width: 900,
+            height: 508
+          }
+        }
+        //设置弹窗页面大小
           if(value==1){
             this.goodsItemClass1='goods-active';
             this.goodsItemClass2=''
@@ -809,23 +852,52 @@
       //编辑单个商品
       editGoods(id,index){
         this.goods.showModal=true;
+        this.isEditGoods=true;
         //获取商品详情
         this.$util.post(this, this.$api.goodsDetail,
           {goodsId: this.goodsList[index].GoodsId},
           (data) => {
             console.log(data);
+            this.aSize=[];//充值价格
+            this.aPeople=[];
+            data.SpecList.forEach(item=>{//回显价格
+              let obj={}
+              obj.sizeName=item.Name
+              obj.sizePrice=item.Price
+              this.aSize.push(obj)
+
+            })
+            data.ShopList.forEach(item=>{
+              let a=JSON.parse(JSON.stringify(this.groupList))
+              let arr=[]
+              item.List.forEach(itemSon=>{
+                arr.push(itemSon.GroupId)
+              })
+              this.$http.post(this.$api.waterGroupList,
+                {pageindex:1,pagesize:10,userId:this}).then(json=>{
+                if(json.data.isSuc==true){
+                  let a=JSON.parse(JSON.stringify(json.data.result.Items));
+                  this.aPeople[e].groupList=a
+                }
+
+              })
+              let obj2={valuePerson:arr,groupList:a,shopValue:this.UserId};
+              this.aPeople.push(obj2)
+            })
           }
         );
 
         let data=this.goodsList[index];
+        this.editGoodsId=data.GoodsId
         this.valueTips=data.FlagId;
         this.aPics=data.Pics.split(',');
         this.Name=data.Name;
         this.Price=data.Price;
         this.CommissionCharge=data.CommissionCharge;
         this.ReceiveGuestCharge=data.ReceiveGuestCharge;
+        this.TuwenUrl=data.TuwenArticleId;
         if(this.FlagId=3){
-          this.hoursValue=data.SecKillHour
+          this.hoursValue=data.SecKillHour/6
         };
         this.valueFirstType=data.GoodsTypeParentId;
         let index1='';
@@ -847,9 +919,6 @@
         if(data.GoodsTypeId){
           this.valueSecondType=data.GoodsTypeId;
         }
-
-
-
       },
         //删除单个商品
       delGOods(id,index){
@@ -915,14 +984,14 @@
           Pics: this.aPics.join(','),
           Price: this.Price,
           OriginalPrice: this.Price,
-          TuwenArticleId: 23,
+          TuwenArticleId: this.TuwenUrl,
           Description: '描述',
           Tags: '',
           Link: '',
           CommissionCharge: this.CommissionCharge,
           ReceiveGuestCharge: this.ReceiveGuestCharge,
           FlagId: this.valueTips,
-          SecKillHour: this.hoursValue,
+          SecKillHour: this.hoursValue*6,
           Type: 2,
         };
         //是否选择二级分类
@@ -934,15 +1003,15 @@
           obj.GoodsTypeParentId = this.valueFirstType;
         }
 
-        // console.log(obj);
-        // return
-        let id = []
-        this.aPeople.forEach(item => {
+        let id = []//组合的人员集合
+        this.aPeople.forEach(item => {//组合人员集合
           id.push(item.valuePerson.join(','))
         })
         let sId = id.join(',');
-        let Addgoodsspec = [];//
-        this.aSize.forEach(item => {
+
+
+        let Addgoodsspec = [];//组合的规格集合
+        this.aSize.forEach(item => {//组合规格
           Addgoodsspec.push({
             UserId: this.UserId,
             Name: item.sizeName,
@@ -953,64 +1022,125 @@
 
         obj.CommissionGroupId = sId;
         obj.Goodsspec = Addgoodsspec;
-        console.log(obj);
-        this.$http.post(this.$api.addGoods, {goods: obj}).then(json => {
-          console.log(json);
-          let data = json.data;
-          if (data.isSuc == true) {
-            this.$message({
-              message: '发布成功',
-              icon: 'success'
-            })
-            this.Name = '';
-            this.Pic = '';
-            this.Pics = '';
-            this.OriginalPrice = '';
-            this.CommissionCharge = ""
-            this.ReceiveGuestCharge = ""
-            this.valueTips="";
-            this.valueFirstType='';
-            this.valueSecondType='';
-            this.FlagId = ''
-            this.aSize = [];
-            this.aPeople = [];
-            this.aPics=[];
-            let obj = {sizeName: '', sizePrice: ''};
-            let a = JSON.parse(JSON.stringify(this.groupList));
-            let obj2 = {valuePerson: [], groupList: a,shopValue:[]};
-            this.aSize.push(obj);
-            this.aPeople.push(obj2);
-            this.goods.showModal = false;
-            this.getGoodsList();
-          } else {
-            this.$message({
-              message: '发布失败+' + data.message,
-              icon: 'error'
-            })
-          }
-        })
+        if(this.isEditGoods){//判断是否是编辑
+          obj.GoodsId=this.editGoodsId
+          this.$http.post(this.$api.updataGoods, {goods: obj}).then(json => {
+            console.log(json);
+            let data = json.data;
+            if (data.isSuc == true) {
+              this.$message({
+                message: '发布成功',
+                icon: 'success'
+              });
+              this.reset();//重置表单
+              // this.Name = '';
+              // this.Pic = '';
+              // this.Pics = '';
+              // this.OriginalPrice = '';
+              // this.CommissionCharge = ""
+              // this.ReceiveGuestCharge = ""
+              // this.valueTips="";
+              // this.valueFirstType='';
+              // this.valueSecondType='';
+              // this.FlagId = ''
+              // this.aSize = [];
+              // this.aPeople = [];
+              // this.aPics=[];
+              // let obj = {sizeName: '', sizePrice: ''};
+              // let a = JSON.parse(JSON.stringify(this.groupList));
+              // let obj2 = {valuePerson: [], groupList: a,shopValue:[]};
+              // this.aSize.push(obj);
+              // this.aPeople.push(obj2);
+              // this.goods.showModal = false;
+              this.getGoodsList();
+            } else {
+              this.$message({
+                message: '发布失败+' + data.message,
+                icon: 'error'
+              })
+            }
+          })
+        }else{
+          this.$http.post(this.$api.addGoods, {goods: obj}).then(json => {
+            console.log(json);
+            let data = json.data;
+            if (data.isSuc == true) {
+              this.$message({
+                message: '发布成功',
+                icon: 'success'
+              });
+              this.reset();//重置表单
+              // this.Name = '';
+              // this.Pic = '';
+              // this.Pics = '';
+              // this.OriginalPrice = '';
+              // this.CommissionCharge = ""
+              // this.ReceiveGuestCharge = ""
+              // this.valueTips="";
+              // this.valueFirstType='';
+              // this.valueSecondType='';
+              // this.FlagId = ''
+              // this.aSize = [];
+              // this.aPeople = [];
+              // this.aPics=[];
+              // let obj = {sizeName: '', sizePrice: ''};
+              // let a = JSON.parse(JSON.stringify(this.groupList));
+              // let obj2 = {valuePerson: [], groupList: a,shopValue:[]};
+              // this.aSize.push(obj);
+              // this.aPeople.push(obj2);
+              // this.goods.showModal = false;
+              this.getGoodsList();
+            } else {
+              this.$message({
+                message: '发布失败+' + data.message,
+                icon: 'error'
+              })
+            }
+          })
+        }
+
         // this.$http
+      },
+      //重置商品编辑页面
+      reset(){
+        this.Name = '';
+        this.Pic = '';
+        this.Pics = '';
+        this.OriginalPrice = '';
+        this.CommissionCharge = ""
+        this.ReceiveGuestCharge = ""
+        this.valueTips="";
+        this.valueFirstType='';
+        this.valueSecondType='';
+        this.FlagId = ''
+        this.aSize = [];
+        this.aPeople = [];
+        this.aPics=[];
+        let obj = {sizeName: '', sizePrice: ''};
+        let a = JSON.parse(JSON.stringify(this.groupList));
+        let obj2 = {valuePerson: [], groupList: a,shopValue:[]};
+        this.aSize.push(obj);
+        this.aPeople.push(obj2);
+        this.goods.showModal = false;
       },
 
       //获取商品列表
       // @param
       getGoodsList(p=0,c=0){
           this.$http.post(this.$api.goodsList,{ pageIndex:1, pageSize:100, goodTypeParentId:p, goodsTypeId:c}).then(json=>{
-            console.log(json);
             let data=json.data;
-
-            if(data.isSuc==true){
-              let arr=[];
-              data.result.Items.forEach(item=>{
-                item.hasChecked=false;
-                item.isChecked=false
+            if (data.isSuc == true) {
+              let arr = [];
+              data.result.Items.forEach(item => {
+                item.hasChecked = false;
+                item.isChecked = false
               })
-              this.goodsList=data.result.Items
-              }
+              this.goodsList = data.result.Items
+            }
           })
       },
 
-      //选择耽搁商品
+      //选择单个商品
       chooseCurrent1(index,state){
         this.goodsList[index].isChecked=state;
       },
@@ -1049,6 +1179,7 @@
 
         }
       },
+      // 编辑分类
       handleNodeClick(data,node,self) {
         console.log(data);
         this.resize()
@@ -1059,13 +1190,15 @@
         }
       },
 
-      //重置编辑
+      //重置分类编辑
       resize(){
         this.disableAdd=false;
         this.disableManage=true;
         this.disableSort=true;
         this.typeValue="";
         this.SecondTypeValue="";
+        this.TuwenUrl=''
+        this.isEditGoods=false,
         this.goodsList.forEach(item=>{
           item.isChecked=false
           item.hasChecked=false
@@ -1115,7 +1248,6 @@
         // })
         this.$util.confirm(this).then(json=>{
           this.$util.post(this,this.$api.delType,{goodsTypeId:[`${id}`]},function (that,data) {
-            console.log('到我了');
             that.getTypeList();
           })
         }).catch(error=>{
@@ -1134,6 +1266,9 @@
         this.aPics.splice(index,1)
         console.log(this.aPics);
       },
+      delImage(){},
+      upLoad(){},
+
       //保存分类
       saveType() {
         //  @params   isEditType   是否是修改
@@ -1149,16 +1284,6 @@
               Pic: '',
               Type:2
             }
-          // let shopLength=this.shopList.length;
-          // let aType=[];
-          // for(let  i=0;i<shopLength;i++){
-          //   let goodsType = {
-          //     GoodsTypeId: this.allTypeList[this.isEditTypeNum*shopLength+i].GoodsTypeId,
-          //     Name: this.firstType,
-          //     Pic: '',
-          //   };
-          //   aType.push(goodsType)
-          // }
 
           let goodsTypeSecond = [];
           this.secondType.forEach((item, index) => {
@@ -1172,14 +1297,8 @@
             }
 
           })
-          // this.$http.post(api.updataType, {goodsTypes:goodsType, goodsTypeSecond}).then(json => {
-          //   // if (json.data.isSuc == true) {
-          //   //   this.getTypeList();
-          //   //   this.hasAddBtn = true;
-          //   // }
-          // })
+
           this.$util.post(this,this.$api.updataType,{goodsType:goodsType, goodsTypeSecond}, (data)=> {
-            // console.log(123);
             this.getTypeList();
             this.firstType='';
             this.secondType=[]
@@ -1229,7 +1348,6 @@
       },
       //服务选择店铺筛选
       chooseShop(e,value){
-        console.log(e,value);
           this.$http.post(this.$api.waterGroupList,
             {pageindex:1,pagesize:10,userId:value}).then(json=>{
             if(json.data.isSuc==true){
@@ -1239,14 +1357,7 @@
 
           })
       },
-      // 选择分组
-      // chooseGroup(e){
-      //     this.groupList[e].price=''
-      //     this.personList=this.groupList[e].UsersList.Items;
-      //     this.personList.forEach(item=>{
-      //       item.price=''
-      //     })
-      // },
+
 
       //获取分类列表
        getTypeList :async function() {
@@ -1440,6 +1551,7 @@
     height: 800px;
     background: #f5f5f5;
     &-title {
+      cursor: pointer;
       width: 222px;
       border-radius: 2px;
       height: 36px;
@@ -1544,6 +1656,7 @@
     /*}*/
     /*}*/
     /*}*/
+
 
     //todo  设置选择框的宽度
     /deep/ .el-select--small{
@@ -1738,5 +1851,47 @@
   }
   .btns{
     margin-top: 50px;
+  }
+  .images{
+    margin-left: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    .image-box{
+      width:120px;
+      height:120px;
+      margin-right: 16px;
+      position: relative;
+      .image-del{
+        position: absolute;
+        top:0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        background: rgba(0,0,0,.5);
+        span{
+          color:#fff;
+        }
+      }
+
+    }
+    .image-box:hover .image-del{
+      display: flex;
+    }
+    img{
+      z-index: 10;
+      width:120px;
+      height:120px;
+      margin-right: 16px;
+    }
+
+    .up-box{
+      width: 120px;
+      height: 120px;
+    }
   }
 </style>

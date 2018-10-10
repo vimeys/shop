@@ -51,7 +51,7 @@
                           <img v-if="form.Pics" :src="form.Pics" class="avatar">
                           <i v-else class="el-icon-plus avatar-uploader-icon logo"></i>
                         </el-upload>
-                        店铺封面设置
+                        <span class="image-tips">店铺封面设置（比例：750 x 316）</span>
                       </el-col>
                       <el-col :span="10">
                         <!--<img :src="imageUrl" alt="">-->
@@ -61,10 +61,13 @@
                           :show-file-list="false"
                           :on-success="handleAvatarSuccess2"
                           :before-upload="beforeAvatarUpload">
-                          <img v-if="form.Logo" :src="form.Logo" class="avatar">
+                          <img v-if="form.Logo" :src="form.Logo" class="avatar-logo">
                           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
-                        店铺头像设置
+                        <span class="image-tips">
+                          店铺头像设置
+                        </span>
+
                       </el-col>
                   </el-row>
                 </el-col>
@@ -543,11 +546,7 @@
         this.$util.post(this,this.$api.shopList,{},(data)=>{
           this.shopList=data;
           this.saveShop(data)
-              this.$message({
-                message: '恭喜你，这是一条成功消息',
-                type: 'warning'
-              })
-        })
+        },true)
       }
 
 
@@ -603,6 +602,7 @@
     }
 
     .change-btn{
+      cursor: pointer;
       width:239px;
       height:37px;
       line-height: 37px;
@@ -782,5 +782,7 @@
   .btns{
     margin-top: 50px;
   }
-
+.image-tips{
+  font-size: 11px;
+}
 </style>

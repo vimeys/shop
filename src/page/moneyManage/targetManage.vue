@@ -186,6 +186,8 @@
               this.getTargetOld();
           }
         },
+
+        //获取久的目标
         getTargetOld(){
             this.$util.post(this,this.$api.targetDetail,{year:this.valueYear,shopId:this.currentShopId},(data)=>{
               console.log(data);
@@ -200,7 +202,7 @@
                   arr.push(obj)
                 })
                 this.cost=arr;
-              this.Amount=data.Profit_List.Amount;
+              this.Amount=data.Profit_List[0].Amount;
               }catch (e) {
                 console.log(e);
               }
@@ -224,8 +226,8 @@
             this.cost.push({
               Name:'',
               Amount:'',
-              ProfitId:'',
-              SalesTargetId:''
+              ProfitId:0,
+              SalesTargetId:0
             })
           }else{
             this.cost.push({
