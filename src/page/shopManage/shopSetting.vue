@@ -136,7 +136,6 @@
                     is-range
                     v-model="value4"
                     editable
-                    format="HH:mm"
                     range-separator="-"
                     start-placeholder="开始时间"
                     end-placeholder="结束时间"
@@ -149,7 +148,6 @@
                 <el-col :span="6" class="base-col">午休时间</el-col>
                 <el-col :span="16" ><el-time-picker
                   is-range
-                  format="HH:mm"
                   v-model="value5"
                   range-separator="-"
                   start-placeholder="开始时间"
