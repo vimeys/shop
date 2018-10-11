@@ -33,7 +33,7 @@
             移动至
           </el-col>
           <el-col :span="5">
-            <el-select v-model="typeValue"   @change="moveType" placeholder="请选择" size="mini">
+            <el-select v-model="typeValue"   @change="moveType" placeholder="请选择" size="small">
               <el-option
                 v-for="(item,index) in typeList"
                 :key="item.GoodsTypeId"
@@ -43,7 +43,7 @@
             </el-select>
           </el-col>
           <el-col :span="5">
-            <el-select v-model="SecondTypeValue" placeholder="请选择" size="mini">
+            <el-select v-model="SecondTypeValue" placeholder="请选择" size="small">
               <el-option
                 v-for="item in SecondTypeList"
                 :key="item.GoodsTypeId"
@@ -116,16 +116,16 @@
         <el-scrollbar class="scroll" v-if="goodsItemClass1">
           <div class="content">
             <div class="img-list" >
-              <el-upload
-                v-if="!isEditGoods"
-                action="http://mdimg.yilianchuang.cn/uploadimage3.ashx"
-                list-type="picture-card"
-                :on-success="handlePictureSuccess"
-                :limit="5"
-                :on-remove="handleRemove">
-                <!--<img v-if="aPics" :src="item" class="avatar" v-for="item in aPics">-->
-                <i class="el-icon-plus"></i>
-              </el-upload>
+              <!--<el-upload-->
+                <!--v-if="!isEditGoods"-->
+                <!--action="http://mdimg.yilianchuang.cn/uploadimage3.ashx"-->
+                <!--list-type="picture-card"-->
+                <!--:on-success="handlePictureSuccess"-->
+                <!--:limit="5"-->
+                <!--:on-remove="handleRemove">-->
+                <!--&lt;!&ndash;<img v-if="aPics" :src="item" class="avatar" v-for="item in aPics">&ndash;&gt;-->
+                <!--<i class="el-icon-plus"></i>-->
+              <!--</el-upload>-->
               <div class="images">
                 <template v-for="(item,index) in aPics">
                   <div class="image-box">
@@ -638,7 +638,7 @@
               item.isChecked = false
             })
             this.goodsList = data.Items
-          })
+          },true)
       },
       //批量管理
       manage(){
@@ -1022,6 +1022,7 @@
 
         obj.CommissionGroupId = sId;
         obj.Goodsspec = Addgoodsspec;
+        debugger
         if(this.isEditGoods){//判断是否是编辑
           obj.GoodsId=this.editGoodsId
           this.$http.post(this.$api.updataGoods, {goods: obj}).then(json => {
@@ -1033,25 +1034,6 @@
                 icon: 'success'
               });
               this.reset();//重置表单
-              // this.Name = '';
-              // this.Pic = '';
-              // this.Pics = '';
-              // this.OriginalPrice = '';
-              // this.CommissionCharge = ""
-              // this.ReceiveGuestCharge = ""
-              // this.valueTips="";
-              // this.valueFirstType='';
-              // this.valueSecondType='';
-              // this.FlagId = ''
-              // this.aSize = [];
-              // this.aPeople = [];
-              // this.aPics=[];
-              // let obj = {sizeName: '', sizePrice: ''};
-              // let a = JSON.parse(JSON.stringify(this.groupList));
-              // let obj2 = {valuePerson: [], groupList: a,shopValue:[]};
-              // this.aSize.push(obj);
-              // this.aPeople.push(obj2);
-              // this.goods.showModal = false;
               this.getGoodsList();
             } else {
               this.$message({
@@ -1070,25 +1052,6 @@
                 icon: 'success'
               });
               this.reset();//重置表单
-              // this.Name = '';
-              // this.Pic = '';
-              // this.Pics = '';
-              // this.OriginalPrice = '';
-              // this.CommissionCharge = ""
-              // this.ReceiveGuestCharge = ""
-              // this.valueTips="";
-              // this.valueFirstType='';
-              // this.valueSecondType='';
-              // this.FlagId = ''
-              // this.aSize = [];
-              // this.aPeople = [];
-              // this.aPics=[];
-              // let obj = {sizeName: '', sizePrice: ''};
-              // let a = JSON.parse(JSON.stringify(this.groupList));
-              // let obj2 = {valuePerson: [], groupList: a,shopValue:[]};
-              // this.aSize.push(obj);
-              // this.aPeople.push(obj2);
-              // this.goods.showModal = false;
               this.getGoodsList();
             } else {
               this.$message({
@@ -1137,7 +1100,7 @@
               })
               this.goodsList = data.result.Items
             }
-          })
+          },true)
       },
 
       //选择单个商品
@@ -1211,9 +1174,8 @@
       //关闭添加分类
       closeTypePopup() {
         this.type.showModal = false;
-        this.isEditType=false;
+        this.isEditType=false;//重置是否属于编辑
         this.hasAddBtn=true;
-
       },
       //点击添加二级分类框
       addSecondType() {
@@ -1273,34 +1235,29 @@
       saveType() {
         //  @params   isEditType   是否是修改
         if (this.isEditType) {//修改
-          // let aType=[]
-          // this.allTypeList.forEach(item=>{
-          //
-          // })
           let goodsType = {
-              GoodsTypeId: this.typeList[this.isEditTypeNum].GoodsTypeId,
-            Guid:this.typeList[this.isEditTypeNum].Guid,
-              Name: this.firstType,
-              Pic: '',
-              Type:2
-            }
-
-          let goodsTypeSecond = [];
+            GoodsTypeId: this.typeList[this.isEditTypeNum].GoodsTypeId,
+            Guid: this.typeList[this.isEditTypeNum].Guid,
+            Name: this.firstType,
+            Pic: '',
+            Type: 2
+          }
+          let goodsTypeSecond = [];//二级分类集合
           this.secondType.forEach((item, index) => {
             let obj = {};
             obj.Name = item.Name;
             let child = this.typeList[this.isEditTypeNum].ChildGoodsType;
             if (index < child.length) {//判断是否有新增的二级分类
-              goodsTypeSecond.push(Object.assign({Pic: '12312',Type:2, GoodsTypeId: child[index].GoodsTypeId}, obj))
+              goodsTypeSecond.push(Object.assign({Pic: '12312', Type: 2, GoodsTypeId: child[index].GoodsTypeId}, obj))
             } else {
-              goodsTypeSecond.push(Object.assign({Pic: '12312',Type:2, GoodsTypeId: 0}, obj))
+              goodsTypeSecond.push(Object.assign({Pic: '12312', Type: 2, GoodsTypeId: 0}, obj))
             }
-
           })
 
           this.$util.post(this,this.$api.updataType,{goodsType:goodsType, goodsTypeSecond}, (data)=> {
             this.getTypeList();
             this.firstType='';
+            this.isEditType=false;
             this.secondType=[]
             this.hasAddBtn=true;
           })

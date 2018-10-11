@@ -9,7 +9,7 @@
       <el-tab-pane label="会员用户" name="first">
         <div class="header">
           <div class="btn">导出EXCEL</div>
-          <ys-search :placeholder="placeholder"></ys-search>
+          <ys-search :placeholder="placeholder" @search="searchVIp"></ys-search>
           <ys-select-shop @getShop="getShop"
                           @selectShop="selectShop"></ys-select-shop>
         </div>
@@ -219,7 +219,7 @@
        >
          <div class="vip-card-list">
            <el-row class="history-word">
-             <el-col><h3>消费信息</h3></el-col>
+             <el-col><h3>会员卡查询</h3></el-col>
            </el-row>
            <el-row>
              <el-col :span="8" style="margin-bottom:30px;margin-left: 25px">持卡用户：{{currentName}}</el-col>
@@ -230,9 +230,9 @@
                 <template v-for="item in vipHasList">
                   <ys-vip-card
                     :detail="item"
+                    :hasSold="hasSold"
                   ></ys-vip-card>
                 </template>
-
                </el-scrollbar>
              </el-col>
            </el-row>
@@ -253,9 +253,10 @@
           <div class="box">
             <div class="header">
               <div class="btn">导出EXCEL</div>
-              <ys-search :placeholder="placeholder"></ys-search>
+              <ys-search :placeholder="placeholder" @search="search"></ys-search>
               <ys-select-shop @getShop="getShop"
-                              @selectShop="selectShop"></ys-select-shop>
+                              @selectShop="selectShop">
+              </ys-select-shop>
             </div>
             <div class="select-bar">
               普通用户列表
@@ -358,7 +359,7 @@
               <div class="history-title">
                 <div>{{currentName}}消费记录</div>
                 <div>
-                  总消费：￥281813
+                  总消费：￥{{}}
                 </div>
               </div>
               <el-table class="history-table"
@@ -549,8 +550,8 @@
             <div v-else class="card-box">
               <ys-vip-card
                 :detail="currentMoban"
+                :hasSold="hasSold"
               >
-
               </ys-vip-card>
             </div>
             <el-row class="row">
@@ -712,7 +713,7 @@
               label: '次卡'
             }
           ],
-          typeNum:'2',
+          typeNum:'',
           typeList:[],
           yearNum:1,
           year:[
@@ -760,6 +761,9 @@
           isUserMoban:false,//是否使用当前模板
           currentName:'',//当前查看人员的名字
           vipHasList:[],//会员持有的会员卡
+          hasSold:false,//是否已售
+          vipSearchValue:'',
+          searchValue:'',
         }
       },
       methods:{
@@ -775,6 +779,17 @@
           this.getVipList(e);
           this.getDefaultList(e)
         },
+        //搜索会员
+        searchVIp(val){
+          this.vipSearchValue=val
+          this.getVipList(this.currentShopId,val);
+        },
+        //搜索普通用户
+        search(val){
+          this.searchValue=val
+            this.getDefaultList(this.currentShopId,val)
+        },
+
         handleClick(tab, event){
           // switch (this.activeName) {
           //   case 'second':
@@ -789,9 +804,12 @@
           //     break;
           // }
         },
+
+        //关闭支付页面
         closePay(){
             this.payShowModel=false
         },
+        //关闭充值记录
         closePayHistory(){
           this.payHistory.showModal=false
         },
@@ -883,7 +901,7 @@
           this.Frequency='';
           this.buyMoney="";
           this.Discount="";
-          this.typeNum='2'
+          this.typeNum=''
         },
         // 其他支付方式
         payOk(val){
@@ -899,19 +917,21 @@
         },
         //查看会员充值记录
         checkPayList(index,row){
-          this.payHistory.showModal=true
+          this.payHistory.showModal=true;
+          console.log(123);
           this.$util.post(this,
             this.$api.getVipPriceList,
             {pageIndex:1, pageSize:100,gameUserId:row.GameUserId, type:2},
             (data)=>{
             this.vipPriceTable=data.Items;
-            this.currentName=row.NickName
+              console.log(row);
+              this.currentName=row.NickName
           })
         },
         //查询会员消费记录
         handleHistory(index,row){
             this.history.showModal=true;
-
+          console.log(row);
           this.$util.post(this, this.$api.getVipPriceList,
             {pageIndex: 1, pageSize: 100, gameUserId: row.GameUserId, type: 1},
             (data) => {
@@ -929,16 +949,16 @@
         },
         //查询会员的会员卡
         checkVipCard(index,row){
-          console.log(index);
-          console.log(row);
           this.vipCard.showModal=true
           this.$util.post(this,this.$api.getVipCardList,{gameusersId:row.GameUserId,shopId:this.currentShopId},(data)=>{
-            console.log(data);
+            this.vipCard.showModal=true
             this.vipHasList=data
+            this.currentName=row.NickName
           })
         },
         closeVipCard(){
-            this.vipCard.showModal=false
+            this.vipCard.showModal=false;
+
         },
 
 
@@ -955,46 +975,41 @@
           // this.code.showModal=e;
           this.opc.showModal=e;
           this.history.showModal=e;
+          this.isUserMoban=false
           this.resize()
         },
         //获取分类(服务范围)
         getTypeList(){
           this.$http.post(this.$api.typeList,{type:2}).then(json=>{
-            let data=json.data
-            console.log(data);
+            let data=json.data;
             if(data.isSuc=true){
                 this.typeList=data.result
             }
           })
         },
-
         // 上一页
         prev(e){
-          this.getVipList(this.currentShopId,e,5)
+          this.getVipList(this.currentShopId,this.vipSearchValue,e,5)
         },
         // 下一页
         next(e){
-          console.log(e);
-          this.getVipList(this.currentShopId,e,5)
+          this.getVipList(this.currentShopId,this.vipSearchValue,e,5)
         },
         // 当前页点击
         current(e){
-          console.log(e);
-          this.getVipList(this.currentShopId,e,5)
+          this.getVipList(this.currentShopId,this.vipSearchValue,e,5)
         },
         // 普通会员上一页
         prev2(e){
-          this.getDefaultList(this.currentShopId,e,5)
+          this.getDefaultList(this.currentShopId,this.searchValue,e,5)
         },
         // 普通会员下一页
         next2(e){
-          console.log(e);
-          this.getDefaultList(this.currentShopId,e,5)
+          this.getDefaultList(this.currentShopId,this.searchValue,e,5)
         },
         // 普通会员当前页点击
         current2(e){
-          console.log(e);
-          this.getDefaultList(this.currentShopId,e,5)
+          this.getDefaultList(this.currentShopId,this.searchValue,e,5)
         },
         //选择模板卡
         chooseCard(e){
@@ -1005,10 +1020,15 @@
           this.cardListType[e].hasBorder=true
         },
         //获取会员列表
-        getVipList(shopId,pageIndex=1,pageSize=10,isvip=1,){
-          this.$http.post(this.$api.getVipList,{shopId:shopId,pageIndex:pageIndex,pageSize:pageSize,isvip:isvip,key:''}).then(json=>{
+        getVipList(shopId,key='',pageIndex=1,pageSize=10,isvip=1,){
+          this.$http.post(this.$api.getVipList,
+            {shopId:shopId,
+              pageIndex:pageIndex,
+              pageSize:pageSize,
+              isvip:isvip,
+              key:key})
+            .then(json=>{
             let data=json.data
-            console.log(data);
             if(data.isSuc=true){
               this.vipList=data.result.Items
               this.total=parseInt(data.result.TotalItems)
@@ -1016,10 +1036,14 @@
           })
         },
         //获取普通会员
-        getDefaultList(shopId,pageIndex=1,pageSize=10,isvip=0,){
-          this.$http.post(this.$api.getVipList,{shopId:shopId,pageIndex:pageIndex,pageSize:pageSize,isvip:isvip,key:''}).then(json=>{
+        getDefaultList(shopId,key='',pageIndex=1,pageSize=10,isvip=0,){
+          this.$http.post(this.$api.getVipList,
+            {shopId:shopId,
+              pageIndex:pageIndex,
+              pageSize:pageSize,
+              isvip:isvip,
+              key:kye}).then(json=>{
             let data=json.data
-            console.log(data);
             if(data.isSuc=true){
               this.defaultList=data.result.Items
               this.total2=parseInt(data.result.TotalItems)
@@ -1032,7 +1056,7 @@
           obj.pageIndex=1;
           obj.pageSize=10;
           obj.isEnable=-1;
-          obj.shopId=shipId
+          obj.shopId=shipId;
           this.$util.post(this,this.$api.memberCardList,obj,(data)=>{
             data.Items.forEach(item=>{
               item.hasChecked=false;

@@ -337,7 +337,7 @@
             <el-col :span="8" class="base-col">服务及服务员</el-col>
           <el-col :span="16">
               <el-scrollbar class="make-order-scroll">
-                <template v-for="item in currentDetail.list">
+                <template v-for="(item,index) in currentDetail.list">
                   <el-row v-if="item.UserIds" style="margin-right: 10px">
                     <el-col class="server-card" >
                       <el-row :gutter="10" class="server-li">
@@ -406,7 +406,7 @@
                           </el-select>
                         </el-col>
                       </el-row>
-                      <span class="el-icon-error del-btn" ></span>
+                      <span class="el-icon-error del-btn" @click="deleteServer(index)" ></span>
                     </el-col>
                   </el-row>
                 </template>
@@ -542,7 +542,7 @@ import ysSelectShop from '@/components/selectShop'
             // this.Data.forEach(item=>{
             //   item.CreateDate=this.$util.
             // })
-          }
+          },true
         )
       },
       //打开付款弹窗
@@ -577,15 +577,16 @@ import ysSelectShop from '@/components/selectShop'
         })
       },
       //获取某店铺下的订单
-      getOrderList(shopId,pageIndex=1,pageSize=10){
-          this.$util.post(this,this.$api.getOrderList,{shopId:shopId,pageIndex,pageSize,state:-1,key:''},
+      getOrderList(shopId,key='',pageIndex=1,pageSize=10){
+          this.$util.post(this,this.$api.getOrderList,
+            {shopId:shopId,pageIndex,pageSize,state:-1,key:key},
             (data)=>{
                 this.Data=data.Items;
                 this.total=data.TotalItems
                 // this.Data.forEach(item=>{
                 //   item.CreateDate=this.$util.
                 // })
-            }
+            },true
           )
       },
       //添加服务
@@ -597,6 +598,10 @@ import ysSelectShop from '@/components/selectShop'
           obj.server='';
           obj.serverNameValue='';//当前服务的服务名称
           this.currentDetail.list.push(obj)
+      },
+      //结算时删除当前服务
+      deleteServer(index){
+          this.currentDetail.list.splice(index,1)
       },
       exportExcel(){
         this.$util.post(this, this.$api.getOrderList,
@@ -633,17 +638,17 @@ import ysSelectShop from '@/components/selectShop'
       // 上一页
       prev(e){
         console.log(e);
-        this.getOrderList(this.currentShopId,e,10)
+        this.getOrderList(this.currentShopId,this.searchVal,e,10)
       },
       // 下一页
       next(e){
         console.log(e);
-        this.getOrderList(this.currentShopId,e,10)
+        this.getOrderList(this.currentShopId,this.searchVal,e,10)
       },
       // 当前页点击
       current(e){
         console.log(e);
-        this.getOrderList(this.currentShopId,e,10)
+        this.getOrderList(this.currentShopId,this.searchVal,e,10)
       },
       addOrderServer(){
           this.orderServerList.forEach(item=>{
@@ -730,6 +735,7 @@ import ysSelectShop from '@/components/selectShop'
     .title{
       font-size: 20px;
       color:#282828;
+      font-weight: 600;
     }
     .row{
       padding-top: 15px;

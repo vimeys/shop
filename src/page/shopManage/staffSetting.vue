@@ -659,25 +659,34 @@
         freeze(index,indexSon){
           let item=JSON.parse(JSON.stringify(this.groupList[index].UsersList.Items[indexSon]));
           if(item.disable){
-            this.$http.post(this.$api.freeze,{userId:item.UserId})
-              .then(json=>{
-                console.log(json.data);
-                if(json.data.isSuc==true){
-                  item.State=0
-
-                  item.disable=!item.disable;
-                  this.groupList[index].UsersList.Items.splice(indexSon,1,item)
-                }
-              })
+            // this.$http.post(this.$api.freeze,{userId:item.UserId})
+            //   .then(json=>{
+            //     if(json.data.isSuc==true){
+            //       item.State=0
+            //
+            //       item.disable=!item.disable;
+            //       this.groupList[index].UsersList.Items.splice(indexSon,1,item)
+            //     }
+            //   })
+            this.$util.post(this,this.$api.freeze,{userId:item.UserId},(data)=> {
+              item.State = 0;
+              item.disable = !item.disable;
+              this.groupList[index].UsersList.Items.splice(indexSon, 1, item)
+            },true)
           }else {
-            this.$http.post(this.$api.active,{userId:item.UserId})
-              .then(json=>{
-                if(json.data.isSuc==true){
-                  item.State=1
-                  item.disable=!item.disable;
-                  this.groupList[index].UsersList.Items.splice(indexSon,1,item)
-                }
-              })
+            // this.$http.post(this.$api.active,{userId:item.UserId})
+            //   .then(json=>{
+            //     if(json.data.isSuc==true){
+            //       item.State=1
+            //       item.disable=!item.disable;
+            //       this.groupList[index].UsersList.Items.splice(indexSon,1,item)
+            //     }
+            //   })
+            this.$util.post(this,this.$api.active,{userId:item.UserId},()=>{
+              item.State=1
+              item.disable=!item.disable;
+              this.groupList[index].UsersList.Items.splice(indexSon,1,item)
+            },true)
           }
 
         },

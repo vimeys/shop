@@ -42,7 +42,7 @@
           width="180">
 
           <template slot-scope="scope">
-        <span style="margin-left: 10px">{{ scope.row.CreateDate|dateChange }}</span>
+        <span style="margin-left: 10px">{{ scope.row.SubscribeStartDate|dateChange }}</span>
 
           </template>
         </el-table-column>
@@ -97,7 +97,7 @@
           width="180">
 
           <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.CreateDate|dateChange }}</span>
+            <span style="margin-left: 10px">{{ scope.row.SubscribeStartDate|dateChange }}</span>
 
           </template>
         </el-table-column>
@@ -174,7 +174,7 @@
         </el-row>
         <el-row class="row">
           <el-col :span="2" :offset="1">预约时间</el-col>
-          <el-col :offset="12" :span="8">{{currentDetail.CreateDate|dateChange}}</el-col>
+          <el-col :offset="12" :span="8">{{currentDetail.SubscribeStartDate|dateChange}}</el-col>
         </el-row>
         <el-row class="row">
           <el-col :span="2" :offset="1">价格</el-col>
@@ -186,11 +186,11 @@
         </el-row>
         <el-row class="row">
           <el-col :span="2" :offset="1">服务名称</el-col>
-          <el-col :offset="12" :span="8">{{currentDetail.serviceName}}</el-col>
+          <el-col :offset="12" :span="8">{{currentDetail.GoodsName}}</el-col>
         </el-row>
         <el-row class="row">
           <el-col :span="2" :offset="1">规格</el-col>
-          <el-col :offset="12" :span="8">{{currentDetail.Size}}</el-col>
+          <el-col :offset="12" :span="8">{{currentDetail.GoodsSpecName}}</el-col>
         </el-row>
         <el-row class="row">
           <el-col :span="2" :offset="1">服务人员</el-col>
@@ -324,7 +324,7 @@
             this.table=data.Items;
             this.total=data.TotalItems;
             this.pageSize=data.ItemsPerPage
-          })
+          },true)
         },
 
 
@@ -424,7 +424,7 @@
               this.table=data.Items
               this.total=data.TotalItems;
               this.pageSize=data.ItemsPerPage
-            })
+            },true)
         }
       },
       mounted(){
@@ -490,11 +490,12 @@
     text-align: center;
   }
 .content{
-  margin-top: 100px;
+  margin-top: 50px;
   width: 100%;
   .title{
     font-size: 20px;
     color:#282828;
+    font-weight:  600;
   }
   .row{
     margin-top: 30px;

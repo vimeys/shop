@@ -180,7 +180,7 @@
                 // console.log()
               this.groupList=data.Items;
 
-            })
+            },true)
         }
       },
       created(){

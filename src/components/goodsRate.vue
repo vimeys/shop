@@ -161,6 +161,7 @@
       transition: all .3s ease-in;
     }
     .box-content{
+      margin-top: 8px;
       width: 175px;
       height: 175px;
       display: flex;

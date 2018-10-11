@@ -304,11 +304,13 @@
           this.yearNum=1;
           this.Frequency='';
           this.buyMoney='';
+          this.valueShop=[];
+          this.value11=[];
+          this.isWuxian=true;
           this.Discount='';
         },
         // 单个会员卡选中
         choose(e){
-          console.log(e);
           this.cardListType[e[0]].isChecked=e[1]
         },
 
@@ -346,6 +348,9 @@
                   this.yearNum=1;
                   this.Frequency='';
                   this.buyMoney='';
+                  this.valueShop=[];
+                  this.value11=[];
+                  this.isWuxian=true
                   this.Discount='';
           })
         },
@@ -374,6 +379,7 @@
             this.$http.post(api.delMemberCard,{membershipCardId:delArr}).then(json=>{
               let data=json.data;
               if(data.isSuc==true){
+                this.isDel=false;
                 this.getCardList()
               }
             })
@@ -412,7 +418,7 @@
                 });
             this.cardListType=data.Items;
 
-          })
+          },true)
         },
         //获取分类列表
         getTypeList :async function() {
@@ -431,10 +437,6 @@
               // let firstShopId=data.result[0].UserId;
               // this.currentShopId=firstShopId
               // this.getGroupList(this.currentShopId)
-              this.$message({
-                message: '恭喜你，这是一条成功消息',
-                type: 'warning'
-              })
             }
           }).catch(err=>{
             console.log(err);
@@ -506,7 +508,8 @@
     }
   }
   .numBtn{
-    .base-btn(94px)
+    .base-btn(94px);
+    border: 1px solid #fff;
   }
   .disable{
     width:94px;
@@ -515,6 +518,7 @@
     border-radius:4px;
     color:#8C8C8C;
     border:1px solid rgba(255,215,54,1);
+    /*box-sizing: border-box;*/
   }
   /deep/ .el-select--small{
     width: 100%;

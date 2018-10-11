@@ -11,7 +11,7 @@
             <span class="el-icon-circle-plus"></span>&nbsp;&nbsp;新建活动
           </div>
           <div @click="manage">管理</div>
-          <ys-search class="del" :placeholder="placeholder"></ys-search>
+          <ys-search class="del" @search="search"  :placeholder="placeholder"></ys-search>
           <!--<div class="del">删除</div>-->
         </div>
         <div class="select-side" v-show="manageState">
@@ -20,7 +20,6 @@
               <ys-choose-all @chooseAll="chooseAll"
                               :isAllChoose="isAllChoose"
               >
-
               </ys-choose-all>
             </el-col>
             <el-col :span="1">全选</el-col>
@@ -241,7 +240,7 @@
         Amount: '',//总金额
         DiscountAmount: '',//打折或满减金额
         Details: '',//详细介绍
-        couponList: [{}, {}],//店铺列表
+        couponList: [],//店铺列表
         isEdit: false,//是否修改
         ischoseAll: false,//是否全选
         currentIndex:'',//当前修改的index
@@ -249,11 +248,28 @@
       }
     },
     methods: {
+
+      search(val){
+          this.$util.post(this,this.$api.couponList,
+            {query: {PageIndex: 1, PageSize: 20, Key:val}},
+            (data)=> {
+              // console.log(data);
+              let res = data.Items
+              res.forEach((item, index) => {
+                item.StartTime = util.getTime(item.StartTime)
+                item.EndTime = util.getTime(item.EndTime)
+                item.hasChecke = false;
+                item.ischosed = false
+              })
+              this.couponList = res
+            }
+          )
+      },
+      //添加优惠券
       addCard() {
         if(!this.manageState){
           this.showModal = true
         }
-
       },
       //管理卡片
       manage() {
@@ -332,17 +348,29 @@
 
       //获取优惠券列表
       getCouponList() {
-        this.$http.post(api.couponList, {query: {PageIndex: 1, PageSize: 10, Key: ''}}).then(json => {
-          // console.log(json);
-          // const loading = this.$loading({
-          //   lock: true,
-          //   text: 'Loading',
-          //   spinner: 'el-icon-loading',
-          //   background: 'rgba(0, 0, 0, 0.7)'
-          // });
-          let data = json.data
-          if (data.isSuc == true) {
-            let res = data.result.Items
+        // this.$http.post(api.couponList, {query: {PageIndex: 1, PageSize: 20, Key: ''}}).then(json => {
+        //   // console.log(json);
+        //   // const loading = this.$loading({
+        //   //   lock: true,
+        //   //   text: 'Loading',
+        //   //   spinner: 'el-icon-loading',
+        //   //   background: 'rgba(0, 0, 0, 0.7)'
+        //   // });
+        //   let data = json.data
+        //   if (data.isSuc == true) {
+        //     let res = data.result.Items
+        //     res.forEach((item, index) => {
+        //       item.StartTime = util.getTime(item.StartTime)
+        //       item.EndTime = util.getTime(item.EndTime)
+        //       item.hasChecke = false;
+        //       item.ischosed = false
+        //     })
+        //     this.couponList = res
+        //   }
+        // })
+        this.$util.post(this,this.$api.couponList,{query: {PageIndex: 1, PageSize: 20, Key: ''}},
+          data=>{
+            let res = data.Items
             res.forEach((item, index) => {
               item.StartTime = util.getTime(item.StartTime)
               item.EndTime = util.getTime(item.EndTime)
@@ -350,8 +378,7 @@
               item.ischosed = false
             })
             this.couponList = res
-          }
-        })
+          }, true)
       },
 
       // 点击修改
@@ -371,21 +398,15 @@
         // obj.SourceType=2;
         // obj.ServiceType=2;
         this.type2 = data.ActivityType;
+        // 回显时间
         function f(val) {
-          console.log(typeof val);
-          // debugger
-          // var firstS=val.indexOf('(');
-          // var firstE=val.indexOf(')');
-          // let time=val.substring(firstS+1,firstE);
           let time=new Date(parseInt(val));
-          const year = time.getFullYear()
-          const month = time.getMonth() + 1
-          const day = time.getDate()
+          const year = time.getFullYear();
+          const month = time.getMonth() ;
+          const day = time.getDate();
           return new Date(year,month,day)
         }
         this.value5=[f(data.StartTime),f(data.EndTime)]
-
-        // obj.Name='ATH眼镜店铺';
       },
 
 
@@ -416,7 +437,6 @@
             }
           })
         }
-        console.log(delArr);
         this.$util.confirm(this).then(json=>{
           // this.$http.post(api.delCoupon, {goodsId: delArr}).then(json => {
           //   let data = json.data;

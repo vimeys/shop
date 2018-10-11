@@ -12,11 +12,13 @@
            </el-col>
            <el-col class="detail" :span="9" :offset="1">
              <img  class="detail-logo" :src="item.Logo" alt="">
-             <div class="change-btn" @click="modify(item,index)">修改</div>
-             <div class="change-btn" @click="delShop(item,index)">删除</div>
+             <div v-if="!shopRole==4" class="change-btn" @click="modify(item,index)">修改</div>
+             <div v-if="!shopRole==4" class="change-btn" @click="delShop(item,index)">删除</div>
            </el-col>
         </el-row>
     </div>
+
+    <!--//添加店铺-->
     <ys-popup
       v-if="showModal"
       :width="pWidth"
@@ -67,7 +69,6 @@
                         <span class="image-tips">
                           店铺头像设置
                         </span>
-
                       </el-col>
                   </el-row>
                 </el-col>
@@ -220,20 +221,20 @@
           </div>
         </div>
        <div>
-         <div class="page-size-box">
-           <el-pagination
-             prev-text="上一页"
-             next-text="下一页"
-             :page-size="pageSize"
-             @size-change="changeSize"
-             @prev-click="prev"
-             @next-click="next"
-             @current-change="current"
-             layout="prev, pager, next"
-             class="page"
-             :total="total">
-           </el-pagination>
-         </div>
+         <!--<div class="page-size-box">-->
+           <!--<el-pagination-->
+             <!--prev-text="上一页"-->
+             <!--next-text="下一页"-->
+             <!--:page-size="pageSize"-->
+             <!--@size-change="changeSize"-->
+             <!--@prev-click="prev"-->
+             <!--@next-click="next"-->
+             <!--@current-change="current"-->
+             <!--layout="prev, pager, next"-->
+             <!--class="page"-->
+             <!--:total="total">-->
+           <!--</el-pagination>-->
+         <!--</div>-->
        </div>
         <div class="btns">
           <el-row>
@@ -265,7 +266,7 @@
 
     data(){
       return{
-        ...mapMutations({saveShop:'SET_SHOP'}),
+
         showModal:false,
         pWidth:1200,
         pHeight:850,
@@ -322,6 +323,7 @@
       }
     },
     methods:{
+      ...mapMutations({saveShop:'SET_SHOP'}),
       addShop(){
         // this.$http.post('/shop',{userId:1007})
         this.showModal=true
@@ -555,10 +557,11 @@
         Role(){
             return this.$store.state.Role
         },
-      ...mapGetters(['shop','userInfo']),
+      ...mapGetters(['shop','userInfo','shopRole']),
     },
     mounted(){
       this.getShopList()
+      console.log(this.shopRole);
     }
   }
 </script>

@@ -9,8 +9,8 @@
     <img src="../assets/images/onceCard.png" alt="" v-else="detail.MembershipType==3">
     <div class="content">
       <div class="name">
-        {{detail.MembershipName}}（通用）
-        <span class="sale-name">已售：{{detail.sold||0}}</span>
+        {{detail.MembershipName}}({{detail.MembershipCardShopName}})
+        <span class="sale-name" v-if="hasSold">已售：{{detail.Sold||0}}</span>
       </div>
       <div class="detail">
         <div>
@@ -19,12 +19,12 @@
             placement="top-start"
             width="250"
             trigger="hover"
-            content="这是一段内容。这是一段内容。这是一段内容。">
+            :content="detail.ServiceScope|replace">
             <!--<el-button slot="reference">hover 激活</el-button>-->
-            <div slot="reference" style="width: 200px">服务范围：美发类</div>
+            <div slot="reference" style="width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;margin-bottom: 10px">服务范围：{{detail.ServiceScope |replace}}</div>
           </el-popover>
         </div>
-        <div>具体权益：美发类享受8折优惠</div>
+        <div v-if="detail.MembershipType!=3">具体权益：{{detail.ServiceScope|replace}},享受{{10-detail.Discount}}折优惠</div>
       </div>
       <div class="money-date">
         <div v-if="detail.MembershipType==3">消费次数：{{detail.Frequency}}次</div>
@@ -51,6 +51,12 @@
             return 1//1是充值卡,2是定制卡,3是次卡
           }
         },
+        hasSold:{
+          type:Boolean,
+          default(){
+            return true
+          }
+        },
         hasChecked: {//是否有选框
           type: Boolean,
           default() {
@@ -63,7 +69,7 @@
             return 0
           }
         },
-        hasBorder:{
+        hasBorder:{//是否有边框
           type:Boolean,
           default:false
         },
@@ -103,6 +109,11 @@
                  null
              }
           }
+        }
+      },
+      filters:{
+        replace(val){
+           return val.replace(/,/g,'，')
         }
       },
       data(){

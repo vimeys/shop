@@ -18,9 +18,9 @@
                  v-if="item.Type==3"
                  @click="checkCoupon"
                  :data="0">
-              <img src="../../../../assets/images/oneBg.png" alt="" v-if="!item.Name">
+              <img src="../../../../assets/images/oneBg.png" alt="" v-if="item.Name">
               <img :src="item.BannerIco" alt="" v-else>
-              <div class="active-text" v-show="!item.Name"> 12:00-13:00 限／时／抢／购</div>
+              <div class="active-text" v-show="item.Name"> {{item.Name}}</div>
               <div class="active-radio"  @click.stop="choose(index)" v-show="item.hasChoose">
                 <div class="active-radio-point" v-show="item.isChoose"></div>
               </div>
@@ -130,7 +130,7 @@
                   <div class="active-items-one">
                     <img src="../../../../assets/images/oneBg.png" alt="">
                     <div class="active-text"> {{one.bannerWord}}</div>
-                    <div class="active-radio" @click="choose" v-show="isChecke">
+                    <div class="active-radio" @click="choose">
                       <div class="active-radio-point" v-show="chosed"></div>
                     </div>
                   </div>
@@ -454,9 +454,7 @@
         }
       },
       methods:{
-        choose(index){
-          this.chosed=!this.chosed
-        },
+
         back(e){
           console.log(e);
         },
@@ -470,7 +468,14 @@
           console.log(123);
         },
         //删除活动
+        // todo 等待删除
         delActive(){
+          let arr=[]
+          this.activeCardList.forEach(item=>{
+            if(item.isChoose==true){
+              arr.push(item)
+            }
+          })
 
         },
         //查看详情
@@ -540,13 +545,23 @@
           if(!this.showDel){
             this.isEdit=true;
             this.showDel=true;
-            this.isChecke=true;
+            this.activeCardList.forEach(item=>{
+              item.hasChoose=true
+            })
+            // this.isChecke=true;
           }else {
             this.isEdit=true;
             this.showDel=false;
-            this.isChecke=false;
+            this.activeCardList.forEach(item=>{
+              item.hasChoose=false
+              item.isChoose=false
+            })
+            // this.isChecke=false;
           }
-
+        },
+        //选中活动卡片
+        choose(index){
+            this.activeCardList[index].isChoose=!this.activeCardList[index].isChoose
         },
         //选中卡片
         chooseCoupon(index){
@@ -611,10 +626,10 @@
           this.$util.post(this,this.$api.couponList,
             {query:{ PageIndex:1,PageSize:10,Key:'',Type:type}},
             (data)=>{
-              console.log(data)
               data.Items.forEach(item=>{
                 item.StartTime = this.$util.getTime(item.StartTime)//后台时间转时间撮
                 item.EndTime = this.$util.getTime(item.EndTime)//后台时间转时间错
+                item.hasChecked=false
                 item.isChecked=false
               })
               this.couponList[type]=data.Items;
@@ -641,7 +656,7 @@
         this.getCouponList(2);
         this.getCouponList(3);
         this.getOneCouponList();
-          this.getActiveCardList()
+        this.getActiveCardList()
       }
 
     }

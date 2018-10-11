@@ -240,7 +240,7 @@
         obj.pageSize=pageSize;
         obj.type=2;
         obj.state=1;
-        this.$util.post(this,this.$api.getGoodsCheck,obj,(data)=>{
+        this.$util.post(this,this.$api.getPeopleCheck,obj,(data)=>{
           // this.
           console.log(data);
         })
@@ -259,41 +259,40 @@
         obj.pageSize=pageSize;
         obj.type=2;
         obj.state=2;
-        this.$util.post(this,this.$api.getGoodsCheck,obj,(data)=>{
+        this.$util.post(this,this.$api.getPeopleCheck,obj,(data)=>{
           // this.
           console.log(data);
         })
       },
       //人员查看已审核
       peopleChecked(index){
-
+        this.peopleCheckedPage(index)
       },
       peopleCheckedPage(index,pageIndex=1,pageSize=10){
-        let obj={}
-        obj.servicePersonId=this.goodsList[index].GoodsId;
-
+        let obj={};
+        obj.servicePersonId=this.waterList[index].UserId;
         obj.pageIndex=pageIndex;
         obj.pageSize=pageSize;
         obj.type=1;
         obj.state=1;
-        this.$util.post(this,this.$api.getGoodsCheck,obj,(data)=>{
+        this.$util.post(this,this.$api.getPeopleCheck,obj,(data)=>{
           // this.
           console.log(data);
         })
       },
       //人员查看未审核
       peopleCheck(index){
-
+        this.peopleCheckPage(index)
       },
       peopleCheckPage(index,pageIndex=1,pageSize=10){
         let obj={}
-        obj.servicePersonId=this.goodsList[index].GoodsId;
+        obj.servicePersonId=this.waterList[index].UserId;
 
         obj.pageIndex=pageIndex;
         obj.pageSize=pageSize;
         obj.type=1;
         obj.state=2;
-        this.$util.post(this,this.$api.getGoodsCheck,obj,(data)=>{
+        this.$util.post(this,this.$api.getPeopleCheck,obj,(data)=>{
           // this.
           console.log(data);
         })
@@ -324,24 +323,35 @@
       //获取商品列表
       // @param
       getGoodsList(p = 0, c = 0) {
-        this.$http.post(this.$api.goodsList, {
-          pageIndex: 1,
+        // this.$http.post(this.$api.goodsList, {
+        //   pageIndex: 1,
+        //   pageSize: 100,
+        //   goodTypeParentId: p,
+        //   goodsTypeId: c
+        // }).then(json => {
+        //   console.log(json);
+        //   let data = json.data;
+        //
+        //   if (data.isSuc == true) {
+        //     let arr = [];
+        //     data.result.Items.forEach(item => {
+        //       item.hasChecked = false;
+        //       item.isChecked = false
+        //     })
+        //     this.goodsList = data.result.Items
+        //   }
+        // })
+        this.$util.post(this,this.$api.goodsList,{pageIndex: 1,
           pageSize: 100,
           goodTypeParentId: p,
-          goodsTypeId: c
-        }).then(json => {
-          console.log(json);
-          let data = json.data;
-
-          if (data.isSuc == true) {
-            let arr = [];
-            data.result.Items.forEach(item => {
-              item.hasChecked = false;
-              item.isChecked = false
-            })
-            this.goodsList = data.result.Items
-          }
-        })
+          goodsTypeId: c},(data)=>{
+          let arr = [];
+          data.Items.forEach(item => {
+            item.hasChecked = false;
+            item.isChecked = false
+          })
+          this.goodsList = data.Items
+        },true)
       },
       //获取人员列表
       getPeopleList(shopId){

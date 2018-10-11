@@ -21,9 +21,9 @@ textarea {
 .base-btn-111 {
   cursor: pointer;
   width: 111px;
-  height: 38px;
+  height: 36px;
   border-radius: 4px;
-  line-height: 38px;
+  line-height: 36px;
   font-size: 14px;
   color: #282828;
   background: #FFD736;
@@ -109,6 +109,9 @@ textarea {
  /deep/ .el-pager li.active {
   background: #FFD736;
 }
+ /deep/ .el-pager li.active {
+  color: #282828;
+}
  /deep/ .el-pagination button {
   width: 72px;
   padding: 0 6px;
@@ -128,6 +131,6 @@ textarea {
   margin-right: 10px;
 }
  /deep/ .el-pagination button:disabled {
-  background: #ccc!important;
+  background: #ccc !important;
 }
 /*# sourceMappingURL=mixin.css.map */

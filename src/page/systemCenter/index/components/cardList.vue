@@ -15,7 +15,7 @@
           <div class="manage" :class="{'disable':disableManage}" @click="manage">批量管理</div>
           <div class="del" style="margin-left: 30px" :class="{'disable':disableSort}" @click="Sort">排序</div>
         </div>
-        <ys-search></ys-search>
+        <ys-search @search="search"></ys-search>
       </div>
       <el-row class="edit-btns" v-if="!disableManage">
         <el-col :span="4">
@@ -187,6 +187,9 @@
       }
     },
     methods:{
+      search(val){
+        this.getHotGoods(val)
+      },
       goback(){
         this.$router.go(-1)
           this.$emit('back',this.show)
@@ -263,7 +266,7 @@
           })
         this.$util.post(this,this.$api.hotGoods,{goodsIds:arr,isSelected:1},()=>{
           this.showModal=false;
-          this.hotGoodsList()
+          this.getHotGoods()
           this.valueSecondType="";
           this.valueFirstType="";
         },true)
@@ -333,7 +336,7 @@
           let old2=this.hotGoodsList[index]
           this.hotGoodsList.splice(index-1,1,old2)
           this.hotGoodsList.splice(index,1,old1)
-        })
+        },true)
 
       },
       //todo 修改排序单位请求接口
@@ -347,7 +350,7 @@
           let old2=this.hotGoodsList[index+1]
           this.hotGoodsList.splice(index,1,old2)
           this.hotGoodsList.splice(index+1,1,old1)
-        })
+        },true)
       },
       close(e){
         console.log(e);
@@ -369,14 +372,14 @@
           this.typeList=arr
         }
       },
-      getHotGoods(){
-          this.$util.post(this,this.$api.hotGoodsList,{pageIndex:1, pageSize:100},(data)=>{
+      getHotGoods(key=""){
+          this.$util.post(this,this.$api.hotGoodsList,{keyword:key,pageIndex:1, pageSize:100},(data)=>{
             data.Items.forEach(item=>{
               item.hasChecked=false;
               item.isChecked=false
             })
             this.hotGoodsList=data.Items
-          })
+          },true)
       },
       //获取商品列表
       // @param
@@ -392,6 +395,7 @@
             this.goodsList=data.result.Items
           }
         })
+
       },
       //获取分组列表
       // getGroupList(shopId,re){
