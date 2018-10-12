@@ -258,28 +258,33 @@
 
         //转换时间
         dateChange(val){
-          try{
-            var first =val.indexOf('(');
-            var last =val.indexOf(')');
-            var time=val.substring(first+1,last)
-            // console.debug(123);
-            // console.log(123);
-          }catch(err){
-            console.debug(err);
+          if(val){//判断预约时间是否为空
+            try{
+              var first =val.indexOf('(');
+              var last =val.indexOf(')');
+              var time=val.substring(first+1,last)
+              // console.debug(123);
+              // console.log(123);
+            }catch(err){
+              console.debug(err);
+            }
+
+            time=new Date(parseInt(time-8*60*60*1000));
+            const year = time.getFullYear()
+            const month = time.getMonth() + 1
+            const day = time.getDate()
+            const hour = time.getHours()
+            const minute = time.getMinutes()
+            const second = time.getSeconds()
+            const formatNumber = n => {
+              n = n.toString()
+              return n[1] ? n : '0' + n
+            }
+            return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute].map(formatNumber).join(':')
+          }else{
+            return '无预约时间'
           }
 
-          time=new Date(parseInt(time-8*60*60*1000));
-          const year = time.getFullYear()
-          const month = time.getMonth() + 1
-          const day = time.getDate()
-          const hour = time.getHours()
-          const minute = time.getMinutes()
-          const second = time.getSeconds()
-          const formatNumber = n => {
-            n = n.toString()
-            return n[1] ? n : '0' + n
-          }
-          return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute].map(formatNumber).join(':')
 
         }
       },

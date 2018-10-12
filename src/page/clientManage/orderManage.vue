@@ -370,10 +370,11 @@
                         <el-col :span="20" >
                           <el-select v-model="item.serverNameValue"
                                      filterable
+                                     @change="chooseServerSize"
                                      size="small"
                                      placeholder="请输入您想搜索的服务">
                             <el-option
-                              v-for="itemSon in item.serverNameValue"
+                              v-for="itemSon in item.server"
                               :key="itemSon.GoodsId"
                               :label="itemSon.Name"
                               :value="itemSon.GoodsId"
@@ -389,7 +390,7 @@
                                      size="small"
                                      placeholder="请选择该服务的规格">
                             <el-option
-                              v-for="itemSon in item.serverNameValue"
+                              v-for="itemSon in item.server"
                               :key="itemSon.GoodsId"
                               :label="itemSon.Name"
                               :value="itemSon.GoodsId"
@@ -591,14 +592,30 @@ import ysSelectShop from '@/components/selectShop'
       },
       //添加服务
       addServer(){
-        this.$util.post(this,this.$api.getAllServerList,{pageIndex:1, pageSize:100,name:''},(data)=>{
-              this.serverData=data
-        })
-        let obj={}
-          obj.server='';
-          obj.serverNameValue='';//当前服务的服务名称
-          this.currentDetail.list.push(obj)
+        this.$util.post(this, this.$api.getAllServerList,
+          {pageIndex: 1, pageSize: 100, name: '', shopId: this.currentShopId},
+          (data) => {
+            this.serverData = data;
+            let obj={}
+            obj.server=data.Items;
+            obj.serverNameValue="";//当前服务的服务名称
+            this.currentDetail.list.push(obj)
+          })
+        // let obj={}
+        //   obj.server='';
+        //   obj.serverNameValue='';//当前服务的服务名称
+        //   this.currentDetail.list.push(obj)
       },
+      chooseServerSize(id){
+        this.$util.post(this,this.$api.getServerSize,{
+          pageIndex: 1,
+          pageSize: 100,
+          goodsId:id
+        },(data)=>{
+          console.log(data);
+        })
+      },
+
       //结算时删除当前服务
       deleteServer(index){
           this.currentDetail.list.splice(index,1)

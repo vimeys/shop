@@ -33,16 +33,16 @@ import  url from './assets/script/url'
 import * as util from './assets/script/util'
 // 引入样式
 //引入地图
-import AMap from 'vue-amap';
-Vue.use(AMap);
+// import AMap from 'vue-amap';
+// Vue.use(AMap);
 
 // 初始化vue-amap
-AMap.initAMapApiLoader({
-  // 申请的高德key
-  key: 'c651425e530d37809b25c66131d13872',
-  // 插件集合
-  plugin: ['AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType']
-});
+// AMap.initAMapApiLoader({
+//   // 申请的高德key
+//   key: 'c651425e530d37809b25c66131d13872',
+//   // 插件集合
+//   plugin: ['AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType']
+// });
 
 
 Vue.config.productionTip = false

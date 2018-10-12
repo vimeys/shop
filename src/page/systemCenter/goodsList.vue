@@ -984,7 +984,8 @@
           Pics: this.aPics.join(','),
           Price: this.Price,
           OriginalPrice: this.Price,
-          TuwenArticleId: this.TuwenUrl,
+          TuwenArticleId: 23,
+          TuwenArticleUrl: this.TuwenUrl,
           Description: '描述',
           Tags: '',
           Link: '',
@@ -1022,11 +1023,10 @@
 
         obj.CommissionGroupId = sId;
         obj.Goodsspec = Addgoodsspec;
-        debugger
+        // debugger
         if(this.isEditGoods){//判断是否是编辑
           obj.GoodsId=this.editGoodsId
           this.$http.post(this.$api.updataGoods, {goods: obj}).then(json => {
-            console.log(json);
             let data = json.data;
             if (data.isSuc == true) {
               this.$message({
@@ -1090,16 +1090,26 @@
       //获取商品列表
       // @param
       getGoodsList(p=0,c=0){
-          this.$http.post(this.$api.goodsList,{ pageIndex:1, pageSize:100, goodTypeParentId:p, goodsTypeId:c}).then(json=>{
-            let data=json.data;
-            if (data.isSuc == true) {
-              let arr = [];
-              data.result.Items.forEach(item => {
-                item.hasChecked = false;
-                item.isChecked = false
-              })
-              this.goodsList = data.result.Items
-            }
+          // this.$http.post(this.$api.goodsList,{ pageIndex:1, pageSize:100, goodTypeParentId:p, goodsTypeId:c}).then(json=>{
+          //   let data=json.data;
+          //   if (data.isSuc == true) {
+          //     let arr = [];
+          //     data.result.Items.forEach(item => {
+          //       item.hasChecked = false;
+          //       item.isChecked = false
+          //     })
+          //     this.goodsList = data.result.Items
+          //   }
+          // })
+        this.$util.post(this, this.$api.goodsList,
+          {pageIndex: 1, pageSize: 100, goodTypeParentId: p, goodsTypeId: c},
+          (data) => {
+            let arr = [];
+            data.Items.forEach(item => {
+              item.hasChecked = false;
+              item.isChecked = false
+            })
+            this.goodsList = data.Items
           },true)
       },
 
@@ -1347,10 +1357,10 @@
             let firstShopId=data.result[0].UserId;
             this.currentShopId=firstShopId
             this.getGroupList(this.currentShopId,true)
-            this.$message({
-              message: '恭喜你，这是一条成功消息',
-              type: 'warning'
-            })
+            // this.$message({
+            //   message: '恭喜你，这是一条成功消息',
+            //   type: 'warning'
+            // })
           }
         }).catch(err=>{
           console.log(err);

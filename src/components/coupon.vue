@@ -173,7 +173,7 @@
       useName(){
         let Name='';
         switch (this.detail.SourceType) {
-          case 2:
+          case 3:
             Name='一元买卷';
             break;
           case 4:

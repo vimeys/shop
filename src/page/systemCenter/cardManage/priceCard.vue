@@ -57,7 +57,7 @@
     >
       <div class="form">
         <el-row>
-          <el-col :span="6"><h3 class="base-h3">修改优惠券</h3></el-col>
+          <el-col :span="6"><h3 class="base-h3">新建优惠券</h3></el-col>
         </el-row>
         <el-row>
           <el-col :span="5" class="base-font base-col">
@@ -535,7 +535,7 @@
   }
 
   .card-list {
-    min-height: 1000px;
+    min-height: 500px;
   }
 
   .form {

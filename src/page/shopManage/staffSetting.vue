@@ -434,6 +434,7 @@
               {value:2,label:'总监'},
               {value:3,label:'高级'},
             ],
+            searchVal:'',//搜索参数
             wb:"",
             rABS:false,
           }
@@ -462,6 +463,7 @@
         chooseShop(e){
           console.log(e);
           this.currentShopId=e
+
           this.getGroupList(this.currentShopId)
           // alert(e)
         },
@@ -476,6 +478,8 @@
         //搜索
         search(val){
           console.log(val);
+          this.searchVal=val;
+          this.getGroupList(this.currentShopId)
         },
 
 
@@ -554,7 +558,7 @@
         },
         delAll(index){
           let arr=[]
-          debugger
+          // debugger
           this.groupList[index].UsersList.Items.forEach(item=>{
             if(item.isChecked){
               arr.push(item.UserId)
@@ -754,7 +758,7 @@
         },
         //添加分组
         addGroup(){
-          debugger
+          // debugger
           if(!this.isEditGroup){
             let obj={
               group:{
@@ -839,18 +843,19 @@
           this.group.showModal=false;
           this.groupName=''
         },
-        //改变权限
+        //修改权限
+        //@params e==当前值, i=index is=indexSon
         changeLimit(e,i,is){
           console.log(this.shopRole);
-          if(this.shopRole==4){
-            if(e==2){
+
+          if(this.shopRole!=2&&this.shopRole!=1){//店铺权限不是店长和管理员
+            if(e==2){//如果他要修改的权限是店长执行
               this.groupList[i].UsersList.Items[is].job=e
               console.log(this.groupList[i].UsersList.Items[is]);
               this.$message({
                   message: '你暂无权限修改',
                   type: 'warning'
                 });
-
               }else{
                 let item=this.groupList[i].UsersList.Items[is];
                 this.$http.post(this.$api.updataPerson,
@@ -890,34 +895,9 @@
           arr.push(obj2)
           arr.push(obj3)
           arr.push(obj4)
-            this.$http.post(this.$api.waterGroupList,
-              {pageindex:1,pagesize:10,userId:shopId}).then(json=>{
-                  if(json.data.isSuc==true){
-                    this.groupList=json.data.result.Items;
-                    let i=0
-                    this.groupList.forEach((item)=>{
-                      if(item.UsersList.Items.length>0){
-                        item.isManage=false
-                        item.UsersList.Items.forEach((itemSon,indexSon)=>{
-                          //循环添加选中按钮以及职位
-                          itemSon.jobList=arr;
-                          itemSon.job=itemSon.ShopRole;
-                          itemSon.hasChecked=false;
-                          itemSon.isChecked=false
-                          i++
-                          if(itemSon.State==1){
-                            itemSon.disable=true
-                          }else {
-                            itemSon.disable=false
-                          }
-                        })
-                      }
-                    })
-                    this.allPeople=i//计算总人数
-                  }
-            })
+
           this.$util.post(this,this.$api.waterGroupList,
-            {pageindex:1,pagesize:10,userId:shopId},
+            {pageindex:1,pagesize:10,userId:shopId,keyword:this.searchVal},
             (data)=>{
               this.groupList=data.Items;
               let i=0

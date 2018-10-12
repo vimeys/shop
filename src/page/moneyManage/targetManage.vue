@@ -38,17 +38,26 @@
       </el-row>
       <template v-for="item in targetListValue">
         <el-row class="target-progress">
-          <el-col :offset="1" :span="12" style="height: 52px;line-height: 52px;padding: 20px">
-            <van-progress :percentage="item.Quantity " :color="redP" v-if="item.Standard==1"/>
-            <van-progress :percentage="item.Quantity " :color="greenp" v-else />
+          <el-col :offset="1" :span="12" style="height: 52px;line-height: 52px;padding: 20px;overflow: hidden">
+            <!--<van-progress :percentage="item.newQuantity " :color="redP" v-if="item.Standard==1"/>-->
+            <!--<van-progress :percentage="item.Quantity " :color="greenp" v-else />-->
+            <div class="target-progress-border-ok" v-if="item.Standard==1">
+
+            </div>
+            <div class="target-progress-border" v-else>
+              <div class="target-progress-content" :style="{'width':item.Quantity+'%'}">
+
+              </div>
+            </div>
+
           </el-col>
-          <el-col :span="4" :class="{'green-font':green}" v-if="item.Standard==1">
+          <el-col :span="5" :class="{'green-font':green}" v-if="item.Standard==1">
             {{item.OrderAmount}}（达标{{item.Quantity}}%）
           </el-col>
-          <el-col :span="4" :class="{'red-font':green}" v-else>
+          <el-col :span="5" :class="{'red-font':green}" v-else>
             {{item.OrderAmount}}（达标{{item.Quantity}}%）
           </el-col>
-          <el-col :span="2" :offset="4">
+          <el-col :span="2" :offset="3">
             {{item.DateTime}}
           </el-col>
         </el-row>
@@ -187,7 +196,7 @@
           }
         },
 
-        //获取久的目标
+        //获取旧的目标
         getTargetOld(){
             this.$util.post(this,this.$api.targetDetail,{year:this.valueYear,shopId:this.currentShopId},(data)=>{
               console.log(data);
@@ -296,8 +305,12 @@
         //获取目标列表
         getList(year,shopid){
             this.$util.post(this,this.$api.targetList,{year:year,shopId:shopid},(data)=>{
-              console.log(data);
-              this.targetListValue=data
+              this.targetListValue=data;
+              this.targetListValue.forEach(item=>{
+                if(item.Quantity>100){
+                  item.newQuantity=200
+                }
+              })
             })
         },
 
@@ -354,6 +367,7 @@
   .target-content{
     background: #fff;
     margin-top: 60px;
+    margin-bottom: 100px;
     .target-content-title{
       height: 55px;
       background: @bs-color;
@@ -382,6 +396,24 @@
       background:#F9F9F9;
       height: 52px;
       line-height: 52px;
+      &-border{
+        width: 100%;
+        height: 100%;
+        border-radius: 7px;
+        border: 1px solid #E1E1E1;
+      }
+      &-content{
+        width: 0%;
+        height: 100%;
+        background: red;
+        border-radius: 7px;
+      }
+      &-border-ok{
+        width: 100%;
+        height: 100%;
+        border-radius: 7px;
+        background: #7ED321;
+      }
     }
     .red-font {
       color: #D0021B;

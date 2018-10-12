@@ -1,5 +1,5 @@
 // const head = 'http://test.csmen.cc/services/';//线上
-const head='/shop/';//跨域
+const head = '/shop/';//跨域
 // const head='http://192.168.0.135:8073/services/';//陈林本地
 
 
@@ -93,6 +93,8 @@ const url = {
   serverList: head + 'settleAccounts/version3/goodsList',//获取服务列表
   serverPeopleList: head + 'settleAccounts/version3/userList',//获取服务员列表
 
+
+
   //订单管理
   getOrderList: head + 'goodsorderform/version3/list',//订单列表
   orderDetail: head + 'goodsorderform/detail',//订单详情
@@ -100,19 +102,17 @@ const url = {
   delAppOrder: head + 'subscribe/delete',//删除预约订单
   appOrderDetail: head + 'subscribe/detail ',//预约详情
   getAllServerList: head + 'settleAccounts/version3/goodsList',//获取店铺下的所有服务
-
-
-
-
-
-
+  getServerSize:head+'settleAccounts/version3/userList',//获取店铺下所有的服务
 
   //添加活动
-  activeList: head + 'usergame/list',//新建活动列表
+  activeList: head + 'usergame/list',//活动列表
+  delActive: head + 'usergame/version3/userGamedelete',//删除活动
   //一元买卷
   addOne: head + 'usergame/version3/addUserGame',//新建一元买卷
   addOneCoupon: head + 'usergame/version3/addcouponBookList',//添加一元买卷优惠券
   oneCouponList: head + 'CouponBook/version3/gameUsersCouponBooklist',//一元买卷下的优惠券列表
+
+
 
   //分销
   openLikes: head + 'usergame/version3/addZan',//开启集赞活动

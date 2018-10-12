@@ -51,36 +51,44 @@ export function confirm(that,type='warning',info='您确定要删除吗?',title=
 //   }
 // }
 //封装的ajax
-export  function post(that,url,params,suc,isLoad,err) {
-  if(isLoad){//判断是否有loading状态
-    var  loading = that.$loading({
+//param isLoad  是否有加载状态
+export function post(that, url, params, suc, isLoad, err) {
+  if (isLoad) {//判断是否有loading状态
+    var loading = that.$loading({
       lock: true,
-      text: 'Loading',
+      text: '加载中...',
       spinner: 'el-icon-loading',
       background: 'rgba(0, 0, 0, 0.7)'
     });
   }
-    that.$http.post(url,params).then(json=>{
-      const h = that.$createElement;
-      if(json.data.isSuc==true){
-        that.$notify({
-          title:'成功',
-          message: h('i', { style: 'color: green'},'数据操作成功'),
-          duration:1000,
-          position: 'bottom-right'
-        })
-        if(isLoad){//判断是否有loading状态
-          loading.close();
-        }
-        suc(json.data.result)
-      }else{
-        that.$notify({
-            title:'接口报错',
-          duration:20000,
-            message: h('i', { style: 'color: red'},json.data.message)
-        })
+  that.$http.post(url, params).then(json => {
+    const h = that.$createElement;
+    if (json.data.isSuc == true) {
+      that.$notify({
+        title: '成功',
+        message: h('i', {style: 'color: green'}, '数据操作成功'),
+        duration: 1000,
+        position: 'bottom-right'
+      })
+      if (isLoad) {//判断是否有loading状态
+        loading.close();
       }
-    }).catch(error=>{
-        console.log(error)
-    })
+      console.log(that.$store.state.shopRole);
+
+      suc(json.data.result)
+    } else {
+      that.$notify({
+        title: '接口报错',
+        duration: 20000,
+        message: h('i', {style: 'color: red'}, json.data.message)
+      })
+      loading.close();
+      setTimeout(()=>{
+        that.$store.commit('SET_SHOP','')
+      },1000)
+
+    }
+  }).catch(error => {
+    console.log(error)
+  })
 }

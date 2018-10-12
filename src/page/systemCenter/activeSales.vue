@@ -4,7 +4,7 @@
 <template>
       <div class="box-sale">
 
-              <el-row :gutter="50"  class="base-row-36">
+              <el-row :gutter="50"  class="base-row">
                 <el-col :span="8"  class="">
                   <div class="sale-card">
                     <el-row>
@@ -18,7 +18,7 @@
                         </el-switch>
                       </el-col>
                     </el-row>
-                    <el-row v-if="valueRedPack" class="base-row-36">
+                    <el-row v-if="valueRedPack" class="base-row">
                       <el-col :span="6">
                         红包金额
                       </el-col>
@@ -26,7 +26,7 @@
                         <input type="text" v-model.number="moneyValue" class="base-input" placeholder="">
                       </el-col>
                     </el-row>
-                    <el-row v-if="valueRedPack" class="base-row-36">
+                    <el-row v-if="valueRedPack" class="base-row">
                       <el-col :span="20" :offset="1"><div class="btn" @click="comfirmRedPack">确定</div></el-col>
                     </el-row>
                   </div>
@@ -37,13 +37,13 @@
                       <el-col :span="6">刮卡</el-col>
                       <el-col :span="4" :offset="14">
                         <el-switch
-                          v-model="value2"
+                          v-model="valueGua"
                           active-color="#FFD736"
                           inactive-color="#E5E5E5">
                         </el-switch>
                       </el-col>
                     </el-row>
-                    <el-row v-if="value2" class="base-row-36">
+                    <el-row v-if="value2" class="base-row">
                       <el-col :span="6">
                         红包金额
                       </el-col>
@@ -51,7 +51,7 @@
                         <input type="text" v-model.number="moneyValue" class="base-input" placeholder="">
                       </el-col>
                     </el-row>
-                    <el-row v-if="value2" class="base-row-36">
+                    <el-row v-if="value2" class="base-row">
                       <el-col :span="20" :offset="1"><div class="btn" @click="confirm">确定</div></el-col>
                     </el-row>
                   </div>
@@ -62,13 +62,13 @@
                       <el-col :span="6">支付立减</el-col>
                       <el-col :span="4" :offset="14">
                         <el-switch
-                          v-model="value2"
+                          v-model="valuePay"
                           active-color="#FFD736"
                           inactive-color="#E5E5E5">
                         </el-switch>
                       </el-col>
                     </el-row>
-                    <el-row v-if="value2" class="base-row-36">
+                    <el-row v-if="value2" class="base-row">
                       <el-col :span="6">
                         红包金额
                       </el-col>
@@ -76,13 +76,13 @@
                         <input type="text" v-model.number="moneyValue" class="base-input" placeholder="">
                       </el-col>
                     </el-row>
-                    <el-row v-if="value2" class="base-row-36">
+                    <el-row v-if="value2" class="base-row">
                       <el-col :span="20" :offset="1"><div class="btn" @click="comfirmRedPack">确定</div></el-col>
                     </el-row>
                   </div>
                 </el-col>
               </el-row>
-              <el-row :gutter="50"  class="base-row-36">
+              <el-row :gutter="50"  class="" style="margin-top: 30px" >
                 <el-col :span="8"  class="">
                   <div class="sale-card">
                     <el-row>
@@ -121,17 +121,19 @@
                       </el-col>
                       <el-col :span="4"> <i class="el-icon-delete" @click="delCoupon(index)"></i></el-col>
                     </el-row>
-                    <el-row>
+                    <el-row v-if="valueLikes">
                       <el-col :span="20" :offset="1">
                         <div class="btn" @click="chooseCard">选择优惠券 </div>
                       </el-col>
                     </el-row>
-                    <el-row v-if="valueLikes" class="base-row-36">
+                    <el-row v-if="valueLikes" class="base-row">
                       <el-col :span="20" :offset="1"><div class="btn" @click="confirmLike">保存</div></el-col>
                     </el-row>
                   </div>
                 </el-col>
               </el-row>
+
+        <!--//添加优惠券-->
           <ys-popup
             :width="width"
             :height="height"
@@ -218,14 +220,15 @@
               }
             ],
             couponList:[],//优惠券列表
-            value1: true,
-            value2:true,
+            value1: false,
+            valueGua:false,
+            valuePay:false,
             valueLikes:true,//是否开启点赞
             valueLikesNum:'',//集赞个数
             valueLikesTime:'',//集赞时间
             checkCoupon:[],//选中的卡卷
             checkCouponList:[],//传递到后台的卡卷
-            valueRedPack: true,
+            valueRedPack: false,//红包状态
             moneyValue:''
           }
       },
@@ -358,7 +361,7 @@
       padding: 15px 0;
       /*padding: 20px 0;*/
     }
-    .base-row-36{
+    .base-row{
       margin-top: 30px;
     }
   }

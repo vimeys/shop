@@ -16,7 +16,7 @@
             <!--一元买券-->
             <div class="active-items-one"
                  v-if="item.Type==3"
-                 @click="checkCoupon"
+                 @click="checkCoupon(index)"
                  :data="0">
               <img src="../../../../assets/images/oneBg.png" alt="" v-if="item.Name">
               <img :src="item.BannerIco" alt="" v-else>
@@ -67,7 +67,7 @@
         <div class="coupons-header">
           <div class="block-btn" @click="goBack"> 返回</div>
           <div class="base-btn-111" @click="openPopup" > 新建优惠券</div>
-          <div class="base-btn-111"> 管理</div>
+          <div class="base-btn-111"  > 管理</div>
         </div>
         <div class="coupons-item" style="display: flex;">
           <div  class="coupon-card" v-for="(item,index) in oneCouponList">
@@ -101,7 +101,7 @@
         </el-row>
         <div class="list-btns">
           <ul>
-            <li><i class="el-icon-document"></i>活动详情<i class="el-icon-arrow-right"></i> </li>
+            <li class="goods-active"><i class="el-icon-document"></i>活动详情<i class="el-icon-arrow-right"></i> </li>
           </ul>
         </div>
       </div>
@@ -318,10 +318,10 @@
       @close="closeCoupon"
     >
       <div class="popup-slide-left">
-        <div class="list-title">活动</div>
+        <div class="list-title">新建优惠券</div>
         <div class="list-btns">
           <ul>
-            <li><i class="el-icon-document"></i>活动详情<i class="el-icon-arrow-right"></i> </li>
+            <li class="goods-active"><i class="el-icon-document"></i>活动信息<i class="el-icon-arrow-right"></i> </li>
             <!--<li :class="[goodsItemClass1]" @click="chooseGoodsItem(1)">-->
               <!--<i class="el-icon-document "></i>-->
               <!--<span class="after">服务属性</span>-->
@@ -437,6 +437,7 @@
               value:3
             }
           ],
+          currentActiveId:'',
           couponList:[],//优惠券列表
           checkCouponList:[],//选中的卡卷
           oneCouponList:[],//一元买卷下的卡卷列表
@@ -473,14 +474,21 @@
           let arr=[]
           this.activeCardList.forEach(item=>{
             if(item.isChoose==true){
-              arr.push(item)
+              arr.push(item.UserGameId)
             }
-          })
-
+          });
+          this.$util.post(this,this.$api.delActive,{userGame:arr},(data)=>{
+              this.getActiveCardList();
+            this.isEdit=false;
+            this.showDel=false;
+          },true)
         },
         //查看详情
-        checkCoupon(e){
-            this.isCardList=false;
+        checkCoupon(index) {
+          this.isCardList = false;
+          let id = this.activeCardList[index].UserGameId
+          this.currentActiveId = id;
+          this.getOneCouponList(id)
         },
         //选择分类
         chooseGoodsItem(value){
@@ -513,7 +521,6 @@
             let obj={}
             obj.StartDate=this.$util.parseTime(new Date(this.Timevalue[0]).getTime());
             obj.EndDate=this.$util.parseTime(new Date(this.Timevalue[0]).getTime());
-
             obj.Type=3;
             // obj.BannerIco='';
             if(this.one.isDiy){
@@ -534,8 +541,19 @@
         },
 
         closeCoupon(){
-            this.popup.showModal=false
+           this.resetCard()
         },
+        // 重置添加一元买卷接口
+        resetCard(){
+          this.popup.showModal=false;
+          this.typeValue=1;
+          this.couponList.forEach(item=>{
+            item.forEach(itemSon=>{
+              itemSon.isChecked=false
+            })
+          })
+        },
+
         //添加文档
         addCard(){
           this.activeValue=1
@@ -550,7 +568,7 @@
             })
             // this.isChecke=true;
           }else {
-            this.isEdit=true;
+            this.isEdit=false;
             this.showDel=false;
             this.activeCardList.forEach(item=>{
               item.hasChoose=false
@@ -572,23 +590,19 @@
         //确选中的优惠券
         confirmCoupon(){
           let arr2=[];
-          for(let i=1;i<4;i++){
+          for(let i=1;i<4;i++){//获取选中的卡卷集合
             this.couponList[i].forEach(item=>{
               if(item.isChecked){
-                // let obj={}
-                // obj.Type=i;
-                // obj.CouponBookId=item.CouponBookId;
                 arr2.push(item.CouponBookId);
-
               }
             })
           }
-          // this.showModel=false;
           this.$util.post(this,this.$api.addOneCoupon,
-            {userGameId:909,couponBookList:arr2},
+            {userGameId:this.currentActiveId,couponBookList:arr2},
             (data)=>{
-              console.log(data);
-            })
+              this.getOneCouponList(this.currentActiveId);
+              this.resetCard();
+            },true)
         },
         // 上传组件的事件
         handleRemove(file, fileList) {
@@ -611,15 +625,18 @@
                 item.isChoose=false;
               })
               this.activeCardList=data2;
+
+               return
+              let data1=[{item:123,type:3},{item:1235,type:2},{item:1234,type:1},{item:12346,type:4},];
+              data1.forEach(item=>{
+                item.hasChoose=false;
+                item.isChoose=false;
+              })
+              this.activeCardList=data1;
             }
           })
-          return
-          let data=[{item:123,type:3},{item:1235,type:2},{item:1234,type:1},{item:12346,type:4},];
-          data.forEach(item=>{
-            item.hasChoose=false;
-            item.isChoose=false;
-          })
-          this.activeCardList=data;
+          // return
+
         },
         //获取优惠券列表
         getCouponList(type){
@@ -636,14 +653,14 @@
             })
         },
         //获取一元买卷下面的优惠券列表
-        getOneCouponList(){
+        getOneCouponList(id){
           //TODO  写死一个userGameId
             this.$util.post(this,this.$api.oneCouponList,
-              {pageIndex:1,pageSize:10,userGameId:909},
+              {pageIndex:1,pageSize:10,userGameId:id},
               (data)=>{
               data.Items.forEach(item=>{
-                item.StartTime = this.$util.getTime(item.StartDate)//后台时间转时间撮
-                item.EndTime = this.$util.getTime(item.EndDate)//后台时间转时间错
+                item.StartTime = this.$util.getTime(item.StartTime)//后台时间转时间撮
+                item.EndTime = this.$util.getTime(item.EndTime)//后台时间转时间错
                 item.hasChecked=false;
                 item.isChecked=false;
               })
@@ -655,7 +672,7 @@
         this.getCouponList(1);
         this.getCouponList(2);
         this.getCouponList(3);
-        this.getOneCouponList();
+        // this.getOneCouponList();
         this.getActiveCardList()
       }
 
@@ -703,6 +720,7 @@
     height: 175px;
     position: relative;
     margin-right: 25px;
+    cursor: pointer;
     img{
       width: 100%;
       height: 100%;
@@ -923,9 +941,10 @@
           margin: 0 20px;
         }
       }
-      li.goods-active{
-        background: @bs-color;
-      }
+
+    }
+    li.goods-active{
+      background: @bs-color;
     }
   }
   .popup-slide-right{
@@ -1044,7 +1063,7 @@
     }
     .coupon-circle{
       position: absolute;
-      top:72px;
+      top:58px;
       right: -17px;
       border-radius: 50%;
       width: 34px;
