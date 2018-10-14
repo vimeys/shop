@@ -1042,7 +1042,7 @@
               pageIndex:pageIndex,
               pageSize:pageSize,
               isvip:isvip,
-              key:kye}).then(json=>{
+              key:key}).then(json=>{
             let data=json.data
             if(data.isSuc=true){
               this.defaultList=data.result.Items

@@ -200,7 +200,8 @@
                 <el-col :span="4" class="base-col base-col">秒杀时长</el-col>
                 <el-col :span="19" >
                   <el-select v-model="hoursValue"
-                             placeholder="秒杀时长" size="small">
+                             placeholder="秒杀时长"
+                             size="small">
                     <el-option
                       v-for="(item,index) in hours"
                       :key="item.value"
@@ -890,7 +891,10 @@
         let data=this.goodsList[index];
         this.editGoodsId=data.GoodsId
         this.valueTips=data.FlagId;
-        this.aPics=data.Pics.split(',');
+        if(data.Pics){
+          this.aPics=data.Pics.split(',');
+        }
+
         this.Name=data.Name;
         this.Price=data.Price;
         this.CommissionCharge=data.CommissionCharge;
@@ -1228,18 +1232,22 @@
 
       },
       //添加图片
-      handlePictureSuccess(res,file){
-        this.aPics.push(file.response.url);
+      // handlePictureSuccess(res,file){
+      //   this.aPics.push(file.response.url);
+      // },
+      upLoad(url){
+          this.aPics.push(url)
       },
       //移除图片
-      handleRemove(file,fileList){
-        console.log(file, fileList);
-        let index=this.aPics.indexOf(file)
-        this.aPics.splice(index,1)
-        console.log(this.aPics);
+      // handleRemove(file,fileList){
+      //   console.log(file, fileList);
+      //   let index=this.aPics.indexOf(file)
+      //   this.aPics.splice(index,1)
+      //   console.log(this.aPics);
+      // },
+      delImage(index){
+          this.aPics.splice(index,1);
       },
-      delImage(){},
-      upLoad(){},
 
       //保存分类
       saveType() {
@@ -1822,11 +1830,14 @@
   .images{
     margin-left: 30px;
     display: flex;
+    width: 434px;
+    flex-wrap: wrap;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: space-around;
     .image-box{
       width:120px;
       height:120px;
+      margin-bottom: 20px;
       margin-right: 16px;
       position: relative;
       .image-del{

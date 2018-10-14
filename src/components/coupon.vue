@@ -146,7 +146,7 @@
     data() {
       return {
         imgUr: 'Coupons-bgimg.png',
-        selfischosed:this.ischosed,
+        selfischosed:this.detail.ischosed,
         card: this.detail,
         CardType:this.detail.Type,
         abb:true,

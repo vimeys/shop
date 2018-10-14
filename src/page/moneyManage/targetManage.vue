@@ -149,16 +149,6 @@
           showModel:false,
           valueYear:'',
           date:[
-            // {
-            //   date:'2016',
-            //   value:2016
-            // },{
-            //   date:'2017',
-            //   value:2017
-            // },{
-            //   date:'2018',
-            //   value:2018
-            // },
           ],
           //每月成本
           cost:[

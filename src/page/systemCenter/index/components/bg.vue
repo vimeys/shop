@@ -112,14 +112,16 @@
         getDetail(){
           this.$util.post(this,this.$api.bgDetail,{},(data)=>{
             // console.log(data);
-            this.bannerImages=data.Pics.split(',')
+            if(data.Pics){
+              this.bannerImages=data.Pics.split(',')
+            }
+
           })
         }
       },
       created(){
           this.getDetail()
       }
-
     }
 </script>
 
@@ -167,6 +169,7 @@
       }
       .images{
         margin-left: 30px;
+
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
@@ -174,6 +177,7 @@
           width:120px;
           height:195px;
           margin-right: 16px;
+
           position: relative;
           .image-del{
             position: absolute;

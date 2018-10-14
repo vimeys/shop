@@ -67,14 +67,15 @@
         <div class="coupons-header">
           <div class="block-btn" @click="goBack"> 返回</div>
           <div class="base-btn-111" @click="openPopup" > 新建优惠券</div>
-          <div class="base-btn-111"  > 管理</div>
+          <div class="base-btn-111"  @click="editOncCoupon"> 管理</div>
+          <div class="base-btn-111" @click="delOneCoupon"> 删除</div>
         </div>
         <div class="coupons-item" style="display: flex;">
           <div  class="coupon-card" v-for="(item,index) in oneCouponList">
             <ys-coupon
               :detail="item"
               :index="index"
-              :isShowEdit="true"
+              @choose="chooseOneCoupon"
               :marginBottom="0"></ys-coupon>
           </div>
         </div>
@@ -86,10 +87,10 @@
               @close="closeOne"
     >
       <div class="popup-slide-left">
-        <div class="list-title">活动</div>
-        <el-row>
+        <div class="list-title base-h3" >活动</div>
+        <el-row style="margin-top: 68px;width: 276px;margin-left: 30px">
           <el-col>
-            <el-select v-model="activeValue" >
+            <el-select v-model="activeValue" size="small" >
               <el-option
                 v-for="item in options"
                 :kye=item.value
@@ -130,9 +131,9 @@
                   <div class="active-items-one">
                     <img src="../../../../assets/images/oneBg.png" alt="">
                     <div class="active-text"> {{one.bannerWord}}</div>
-                    <div class="active-radio" @click="choose">
-                      <div class="active-radio-point" v-show="chosed"></div>
-                    </div>
+                    <!--<div class="active-radio" @click="choose">-->
+                      <!--<div class="active-radio-point" v-show="chosed"></div>-->
+                    <!--</div>-->
                   </div>
                 </div>
                 <div v-else style="margin-bottom: 30px">
@@ -185,7 +186,7 @@
 
     <!--//团购-->
     <ys-popup
-        v-show="!activeValue==2"
+        v-show="activeValue==2"
         @close="closeTeam"
     >
       <div class="popup-slide-left">
@@ -465,6 +466,29 @@
         openPopup(){
             this.popup.showModal=true
         },
+          //编辑一元买卷下的卡卷
+        editOncCoupon(){
+            this.oneCouponList.forEach(item=>{
+              item.hasChecke=true
+            })
+        },
+        chooseOneCoupon(index){
+          this.oneCouponList[index].ischosed=false;
+        },
+        delOneCoupon(){
+            let arr=[];
+            this.oneCouponList.forEach(item=>{
+              if(item.ischosed){
+                arr.push(item.CouponBookId)
+              }
+          })
+          this.$util.post(this,this.$api.delOneCoupon,
+            {userGameId:this.currentActiveId,couponBookList:arr},
+            (data)=>{
+
+            }
+          )
+        },
         change(){
           console.log(123);
         },
@@ -646,8 +670,8 @@
               data.Items.forEach(item=>{
                 item.StartTime = this.$util.getTime(item.StartTime)//后台时间转时间撮
                 item.EndTime = this.$util.getTime(item.EndTime)//后台时间转时间错
-                item.hasChecked=false
-                item.isChecked=false
+                item.hasChecke=false
+                item.ischosed=false
               })
               this.couponList[type]=data.Items;
             })
@@ -661,8 +685,8 @@
               data.Items.forEach(item=>{
                 item.StartTime = this.$util.getTime(item.StartTime)//后台时间转时间撮
                 item.EndTime = this.$util.getTime(item.EndTime)//后台时间转时间错
-                item.hasChecked=false;
-                item.isChecked=false;
+                item.hasChecke=false;
+                item.ischosed=false;
               })
               this.oneCouponList=data.Items;
             })
@@ -923,7 +947,7 @@
       margin-left: 33px;
     }
     .list-btns{
-      margin-top: 68px;
+      margin-top: 38px;
       text-align: center;
       margin-left: 30px;
       li{
@@ -970,7 +994,7 @@
     .form{
       .modal{
         display: flex;
-        margin: 30px 0;
+        margin: 167px 0 30px;
         div{
           width: 226px;
           height: 37px;
@@ -1099,5 +1123,11 @@
     .chosed{
       background-color:#FFD736;
     }
+  }
+  /deep/ .el-select--small{
+    width: 100%;
+  }
+  /deep/ input{
+    text-align: center;
   }
 </style>

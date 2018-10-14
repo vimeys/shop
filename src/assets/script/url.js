@@ -111,6 +111,7 @@ const url = {
   addOne: head + 'usergame/version3/addUserGame',//新建一元买卷
   addOneCoupon: head + 'usergame/version3/addcouponBookList',//添加一元买卷优惠券
   oneCouponList: head + 'CouponBook/version3/gameUsersCouponBooklist',//一元买卷下的优惠券列表
+  delOneCoupon:head+'usergame/version3/delecouponBookList',//删除一元买卷下的优惠券
 
 
 

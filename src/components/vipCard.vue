@@ -14,8 +14,9 @@
       </div>
       <div class="detail">
         <div>
-
+          <div slot="reference" style="width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;margin-bottom: 10px" v-if="!hasSold">服务范围：{{detail.ServiceScope |replace}}</div>
           <el-popover
+            v-else
             placement="top-start"
             width="250"
             trigger="hover"
@@ -23,6 +24,7 @@
             <!--<el-button slot="reference">hover 激活</el-button>-->
             <div slot="reference" style="width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;margin-bottom: 10px">服务范围：{{detail.ServiceScope |replace}}</div>
           </el-popover>
+
         </div>
         <div v-if="detail.MembershipType!=3">具体权益：{{detail.ServiceScope|replace}},享受{{10-detail.Discount}}折优惠</div>
       </div>
