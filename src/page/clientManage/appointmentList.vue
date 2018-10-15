@@ -425,7 +425,9 @@
         },
         //获取订单列表
         getOrderList(shopId,pageIndex=1,pageSize=10){
-            this.$util.post(this,this.$api.getAppOrderList,{shopId:shopId,pageIndex,pageSize,state:-1,key:''},(data)=>{
+            this.$util.post(this,this.$api.getAppOrderList,
+              {shopId:shopId,pageIndex,pageSize,state:-1,key:''},
+              (data)=>{
               this.table=data.Items
               this.total=data.TotalItems;
               this.pageSize=data.ItemsPerPage

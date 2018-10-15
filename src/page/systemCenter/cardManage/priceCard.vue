@@ -141,11 +141,25 @@
           <el-col :span="17" :offset="1" v-if="type==3">
             <input type="text" v-model.number="Amount" placeholder="输入金额" class="base-input">
           </el-col>
-          <el-col :span="17" :offset="1" v-else>
+          <el-col :span="17" :offset="1" v-else-if="type==1">
             满 <input type="text" v-model.number="Amount" placeholder="输入金额" class="small-input">
-            减 <input type="text" v-model.number="DiscountAmount" placeholder="输入金额" class="small-input" v-if="type==1">
-            <input type="text" v-model.number="DiscountAmount" placeholder="输入1-10折" class="small-input"
-                   v-else-if="type==2">
+            减 <input type="text"
+                     v-model.number="DiscountAmount"
+                     placeholder="输入金额"
+                     class="small-input" >
+            <!--<input type="text"-->
+                   <!--v-model.number="DiscountAmount"-->
+                   <!--placeholder="输入1-10折"-->
+                   <!--class="small-input">-->
+                   <!--v-else-if="type==2">-->
+          </el-col>
+          <el-col :span="17" :offset="1" v-else="type==2">
+            满 <input type="text" v-model.number="Amount" placeholder="输入金额" class="small-input">
+            折<input type="text"
+                    v-model.number="DiscountAmount"
+                    placeholder="输入1-10折"
+                    class="small-input"
+                   >
           </el-col>
           <el-col :span="1" class="before">
           </el-col>

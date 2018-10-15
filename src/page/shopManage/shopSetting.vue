@@ -5,6 +5,17 @@
 <template>
   <div class="box">
       <div class="btn" @click="addShop"><img src="@/assets/images/icon/addBtn.png" alt="">新建门店</div>
+      <!--<div class="btn" @click="addShop"><img src="@/assets/images/icon/addBtn.png" alt="">-->
+        <!--<i class="iconfont">&#xe62c;</i></div>-->
+    <div>
+      <!--<i class="iconfont">&#xe62c;</i>-->
+      <!--<i class="iconfont  icon-weibiaoti-1"></i>-->
+      <!--<svg class="icon" aria-hidden="true">-->
+        <!--<use xlink:href="#icon-weibiaoti-1"></use>-->
+        <!--<use xlink:href="#icon-weibiaoti-"></use>-->
+      <!--</svg>-->
+
+    </div>
     <div class="shop" v-for="(item,index) in shopList" :key="item.UserShopId">
         <el-row>
            <el-col class="col" :span="7" :offset="5">
@@ -12,8 +23,8 @@
            </el-col>
            <el-col class="detail" :span="9" :offset="1">
              <img  class="detail-logo" :src="item.Logo" alt="">
-             <div v-if="!shopRole==4" class="change-btn" @click="modify(item,index)">修改</div>
-             <div v-if="!shopRole==4" class="change-btn" @click="delShop(item,index)">删除</div>
+             <div v-if="shopRole!=4" class="change-btn" @click="modify(item,index)">修改</div>
+             <div v-if="shopRole!=4" class="change-btn" @click="delShop(item,index)">删除</div>
            </el-col>
         </el-row>
     </div>

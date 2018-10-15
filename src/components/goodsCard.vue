@@ -191,7 +191,7 @@
       }
       .box-content{
         width: 175px;
-        height: 175px;
+        height: 105px;
         display: flex;
         margin-top: 5px;
         flex-direction: column;

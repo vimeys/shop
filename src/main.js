@@ -25,6 +25,7 @@ import './assets/style/base.scss'
 import Vant from 'vant';
 import  store from './store'
 import 'vant/lib/vant-css/index.css';
+// import  './assets/icon/icon.css'
 // 导入 table 和 分页组件
 import 'vue-easytable/libs/themes-base/index.css'
 // 注册到全局
@@ -44,8 +45,9 @@ import * as util from './assets/script/util'
 //   plugin: ['AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType']
 // });
 
-
-Vue.config.productionTip = false
+// import 'http://at.alicdn.com/t/font_873155_0f9gdcax987e.js'
+import  './assets/icon/icon.css'
+  Vue.config.productionTip = false
 Vue.prototype.$api=url;//全局注册api
 Vue.prototype.$util=util;//全局注册工具
 Vue.use(ElementUI);

@@ -356,7 +356,7 @@
               <ys-coupon
                 :detail="item"
                 :index="index"
-                :isShowEdit="true"
+                :isShowEdit="false"
                 :marginBottom="0"></ys-coupon>
               <div class="coupon-circle" @click="chooseCoupon(index)">
                 <div class="coupon-point" v-show="item.isChecked"></div>
@@ -442,6 +442,7 @@
           couponList:[],//优惠券列表
           checkCouponList:[],//选中的卡卷
           oneCouponList:[],//一元买卷下的卡卷列表
+          isShowEdit:false,//是否有修改按钮
           show:true,
           // 上传组件的按钮
           dialogImageUrl: '',
@@ -472,8 +473,9 @@
               item.hasChecke=true
             })
         },
-        chooseOneCoupon(index){
-          this.oneCouponList[index].ischosed=false;
+        chooseOneCoupon(index,booleen){
+          console.log(index);
+          this.oneCouponList[index].ischosed=!this.oneCouponList[index].ischosed;
         },
         delOneCoupon(){
             let arr=[];
@@ -485,7 +487,7 @@
           this.$util.post(this,this.$api.delOneCoupon,
             {userGameId:this.currentActiveId,couponBookList:arr},
             (data)=>{
-
+                this.getOneCouponList(this.currentActiveId)
             }
           )
         },
@@ -639,28 +641,43 @@
         //获取活动列表
         getActiveCardList(){
             // this.$http.post(this.$api)
-          this.$http.post(this.$api.activeList,{query:{PageIndex:1, PageSize:10}}).then(json=>{
-            console.log(json);
-            let data=json.data;
-            if(data.isSuc==true){
-              let data2=data.result.Items
-              data2.forEach(item=>{
-                item.hasChoose=false;
-                item.isChoose=false;
-              })
-              this.activeCardList=data2;
-
-               return
-              let data1=[{item:123,type:3},{item:1235,type:2},{item:1234,type:1},{item:12346,type:4},];
-              data1.forEach(item=>{
-                item.hasChoose=false;
-                item.isChoose=false;
-              })
-              this.activeCardList=data1;
-            }
-          })
+          // this.$http.post(this.$api.activeList,{query:{PageIndex:1, PageSize:10}}).then(json=>{
+          //   console.log(json);
+          //   let data=json.data;
+          //   if(data.isSuc==true){
+          //     let data2=data.result.Items
+          //     data2.forEach(item=>{
+          //       item.hasChoose=false;
+          //       item.isChoose=false;
+          //     })
+          //     this.activeCardList=data2;
+          //
+          //      return
+          //     let data1=[{item:123,type:3},{item:1235,type:2},{item:1234,type:1},{item:12346,type:4},];
+          //     data1.forEach(item=>{
+          //       item.hasChoose=false;
+          //       item.isChoose=false;
+          //     })
+          //     this.activeCardList=data1;
+          //   }
+          // })
           // return
+          this.$util.post(this,this.$api.activeList,{query:{PageIndex:1, PageSize:20}},(data)=>{
+            let data2=data.Items
+            data2.forEach(item=>{
+              item.hasChoose=false;
+              item.isChoose=false;
+            })
+            this.activeCardList=data2;
 
+            // return
+            // let data1=[{item:123,type:3},{item:1235,type:2},{item:1234,type:1},{item:12346,type:4},];
+            // data1.forEach(item=>{
+            //   item.hasChoose=false;
+            //   item.isChoose=false;
+            // })
+            // this.activeCardList=data1;
+          },true)
         },
         //获取优惠券列表
         getCouponList(type){
@@ -939,7 +956,9 @@
     flex-direction: column;
     .list-title{
       height:28px;
+      font-weight: 600;
       font-size:20px;
+
       color:rgba(40,40,40,1);
       line-height:28px;
       text-align: left;
@@ -947,7 +966,7 @@
       margin-left: 33px;
     }
     .list-btns{
-      margin-top: 38px;
+      margin-top: 68px;
       text-align: center;
       margin-left: 30px;
       li{

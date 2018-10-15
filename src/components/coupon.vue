@@ -36,11 +36,9 @@
       <div>
         {{StartTime}}
       </div>
-      <!--<div v-show="isShowEdit">-->
-        <div class="reBtn" v-if="card.Type==1"  @click="reMake(index)">修改</div>
-        <div class="reBtn reBtn02" v-else-if="card.Type==2"  @click="reMake(index)">修改</div>
-        <div class="reBtn reBtn03" v-else="card.Type==3"  @click="reMake(index)">修改</div>
-      <!--</div>-->
+        <div v-show="isShowEdit" class="reBtn" v-if="card.Type==1"  @click="reMake(index)">修改</div>
+        <div v-show="isShowEdit" class="reBtn reBtn02" v-else-if="card.Type==2"  @click="reMake(index)">修改</div>
+        <div v-show="isShowEdit" class="reBtn reBtn03" v-else="card.Type==3"  @click="reMake(index)">修改</div>
 
       <div>
         <div>
@@ -157,7 +155,7 @@
       choose(index){
         this.selfischosed=!this.selfischosed
         console.log(this.card);
-          this.$emit('choose',[index,this.selfischosed])
+          this.$emit('choose',index)
       },
       //修改当前卡片
       reMake(index){

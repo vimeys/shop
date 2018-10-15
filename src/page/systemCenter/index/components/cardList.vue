@@ -301,7 +301,13 @@
         })
         this.$util.post(this,this.$api.hotGoods,{goodsIds:arr,isSelected:0},
           (data)=>{
-              this.disableManage=false
+            this.disableManage=true;
+            this.disableAdd=false
+            this.disableSort=true
+            this.isSort=false
+            this.hotGoodsList.forEach(item=>{
+              item.hasChecked=false
+            })
                this.getHotGoods()
         },true)
       },

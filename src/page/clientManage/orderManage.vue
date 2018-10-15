@@ -355,8 +355,18 @@
                       <el-row :gutter="10" class="server-li">
                         <el-col :span="4" class="base-col">人员</el-col>
                         <el-col :span="20" class="base-text">
-                          <el-select size="small">
-                            <el-option></el-option>
+                          <el-select size="small"
+                                      placeholder="请选择人员"
+                                     multiple
+                                     collapse-tags
+                                     v-model="currentDetail.list[index].arr"
+                          >
+                            <el-option v-for="itemSon in currentDetail.list[index].SelectGoodsGroupEx"
+                                      :key="itemSon.UserId"
+                                       :label="itemSon.NickName"
+                                       :value="itemSon.UserId"
+                            >
+                            </el-option>
                           </el-select>
                         </el-col>
                       </el-row>
@@ -421,7 +431,7 @@
         </el-row>
         <el-row class="server-count">
           <el-col :span="6" :offset="2">
-            共计金额：<span class="server-money">￥399</span>
+            共计金额：<span class="server-money">￥{{allMoney}}</span>
           </el-col>
         </el-row>
         <el-row>
@@ -550,6 +560,21 @@ import ysSelectShop from '@/components/selectShop'
       handleEdit(index, row) {
         this.order.showModal=true;
         this.$util.post(this,this.$api.orderDetail,{goodsOrderFormId:row.GoodsOrderFormId},(data)=>{
+
+
+          // debugger
+          data.list.forEach(item=>{
+            // arr.push(item.GroupEmployee.UserId)
+            let arr=[]
+            item.SelectGoodsGroupEx.forEach(itemSon=>{
+              console.log(itemSon.UserId);
+              arr.push(itemSon.UserId)
+            })
+            console.log(arr);
+            item.arr=arr
+            console.log(item);
+          })
+          // data.list.chooseArr=arr
           this.currentDetail=data
         })
       },
@@ -610,6 +635,7 @@ import ysSelectShop from '@/components/selectShop'
         this.$util.post(this,this.$api.getServerSize,{
           pageIndex: 1,
           pageSize: 100,
+          shopId:this.currentShopId,
           goodsId:id
         },(data)=>{
           console.log(data);
@@ -672,6 +698,23 @@ import ysSelectShop from '@/components/selectShop'
             item.hasPlus=false
           })
           this.orderServerList.push({goods:'',size:'',people:'',hasPlus:true})
+      }
+    },
+
+    computed:{
+      allMoney(){
+        let num=0
+        if(this.currentDetail){
+          this.currentDetail.list.forEach(item=>{
+            if(!item.UserIds){
+              num+=parseInt(item.price)
+            }
+          })
+          return this.currentDetail.AmountPrice+num
+        }else{
+          return 0
+        }
+
       }
     }
   }

@@ -868,21 +868,22 @@
               this.aSize.push(obj)
 
             })
-            data.ShopList.forEach(item=>{
+            data.ShopList.forEach((item,index)=>{
               let a=JSON.parse(JSON.stringify(this.groupList))
               let arr=[]
               item.List.forEach(itemSon=>{
                 arr.push(itemSon.GroupId)
               })
+              // 获取人员服务列表
               this.$http.post(this.$api.waterGroupList,
-                {pageindex:1,pagesize:10,userId:this}).then(json=>{
+                {pageindex:1,pagesize:10,userId:item.UserId}).then(json=>{
                 if(json.data.isSuc==true){
                   let a=JSON.parse(JSON.stringify(json.data.result.Items));
-                  this.aPeople[e].groupList=a
+                  this.aPeople[index].groupList=a
                 }
 
               })
-              let obj2={valuePerson:arr,groupList:a,shopValue:this.UserId};
+              let obj2={valuePerson:arr,groupList:a,shopValue:item.UserId};
               this.aPeople.push(obj2)
             })
           }
@@ -1322,12 +1323,13 @@
         this.aPeople.splice(index,1)
       },
       //服务选择店铺筛选
-      chooseShop(e,value){
+      chooseShop(i,value){
+        this.aPeople[i].valuePerson=[];
           this.$http.post(this.$api.waterGroupList,
             {pageindex:1,pagesize:10,userId:value}).then(json=>{
             if(json.data.isSuc==true){
                 let a=JSON.parse(JSON.stringify(json.data.result.Items));
-                this.aPeople[e].groupList=a
+                this.aPeople[i].groupList=a
               }
 
           })

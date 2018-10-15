@@ -1,0 +1,32 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+<!--
+2013-9-30: Created.
+-->
+<svg>
+<metadata>
+Created by iconfont
+</metadata>
+<defs>
+
+<font id="iconfont" horiz-adv-x="1024" >
+  <font-face
+    font-family="iconfont"
+    font-weight="500"
+    font-stretch="normal"
+    units-per-em="1024"
+    ascent="896"
+    descent="-128"
+  />
+    <missing-glyph />
+    
+    <glyph glyph-name="weibiaoti-" unicode="&#58924;" d="M512 379.345455m-360.727273 0a360.727273 360.727273 0 1 1 721.454546 0 360.727273 360.727273 0 1 1-721.454546 0ZM595.781818 381.672727c-20.945455-18.618182-51.2-32.581818-83.781818-32.581818s-60.509091 11.636364-83.781818 32.581818c-53.527273-27.927273-90.763636-62.836364-90.763637-130.327272h349.09091c0 67.490909-37.236364 100.072727-90.763637 130.327272zM512 381.672727c53.527273 0 97.745455 44.218182 97.745455 97.745455s-44.218182 97.745455-97.745455 97.745454-97.745455-44.218182-97.745455-97.745454c0-55.854545 44.218182-97.745455 97.745455-97.745455z"  horiz-adv-x="1024" />
+
+    
+    <glyph glyph-name="Group" unicode="&#58881;" d=""  horiz-adv-x="1024" />
+
+    
+
+
+  </font>
+</defs></svg>

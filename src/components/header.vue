@@ -11,6 +11,10 @@
         <router-link tag="li" class="el-icon-message
  message" :to="message.path">
           <span class="el-icon-caret-top"></span>
+             <!--<svg class="icon" aria-hidden="true">-->
+            <!--<use xlink:href="#icon-weibiaoti-1"></use>-->
+            <!--</svg>-->
+          <!--</span>-->
         </router-link>
         <li @click="loginOut">退出</li>
       </ul>

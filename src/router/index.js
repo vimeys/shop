@@ -282,7 +282,8 @@ export default new Router({
           name:'serviceData',
           component:serviceData
         }
-      ]
+      ],
+      redirect:'/dataView/serviceRate'
     },
     //消息中心
     {
