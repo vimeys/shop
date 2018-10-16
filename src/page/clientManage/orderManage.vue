@@ -380,7 +380,7 @@
                         <el-col :span="20" >
                           <el-select v-model="item.serverNameValue"
                                      filterable
-                                     @change="chooseServerSize"
+                                     @change="chooseServer(item.serverNameValue,index)"
                                      size="small"
                                      placeholder="请输入您想搜索的服务">
                             <el-option
@@ -396,14 +396,15 @@
                       <el-row :gutter="10" class="server-li">
                         <el-col :span="4" class="base-col">规格</el-col>
                         <el-col :span="20" >
-                          <el-select v-model="item.serverNameValue"
+                          <el-select v-model="item.serverSizeValue"
                                      size="small"
+                                     @change="chooseServerSize(item.serverSizeValue,index)"
                                      placeholder="请选择该服务的规格">
                             <el-option
-                              v-for="itemSon in item.server"
-                              :key="itemSon.GoodsId"
+                              v-for="(itemSon,indexSon) in item.serverSize"
+                              :key="itemSon.GoodsSpecId"
                               :label="itemSon.Name"
-                              :value="itemSon.GoodsId"
+                              :value="itemSon.GoodsSpecId"
                             >
                             </el-option>
                           </el-select>
@@ -412,12 +413,23 @@
                       <el-row :gutter="10" class="server-li">
                         <el-col :span="4" class="base-col">人员</el-col>
                         <el-col :span="20" >
-                          <el-select size="small">
-                            <el-option></el-option>
+                          <el-select size="small"
+                                     placeholder="请选择人员"
+                                     multiple
+                                     collapse-tags
+                                     v-model="currentDetail.list[index].serverPeopleValue">
+                            <el-option
+                              v-for="(itemSon,indexSon) in item.serverPeoples"
+                              :key="itemSon.UserId"
+                              :label="itemSon.NickName"
+                              :value="itemSon.UserId"
+                            ></el-option>
                           </el-select>
                         </el-col>
                       </el-row>
-                      <span class="el-icon-error del-btn" @click="deleteServer(index)" ></span>
+                      <span class="el-icon-error del-btn"
+                            @click="deleteServer(index)" >
+                      </span>
                     </el-col>
                   </el-row>
                 </template>
@@ -430,13 +442,13 @@
           </el-col>
         </el-row>
         <el-row class="server-count">
-          <el-col :span="6" :offset="2">
+          <el-col :span="7" :offset="2">
             共计金额：<span class="server-money">￥{{allMoney}}</span>
           </el-col>
         </el-row>
         <el-row>
           <el-col>
-            <div class="confirm">
+            <div class="confirm" @click="pay">
               收款
             </div>
           </el-col>
@@ -567,12 +579,9 @@ import ysSelectShop from '@/components/selectShop'
             // arr.push(item.GroupEmployee.UserId)
             let arr=[]
             item.SelectGoodsGroupEx.forEach(itemSon=>{
-              console.log(itemSon.UserId);
               arr.push(itemSon.UserId)
             })
-            console.log(arr);
             item.arr=arr
-            console.log(item);
           })
           // data.list.chooseArr=arr
           this.currentDetail=data
@@ -587,16 +596,12 @@ import ysSelectShop from '@/components/selectShop'
 
 
       filterTag(value,row){
-        console.log(value);
-        console.log(row);
         return row.State == value;
       },
       // 查看图片详情
       openImage(){},
       //打开详情弹窗
       openDetailPopup(i,id){
-        console.log(i, id);
-        console.log(id);
         this.detail.showModal=true;
         this.$util.post(this,this.$api.orderDetail,{goodsOrderFormId:id},(data)=>{
               this.currentDetail=data
@@ -631,21 +636,84 @@ import ysSelectShop from '@/components/selectShop'
         //   obj.serverNameValue='';//当前服务的服务名称
         //   this.currentDetail.list.push(obj)
       },
-      chooseServerSize(id){
+      // 添加新的服务选择服务
+      chooseServer(id,index){
         this.$util.post(this,this.$api.getServerSize,{
           pageIndex: 1,
           pageSize: 100,
           shopId:this.currentShopId,
           goodsId:id
         },(data)=>{
-          console.log(data);
+          let items=this.currentDetail.list[index]
+          items.serverSize=data.Items;
+          items.serverSizeValue='';
+          let arr=[]
+          data.Items[0].GoodsGroup.forEach(item=>{
+            arr=[...arr,...item.GroupEmployee]
+          })
+          items.serverPeoples=arr
+          items.serverPeopleValue=[];
+          this.currentDetail.list.splice(index,1,items)
+
         })
       },
+      //结算选择规格
+      chooseServerSize(val,index){
+        console.log(val, index);
 
+        let items=this.currentDetail.list[index];
+        console.log(items);
+        items.serverSize.forEach(item=>{
+          console.log(item);
+          if(item.GoodsSpecId==val){
+            items.price=item.Price
+          }
+        })
+        this.currentDetail.list.splice(index,1,items)
+      },
       //结算时删除当前服务
       deleteServer(index){
           this.currentDetail.list.splice(index,1)
       },
+      //结算调起支付
+      pay(){
+        let obj={}
+        obj.NickName=this.currentDetail.GameUserName;
+        obj.Phone=this.currentDetail.Tel;
+        obj.ShopId=this.currentShopId;
+        if(this.currentDetail.list[0].UserId){
+          obj.UserId
+        }
+        obj.UserId=this.currentDetail.list[0]
+        obj.Goods=[]
+
+        this.currentDetail.list.forEach(item=>{
+          if(item.UserIds){//判断是否是后添加的
+            let obj2={}
+            obj2.Num=1;
+            obj2.GoodsId=item.GoodsId
+            obj2.GoodsSpecId=item.GoodsSpecId
+                obj2.UserIds=item.arr.join(",")
+                obj2.SubscribeId=item.SubscribeId;
+            obj.Goods.push(obj2)
+          }else{
+            let obj2={}
+            obj2.Num=1;
+            obj2.GoodsId=item.serverNameValue
+            obj2.GoodsSpecId=item.serverSizeValue
+            obj2.UserIds=item.serverPeopleValue.join(",")
+            obj2.SubscribeId=0
+            obj.Goods.push(obj2)
+          }
+        })
+        console.log(obj);
+        this.$util.post(this,this.$api.payForServer,{model:obj},(data)=>{
+          console.log(data);
+        })
+      },
+
+
+
       exportExcel(){
         this.$util.post(this, this.$api.getOrderList,
           {shopId: this.currentShopId, pageIndex: 1, pageSize: 100000, state: -1, key: ''},
@@ -707,7 +775,9 @@ import ysSelectShop from '@/components/selectShop'
         if(this.currentDetail){
           this.currentDetail.list.forEach(item=>{
             if(!item.UserIds){
-              num+=parseInt(item.price)
+              if(item.price){
+                num+=parseInt(item.price)
+              }
             }
           })
           return this.currentDetail.AmountPrice+num

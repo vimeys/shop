@@ -56,9 +56,14 @@ import  staffSetting from '@/page/shopManage/staffSetting'
 
 //*************素材管理**********
 import  fodderCenter from '@/page/fodderCenter/fodder'
-import  fodder  from '@/page/fodderCenter/accountSetting'
-import  push from '@/page/fodderCenter/push'
-import  type from '@/page/fodderCenter/fodder/type'
+import  fodder  from '@/page/fodderCenter/accountSetting'//素材中心
+import  push from '@/page/fodderCenter/push'//平台推送
+import  type from '@/page/fodderCenter/fodder/type'//分类页面
+import  articleList from '@/page/fodderCenter/fodder/articleList'//文章
+import transpond from '@/page/fodderCenter/fodder/transpond'//转发文章
+import  pictorial from '@/page/fodderCenter/fodder/pictorial'//画报
+import  poster from '@/page/fodderCenter/fodder/poster'//海报
+import issued from '@/page/fodderCenter/fodder/issued'//已发布
 
 
 
@@ -235,6 +240,31 @@ export default new Router({
               path:'fodder',
               name:"type",
               component:type
+            },
+            {
+              path:'articleList',
+              name:'articleList',
+              component:articleList
+            },
+            {
+              path:'transpond',
+              name:'pictorial',
+              component:transpond
+            },
+            {
+              path:'pictorial',
+              name:'pictorial',
+              component:pictorial
+            },
+            {
+              path:'poster',
+              name:'poster',
+              component:poster
+            },
+            {
+              path:'issued',
+              name:'issued',
+              component:issued
             }
           ],
           redirect:'/fodderCenter/fodders/fodder'

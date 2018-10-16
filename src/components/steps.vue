@@ -136,6 +136,8 @@
       }
       .active{
         font-size: 20px;
+        display: flex;
+        align-items: center;
       }
       .active:before{
         content: '●';

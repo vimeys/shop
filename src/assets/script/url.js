@@ -103,6 +103,9 @@ const url = {
   appOrderDetail: head + 'subscribe/detail ',//预约详情
   getAllServerList: head + 'settleAccounts/version3/goodsList',//获取店铺下的所有服务
   getServerSize:head+'settleAccounts/version3/userList',//获取店铺下所有的服务
+  payForServer:head+'SettleAccounts/version3/pendingOrder',//结算服务
+
+
 
   //添加活动
   activeList: head + 'usergame/list',//活动列表

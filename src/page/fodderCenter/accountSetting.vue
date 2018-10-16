@@ -20,7 +20,7 @@
         <el-tab-pane label="海报" name="fifth">
           <!--<router-view></router-view>-->
         </el-tab-pane>
-        <el-tab-pane label="已发布" name="fifth">
+        <el-tab-pane label="已发布" name="sixth">
           <!--<router-view></router-view>-->
         </el-tab-pane>
         <router-view></router-view>
@@ -49,22 +49,27 @@
               break
             case 'second':
               this.$router.replace({
-                path: '/centerIndex/indexPage/logo'
+                path: '/fodderCenter/fodders/articleList'
               });
               break;
             case 'third':
               this.$router.replace({
-                path: '/centerIndex/indexPage/diyImage'
+                path: '/fodderCenter/fodders/transpond'
               });
               break;
             case 'fourth':
               this.$router.push({
-                path: '/centerIndex/indexPage/activity'
+                path: '/fodderCenter/fodders/pictorial'
               });
               break;
             case 'fifth':
               this.$router.replace({
-                path:'/centerIndex/indexPage/cardList'
+                path:'/fodderCenter/fodders/poster'
+              })
+              break;
+            case 'sixth':
+              this.$router.replace({
+                path:'/fodderCenter/fodders/issued'
               })
           }
         }

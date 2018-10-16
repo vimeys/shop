@@ -54,7 +54,6 @@
                       <el-rate
                         v-model="item.Level||0"
                         disabled
-                        show-score
                         text-color="#ff9900"
                         score-template="{value}">
                       </el-rate>
@@ -93,8 +92,9 @@
                         <el-rate
                           v-model="rateValue"
                           disabled
+                          show-score="false"
                           text-color="#ff9900"
-                          score-template="{value}">
+                          score-template="{1}">
                         </el-rate>
                       </div>
                       <div >

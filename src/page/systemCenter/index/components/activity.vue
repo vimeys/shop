@@ -70,11 +70,12 @@
           <div class="base-btn-111"  @click="editOncCoupon"> 管理</div>
           <div class="base-btn-111" @click="delOneCoupon"> 删除</div>
         </div>
-        <div class="coupons-item" style="display: flex;">
-          <div  class="coupon-card" v-for="(item,index) in oneCouponList">
+        <div class="coupons-item" style="display: flex;flex-wrap: wrap; margin-top: 30px">
+          <div  class="coupon-card" v-for="(item,index) in oneCouponList" style="margin-bottom: 30px">
             <ys-coupon
               :detail="item"
               :index="index"
+              :isShowEdit="false"
               @choose="chooseOneCoupon"
               :marginBottom="0"></ys-coupon>
           </div>
@@ -469,8 +470,12 @@
         },
           //编辑一元买卷下的卡卷
         editOncCoupon(){
+          // if(this.oneCou)
+          // if()
             this.oneCouponList.forEach(item=>{
-              item.hasChecke=true
+              // if()
+              item.hasChecke=!item.hasChecke
+              item.ischosed=false;
             })
         },
         chooseOneCoupon(index,booleen){
@@ -529,6 +534,10 @@
         //关闭一元买卷模态框
         closeOne(e){
           this.activeValue=""
+          this.one.bannerWord=""
+          this.Timevalue=""
+          this.one.isDiy=false;
+          this.one.Pic=""
         },
         //关闭团购模态框
         closeTeam(e){
@@ -556,6 +565,12 @@
             }
             this.$http.post(this.$api.addOne,{model:obj}).then(json=>{
               console.log(json);
+              this.activeValue=""
+              this.getActiveCardList();
+              this.one.bannerWord=""
+              this.Timevalue=""
+              this.one.isDiy=false;
+              this.one.Pic=""
               let data=json.data;
               if(json.isSuc==true){
                 this.$message({

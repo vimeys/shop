@@ -73,8 +73,6 @@ export function post(that, url, params, suc, isLoad, err) {
       if (isLoad) {//判断是否有loading状态
         loading.close();
       }
-      console.log(that.$store.state.shopRole);
-
       suc(json.data.result)
     } else {
       that.$notify({
