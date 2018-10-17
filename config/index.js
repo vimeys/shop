@@ -19,6 +19,13 @@ module.exports = {
         pathRewrite:{
           '^/shop': '/'
         }
+      },
+      '/baidu':{
+        target:'http://api.map.baidu.com/',
+        changeOrigin:true,//允许跨域
+        pathRewrite:{
+          '^/baidu': '/'
+        }
       }
     },
 

@@ -34,6 +34,10 @@ import  url from './assets/script/url'
 import * as util from './assets/script/util'
 // 引入样式
 //引入地图
+import  map from 'vue-baidu-map'
+Vue.use(map,{
+  ak:'6Zqo32LrGfGwV8ApAnKVqBVdAjWmVvEm'
+})
 // import AMap from 'vue-amap';
 // Vue.use(AMap);
 

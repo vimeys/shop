@@ -697,8 +697,8 @@
           Frequency:'',//次数
           Discount:'',//折扣价
           carlType:0,//充值卡类型
-          pageSize:5,//分页条数
-          pageSize2:5,//分页条数
+          pageSize:10,//分页条数
+          pageSize2:10,//分页条数
           total:1,//分页总数
           total2:1,//分页总数
           cardList:[
@@ -989,27 +989,27 @@
         },
         // 上一页
         prev(e){
-          this.getVipList(this.currentShopId,this.vipSearchValue,e,5)
+          this.getVipList(this.currentShopId,this.vipSearchValue,e,10)
         },
         // 下一页
         next(e){
-          this.getVipList(this.currentShopId,this.vipSearchValue,e,5)
+          this.getVipList(this.currentShopId,this.vipSearchValue,e,10)
         },
         // 当前页点击
         current(e){
-          this.getVipList(this.currentShopId,this.vipSearchValue,e,5)
+          this.getVipList(this.currentShopId,this.vipSearchValue,e,10)
         },
         // 普通会员上一页
         prev2(e){
-          this.getDefaultList(this.currentShopId,this.searchValue,e,5)
+          this.getDefaultList(this.currentShopId,this.searchValue,e,10)
         },
         // 普通会员下一页
         next2(e){
-          this.getDefaultList(this.currentShopId,this.searchValue,e,5)
+          this.getDefaultList(this.currentShopId,this.searchValue,e,10)
         },
         // 普通会员当前页点击
         current2(e){
-          this.getDefaultList(this.currentShopId,this.searchValue,e,5)
+          this.getDefaultList(this.currentShopId,this.searchValue,e,10)
         },
         //选择模板卡
         chooseCard(e){

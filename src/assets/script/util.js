@@ -81,9 +81,9 @@ export function post(that, url, params, suc, isLoad, err) {
         message: h('i', {style: 'color: red'}, json.data.message)
       })
       loading.close();
-      setTimeout(()=>{
-        that.$store.commit('SET_SHOP','')
-      },1000)
+      // setTimeout(()=>{
+      //   that.$store.commit('SET_SHOP','')
+      // },1000)
 
     }
   }).catch(error => {

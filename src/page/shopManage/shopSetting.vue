@@ -7,15 +7,10 @@
       <div class="btn" @click="addShop"><img src="@/assets/images/icon/addBtn.png" alt="">新建门店</div>
       <!--<div class="btn" @click="addShop"><img src="@/assets/images/icon/addBtn.png" alt="">-->
         <!--<i class="iconfont">&#xe62c;</i></div>-->
-    <div>
-      <!--<i class="iconfont">&#xe62c;</i>-->
-      <!--<i class="iconfont  icon-weibiaoti-1"></i>-->
-      <!--<svg class="icon" aria-hidden="true">-->
-        <!--<use xlink:href="#icon-weibiaoti-1"></use>-->
-        <!--<use xlink:href="#icon-weibiaoti-"></use>-->
-      <!--</svg>-->
 
-    </div>
+    <!--<div id="allmap" ref="allmap"></div>-->
+
+
     <div class="shop" v-for="(item,index) in shopList" :key="item.UserShopId">
         <el-row>
            <el-col class="col" :span="7" :offset="5">
@@ -171,11 +166,11 @@
               </el-row>
               <el-row class="row-margin">
                 <el-col :span="6" class="title">定位</el-col>
-                <el-col  :span="16"><div class="siteBtn">点击定位</div></el-col>
+                <el-col  :span="16"><div class="siteBtn" @click="openMap">点击定位</div></el-col>
                 <el-col :span="2"></el-col>
               </el-row>
               <el-row>
-                  <el-col :span="24" :offset="0">成都市高新区天府五街MCI公司</el-col>
+                  <el-col :span="24" :offset="0">{{addr}}</el-col>
               </el-row>
               <el-row class="row-margin">
                 <el-col :span="6" class="base-col">门店详情</el-col>
@@ -204,7 +199,49 @@
         </el-row>
       </div>
     </ys-popup>
-
+      <!--地图选择-->
+    <ys-popup
+      :width="mWidth"
+      :height="mHeight"
+      v-show="mShowModal"
+      :zIndex="zIndex"
+      @close="closeMap"
+    >
+      <div style="padding-top:50px;width: 1200px;">
+        <Modal @on-cancel="cancel" v-model="showMapComponent" width="800" :closable="false" :mask-closable="false">
+          <baidu-map v-bind:style="mapStyle" class="bm-view" ak="你的密钥"
+                     :center="center"
+                     :zoom="zoom"
+                     :scroll-wheel-zoom="true"
+                     @click="getClickInfo"
+                     @moving="syncCenterAndZoom"
+                     @moveend="syncCenterAndZoom"
+                     @zoomend="syncCenterAndZoom">
+            <bm-view style="width: 100%; height:500px;"></bm-view>
+            <bm-marker :position="{lng: center.lng, lat: center.lat}" :dragging="true" animation="BMAP_ANIMATION_BOUNCE">
+            </bm-marker>
+            <bm-control :offset="{width: '10px', height: '10px'}">
+              <bm-auto-complete v-model="keyword" :sugStyle="{zIndex: 999999}">
+                <input type="text" placeholder="请输入搜索关键字" class="serachinput">
+              </bm-auto-complete>
+            </bm-control>
+            <bm-local-search :keyword="keyword" :auto-viewport="true" style="width:0px;height:0px;overflow: hidden;"></bm-local-search>
+          </baidu-map>
+          <div slot="footer" style="margin-top: 50px;">
+            <!--<Button @click="cancel" type="ghost"-->
+            <!--style="width: 60px;height: 36px;">取消-->
+            <!--</Button>-->
+            <!--<Button type="primary" style="width: 60px;height: 36px;" @click="confirm">确定</Button>-->
+            <el-row>
+              <el-col>
+                <div class="base-btn-111" @click="cancel"> 取消</div>
+                <div class="base-btn-111" @click="confirm"> 确定</div>
+              </el-col>
+            </el-row>
+          </div>
+        </Modal>
+      </div>
+    </ys-popup>
     <!--选择文章-->
     <ys-popup
       v-show="aShowModal"
@@ -248,7 +285,7 @@
         <div class="btns">
           <el-row>
             <el-col :span="12"><div class="base-btn-111" @click="closeArticle">取消</div></el-col>
-            <el-col :span="12"><div class="base-btn-111" @click="confirm">确定</div></el-col>
+            <el-col :span="12"><div class="base-btn-111" @click="confirm1">确定</div></el-col>
           </el-row>
         </div>
       </div>
@@ -265,18 +302,29 @@
   import {emptyObj} from "../../assets/script/util";
   import api from "@/assets/script/url"
   import {mapGetters, mapMutations} from 'vuex'
+  import {BaiduMap, BmControl, BmView, BmAutoComplete, BmLocalSearch, BmMarker} from 'vue-baidu-map'
   export default {
     name: "shopSetting",
     components:{
       shopDetail,
       ysPopup,
-      upload
+      upload,
+      BaiduMap,
+      BmControl,
+      BmView,
+      BmAutoComplete,
+      BmLocalSearch,
+      BmMarker
     },
 
     data(){
       return{
-
+        test:'',
         showModal:false,
+        mWidth:1200,
+        mHeight:650,
+        mShowModal:true,
+        zIndex:1000,
         pWidth:1200,
         pHeight:850,
         aWidth:550,
@@ -300,10 +348,19 @@
           LunchEndDate:'',
           EmployeesNumber:''
         },
+        addr:'无',
         shopList:[],
         articleList:[],//文章列表
         articleIndex:'',
-        TuwenUrl:''//图文链接
+        TuwenUrl:'',//图文链接
+        showMapComponent: this.value,
+        keyword: '',
+        mapStyle: {
+          width: '100%',
+          height: this.mapHeight + 'px'
+        },
+        center: {lng: 116.404, lat: 39.915},
+        zoom: 15
       }
     },
     filters:{
@@ -331,9 +388,88 @@
 
       }
     },
+    watch: {
+      value: function (currentValue) {
+        this.showMapComponent = currentValue
+        if (currentValue) {
+          this.keyword = ''
+        }
+      }
+    },
+    props: {
+      value: Boolean,
+      mapHeight: {
+        type: Number,
+        default: 500
+      }
+    },
     methods:{
+      openMap(){
+          this.mShowModal=true;
+      },
+      closeMap(){
+          this.mShowModal=false
+      },
+      /***
+       * 地图点击事件。
+       */
+      getClickInfo (e) {
+        console.log(e);
+        this.center.lng = e.point.lng
+        this.center.lat = e.point.lat
+      },
+      syncCenterAndZoom (e) {
+        const {lng, lat} = e.target.getCenter()
+        this.center.lng = lng
+        this.center.lat = lat
+        this.zoom = e.target.getZoom()
+      },
+      /***
+       * 确认
+       */
+      confirm: function () {
+        this.showMapComponent = false
+        // console.log(this.center);
+        // console.log(this.center.lat);
+        // console.log(`http://api.map.baidu.com/geocoder/v2/?callback=renderReverse&location=${this.center.lat},${this.center.lng},&output=json&pois=1&ak=6Zqo32LrGfGwV8ApAnKVqBVdAjWmVvEm&callback=showLocation`);
+        this.$http.get(`/baidu/geocoder/v2/?callback=renderReverse&location=${this.center.lat},${this.center.lng},&output=json&pois=1&ak=6Zqo32LrGfGwV8ApAnKVqBVdAjWmVvEm&callback=showLocation`).then(json=>{
+          // console.log(JSON.parse(json.data).result.formatted_address);
+          console.log(json.data);
+          let parseTime=json.data
+          var first =parseTime.indexOf('(');
+          var last =parseTime.indexOf(')');
+          var time=parseTime.substring(first+1,last)
+          console.log(JSON.parse(time));
+        })
+
+        // this.$emit('map-confirm', this.center)
+      },
+      /***
+       * 取消
+       */
+      cancel: function () {
+        this.showMapComponent = false
+        this.$emit('cancel', this.showMapComponent)
+      },
+      // map(){
+      //   let map =new BMap.Map(this.$refs.allmap); // 创建Map实例
+      //   map.centerAndZoom(new BMap.Point(116.404, 39.915), 11);// 初始化地图,设置中心点坐标和地图级别
+      //   map.addControl(new BMap.MapTypeControl({//添加地图类型控件
+      //     mapTypes:[
+      //       BMAP_NORMAL_MAP,
+      //       BMAP_HYBRID_MAP
+      //     ]}));
+      //   map.setCurrentCity("北京");// 设置地图显示的城市 此项是必须设置的
+      //   map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
+      // },
+      search(){
+          this.$http.get('http://api.map.baidu.com/geocoder/v2/?address=北京市海淀区上地十街10号&output=json&ak=6Zqo32LrGfGwV8ApAnKVqBVdAjWmVvEm&callback=showLocation').then(json=>{
+            console.log(json);
+          })
+      },
       ...mapMutations({saveShop:'SET_SHOP'}),
       addShop(){
+        this.$http.get('http://api.map.baidu.com/geocoder/v2/?address=北京市海淀区上地十街10号&output=json&ak=6Zqo32LrGfGwV8ApAnKVqBVdAjWmVvEm&callback=showLocation')
         // this.$http.post('/shop',{userId:1007})
         this.showModal=true
       },
@@ -515,7 +651,7 @@
           this.articleList[index].isChosed=true;
         this.articleIndex=index
       },
-      confirm(){
+      confirm1(){
           this.TuwenUrl=this.articleList[this.articleIndex].PublishUrl
         this.articleList.isChosed=false
         this.aShowModal=false
@@ -571,6 +707,7 @@
     mounted(){
       this.getShopList()
       console.log(this.shopRole);
+      // this.map()
     }
   }
 </script>
@@ -579,6 +716,27 @@
   @import "~@/assets/style/mixin";
   /deep/ .el-scrollbar__wrap{
     overflow-x: hidden;
+  }
+  .serachinput{
+    width: 300px;
+    box-sizing: border-box;
+    padding: 9px;
+    border: 1px solid #dddee1;
+    line-height: 20px;
+    font-size: 16px;
+    height: 38px;
+    color: #333;
+    position: relative;
+    border-radius: 4px;
+    -webkit-box-shadow: #666 0px 0px 10px;
+    -moz-box-shadow: #666 0px 0px 10px;
+    box-shadow: #666 0px 0px 10px;
+  }
+
+  #allmap{
+    height: 500px;
+    overflow: hidden;
+
   }
     .box{
       width: 1200px;

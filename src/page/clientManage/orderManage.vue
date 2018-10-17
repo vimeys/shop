@@ -456,7 +456,14 @@
       </div>
 
     </ys-popup>
+    <ys-pay
+      @close="closePay"
+      :showModel="payShowModel"
+      @payOk="payOk"
+      :image="codeImage"
+    >
 
+    </ys-pay>
 
   </div>
 </template>
@@ -467,12 +474,14 @@
 import ysSelectShop from '@/components/selectShop'
   import FileSaver from 'file-saver'
   import XLSX from 'xlsx'
+  import ysPay from '@/components/pay'
   export default {
     name: "orderManage",
     components: {
       ysSearch,
       ysPopup,
-      ysSelectShop
+      ysSelectShop,
+      ysPay
     },
     filters:{
       state(val){
@@ -542,6 +551,8 @@ import ysSelectShop from '@/components/selectShop'
         currentShopId:'',
         serverData:'',//所有服务的数据
         searchVal:'',//搜索数据
+        payShowModel:false,
+        codeImage:''
       }
     },
     methods: {
@@ -681,10 +692,12 @@ import ysSelectShop from '@/components/selectShop'
         obj.NickName=this.currentDetail.GameUserName;
         obj.Phone=this.currentDetail.Tel;
         obj.ShopId=this.currentShopId;
-        if(this.currentDetail.list[0].UserId){
-          obj.UserId
+        if(this.currentDetail.list[0].UserIds){//判断是否是之前没有单子
+          obj.UserId=this.currentDetail.UserId;
+        }else {
+          obj.UserId=this.currentDetail.list[0].serverPeopleValue[0]
         }
-        obj.UserId=this.currentDetail.list[0]
+        // obj.UserId=this.currentDetail.list[0]
         obj.Goods=[]
 
         this.currentDetail.list.forEach(item=>{
@@ -706,12 +719,25 @@ import ysSelectShop from '@/components/selectShop'
             obj.Goods.push(obj2)
           }
         })
-        console.log(obj);
         this.$util.post(this,this.$api.payForServer,{model:obj},(data)=>{
           console.log(data);
+          this.$util.post(this,this.$api.payCode,
+            data,
+            (data2)=>{
+              this.codeImage=data2
+              this.payShowModel=true
+            },true)
         })
       },
+      //关闭支付页面
+      closePay(){
+          this.payShowModel=false;
+          this.codeImage=''
+      },
+      //点击已经支付
+      payOk(){
 
+      },
 
 
       exportExcel(){
