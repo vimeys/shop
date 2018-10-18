@@ -53,8 +53,9 @@ export function confirm(that,type='warning',info='您确定要删除吗?',title=
 //封装的ajax
 //param isLoad  是否有加载状态
 export function post(that, url, params, suc, isLoad, err) {
+  var loading
   if (isLoad) {//判断是否有loading状态
-    var loading = that.$loading({
+    loading = that.$loading({
       lock: true,
       text: '加载中...',
       spinner: 'el-icon-loading',
@@ -75,11 +76,12 @@ export function post(that, url, params, suc, isLoad, err) {
       }
       suc(json.data.result)
     } else {
+      err(json.data)
       that.$notify({
         title: '接口报错',
         duration: 20000,
         message: h('i', {style: 'color: red'}, json.data.message)
-      })
+    })
       loading.close();
       // setTimeout(()=>{
       //   that.$store.commit('SET_SHOP','')
@@ -87,6 +89,19 @@ export function post(that, url, params, suc, isLoad, err) {
 
     }
   }).catch(error => {
+    var loading = that.$loading({
+      lock: true,
+      text: '加载中...',
+      spinner: 'el-icon-loading',
+      background: 'rgba(0, 0, 0, 0.7)'
+    });
     console.log(error)
+    const h = that.$createElement;
+    that.$notify({
+      title: '接口报错',
+      duration: 20000,
+      message: h('i', {style: 'color: red'}, error.Error)
+    })
+    loading.close();
   })
 }

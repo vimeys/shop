@@ -60,6 +60,12 @@
             this.saveUserInfo(data);
             window.localStorage.setItem('token',data.Token)
             this.getShopList()
+          },true,(data)=>{
+            this.$message({
+              message:data.message,
+              type:'error',
+              icon:"error"
+            })
           })
         },
 

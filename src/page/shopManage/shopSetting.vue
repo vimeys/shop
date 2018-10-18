@@ -323,7 +323,7 @@
         showModal:false,
         mWidth:1200,
         mHeight:650,
-        mShowModal:true,
+        mShowModal:false,
         zIndex:1000,
         pWidth:1200,
         pHeight:850,
@@ -346,7 +346,8 @@
           ShopEndDate:'',
           LunchStartDate:'',
           LunchEndDate:'',
-          EmployeesNumber:''
+          EmployeesNumber:'',
+          Position:'116.381847,39.98109'
         },
         addr:'无',
         shopList:[],
@@ -428,7 +429,8 @@
        * 确认
        */
       confirm: function () {
-        this.showMapComponent = false
+        this.mShowModal = false
+        this.form.Position=`${this.center.lng},${this.center.lat}`;
         // console.log(this.center);
         // console.log(this.center.lat);
         // console.log(`http://api.map.baidu.com/geocoder/v2/?callback=renderReverse&location=${this.center.lat},${this.center.lng},&output=json&pois=1&ak=6Zqo32LrGfGwV8ApAnKVqBVdAjWmVvEm&callback=showLocation`);
@@ -437,9 +439,11 @@
           console.log(json.data);
           let parseTime=json.data
           var first =parseTime.indexOf('(');
-          var last =parseTime.indexOf(')');
-          var time=parseTime.substring(first+1,last)
+          var last =parseTime.lastIndexOf(')');
+          var time=parseTime.substring(first+1,last);
+          console.log(time);
           console.log(JSON.parse(time));
+          this.addr=JSON.parse(time).result.formatted_address
         })
 
         // this.$emit('map-confirm', this.center)
@@ -448,20 +452,9 @@
        * 取消
        */
       cancel: function () {
-        this.showMapComponent = false
-        this.$emit('cancel', this.showMapComponent)
+        this.mShowModal=false;
       },
-      // map(){
-      //   let map =new BMap.Map(this.$refs.allmap); // 创建Map实例
-      //   map.centerAndZoom(new BMap.Point(116.404, 39.915), 11);// 初始化地图,设置中心点坐标和地图级别
-      //   map.addControl(new BMap.MapTypeControl({//添加地图类型控件
-      //     mapTypes:[
-      //       BMAP_NORMAL_MAP,
-      //       BMAP_HYBRID_MAP
-      //     ]}));
-      //   map.setCurrentCity("北京");// 设置地图显示的城市 此项是必须设置的
-      //   map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
-      // },
+
       search(){
           this.$http.get('http://api.map.baidu.com/geocoder/v2/?address=北京市海淀区上地十街10号&output=json&ak=6Zqo32LrGfGwV8ApAnKVqBVdAjWmVvEm&callback=showLocation').then(json=>{
             console.log(json);
@@ -529,25 +522,12 @@
               LunchStartDate: this.value5[0].toString().substr(16, 5),
               LunchEndDate: this.value5[1].toString().substr(16, 5),
               //todo死数据
-              Position: '116.381847,39.98109',
+              Position: this.form.Position,
               TuwenUrl: this.TuwenUrl,
               EmployeesNumber: form.EmployeesNumber
             }
           }
-          // this.$http.post(api.updataShop, obj).then(json => {
-          //   let data = json.data;
-          //   if (data.isSuc == true) {
-          //     this.showModal = false;
-          //     this.getShopList()
-          //     this.form = emptyObj(this.form);
-          //     this.$message({
-          //       message: '店铺修改成功',
-          //       type: 'success'
-          //     });
-          //   }
-          // }).catch(err => {
-          //   console.log(err);
-          // })
+
 
           this.$util.post(this,this.$api.updataShop,obj,(data)=>{
             this.showModal=false;
@@ -575,25 +555,12 @@
               LunchStartDate: this.value5[0].toString().substr(16, 5),
               LunchEndDate: this.value5[1].toString().substr(16, 5),
               //todo死数据
-              Position: '116.381847,39.98109',
+              Position: this.form.Position,
               TuwenUrl: 'http://mdimg.yilianchuang.cn/uploadimage3.ashx',
               EmployeesNumber: form.EmployeesNumber
             }
           }
-          // this.$http.post('/shop/usershop/addUserShop', obj).then(json => {
-          //   let data = json.data;
-          //   if (data.isSuc == true) {
-          //     this.showModal = false;
-          //     this.getShopList()
-          //     this.form = emptyObj(this.form);
-          //     this.$message({
-          //       message: '店铺添加成功',
-          //       type: 'success'
-          //     });
-          //   }
-          // }).catch(err => {
-          //   console.log(err);
-          // })
+
           this.$util.post(this,this.$api.addUserShop,obj,(data)=>{
                 this.showModal = false;
             this.reset()
@@ -622,6 +589,7 @@
             LunchEndDate:'',
             EmployeesNumber:''
         }
+        this.addr=''
         this.TuwenUrl=''
         this.value4= [new Date(2018, 9, 10, 8, 40), new Date(2018, 9, 10, 9, 40)];
           this.value5= [new Date(2018, 9, 10, 8, 40), new Date(2018, 9, 10, 9, 40)];
@@ -685,8 +653,21 @@
         let ls=this.shopList[index].LunchStartDate.split(':')
         let os=this.shopList[index].ShopStartDate.split(':')
         let oe=this.shopList[index].ShopEndDate.split(':')
-        this.value4=[new Date(2018, 9, 10, ls[0],ls[1]),new Date(2018, 9, 10, le[0],le[1])]
-        this.value5=[new Date(2018, 9, 10, os[0],os[1]),new Date(2018, 9, 10, oe[0],oe[1])]
+        this.value4=[new Date(2018, 9, 10, os[0],os[1]),new Date(2018, 9, 10, oe[0],oe[1])]
+        this.value5=[new Date(2018, 9, 10, ls[0],ls[1]),new Date(2018, 9, 10, le[0],le[1])]
+        let lat,lon
+        let arr=shopData.Position.split(',')
+        console.log(arr);
+        lat=arr[1]
+        lon=arr[0]
+        this.$http.get(`/baidu/geocoder/v2/?callback=renderReverse&location=${lat},${lon}&output=json&pois=1&ak=6Zqo32LrGfGwV8ApAnKVqBVdAjWmVvEm`).then(json=>{
+          console.log(json);
+          let parseTime=json.data
+          var first =parseTime.indexOf('(');
+          var last =parseTime.lastIndexOf(')');
+          var time=parseTime.substring(first+1,last);
+          this.addr=JSON.parse(time).result.formatted_address
+        })
       },
       // 获取列表
       getShopList(){

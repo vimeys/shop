@@ -11,7 +11,7 @@
       </ys-select-shop>
     </div>
     <!--下载表格-->
-    <div class="table" style="position: fixed;top:-10000px">
+    <div class="table" style="position: fixed;top:-10000px;left:-1000px">
       <el-table
         :data="table2"
         id="test-table"

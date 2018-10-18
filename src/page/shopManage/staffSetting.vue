@@ -507,7 +507,8 @@
                 this.add.showModal=false
             }else{
               this.$message({
-                message:'发布失败',
+                message:data.message,
+                type:'error',
                 icon:"error"
               })
             }

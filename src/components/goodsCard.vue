@@ -244,9 +244,7 @@
         }
       }
     }
-    .item:hover .move{
-        display: flex;
-    }
+
     .move{
         z-index: 10000;
       position: absolute;
@@ -260,5 +258,11 @@
       justify-content: space-between;
       box-sizing: border-box;
       padding: 0 10px;
+      opacity: 0;
+    }
+    .item:hover .move{
+      display: flex;
+      opacity: 1;
+      transition: all 1.3s ease-in;
     }
 </style>

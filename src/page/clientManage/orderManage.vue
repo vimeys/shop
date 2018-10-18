@@ -552,7 +552,8 @@ import ysSelectShop from '@/components/selectShop'
         serverData:'',//所有服务的数据
         searchVal:'',//搜索数据
         payShowModel:false,
-        codeImage:''
+        codeImage:'',
+        currentFromId:''//当前订单的id
       }
     },
     methods: {
@@ -582,6 +583,7 @@ import ysSelectShop from '@/components/selectShop'
       //打开付款弹窗
       handleEdit(index, row) {
         this.order.showModal=true;
+        this.currentFromId=row.GoodsOrderFormId
         this.$util.post(this,this.$api.orderDetail,{goodsOrderFormId:row.GoodsOrderFormId},(data)=>{
 
 
@@ -692,6 +694,7 @@ import ysSelectShop from '@/components/selectShop'
         obj.NickName=this.currentDetail.GameUserName;
         obj.Phone=this.currentDetail.Tel;
         obj.ShopId=this.currentShopId;
+        obj.GoodsorderformId=this.currentFromId
         if(this.currentDetail.list[0].UserIds){//判断是否是之前没有单子
           obj.UserId=this.currentDetail.UserId;
         }else {
