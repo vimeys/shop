@@ -303,6 +303,14 @@
   import api from "@/assets/script/url"
   import {mapGetters, mapMutations} from 'vuex'
   import {BaiduMap, BmControl, BmView, BmAutoComplete, BmLocalSearch, BmMarker} from 'vue-baidu-map'
+  import jsonp from 'jsonp'
+   function test(){
+     console.log(123);
+     var url = `http://api.map.baidu.com/geocoder/v2/?callback=renderReverse&location=39,100&output=json&pois=1&ak=6Zqo32LrGfGwV8ApAnKVqBVdAjWmVvEm`;
+     this.$http.get(url).then((err,data)=>{
+       console.log(data);
+     });
+  }
   export default {
     name: "shopSetting",
     components:{
@@ -316,7 +324,6 @@
       BmLocalSearch,
       BmMarker
     },
-
     data(){
       return{
         test:'',
@@ -434,18 +441,20 @@
         // console.log(this.center);
         // console.log(this.center.lat);
         // console.log(`http://api.map.baidu.com/geocoder/v2/?callback=renderReverse&location=${this.center.lat},${this.center.lng},&output=json&pois=1&ak=6Zqo32LrGfGwV8ApAnKVqBVdAjWmVvEm&callback=showLocation`);
-        this.$http.get(`/baidu/geocoder/v2/?callback=renderReverse&location=${this.center.lat},${this.center.lng},&output=json&pois=1&ak=6Zqo32LrGfGwV8ApAnKVqBVdAjWmVvEm&callback=showLocation`).then(json=>{
-          // console.log(JSON.parse(json.data).result.formatted_address);
-          console.log(json.data);
-          let parseTime=json.data
-          var first =parseTime.indexOf('(');
-          var last =parseTime.lastIndexOf(')');
-          var time=parseTime.substring(first+1,last);
-          console.log(time);
-          console.log(JSON.parse(time));
-          this.addr=JSON.parse(time).result.formatted_address
+        // this.$http.get(`/baidu/geocoder/v2/?callback=renderReverse&location=${this.center.lat},${this.center.lng},&output=json&pois=1&ak=6Zqo32LrGfGwV8ApAnKVqBVdAjWmVvEm&callback=showLocation`).then(json=>{
+        //   // console.log(JSON.parse(json.data).result.formatted_address);
+        //   console.log(json.data);
+        //   let parseTime=json.data
+        //   var first =parseTime.indexOf('(');
+        //   var last =parseTime.lastIndexOf(')');
+        //   var time=parseTime.substring(first+1,last);
+        //   console.log(time);
+        //   console.log(JSON.parse(time));
+        //   this.addr=JSON.parse(time).result.formatted_address
+        // })
+        jsonp(`http://api.map.baidu.com/geocoder/v2/?callback=renderReverse&location=${this.center.lat},${this.center.lng},&output=json&pois=1&ak=6Zqo32LrGfGwV8ApAnKVqBVdAjWmVvEm&callback=showLocation`,null,(err,data)=>{
+          this.addr=data.result.formatted_address
         })
-
         // this.$emit('map-confirm', this.center)
       },
       /***
@@ -462,7 +471,7 @@
       },
       ...mapMutations({saveShop:'SET_SHOP'}),
       addShop(){
-        this.$http.get('http://api.map.baidu.com/geocoder/v2/?address=北京市海淀区上地十街10号&output=json&ak=6Zqo32LrGfGwV8ApAnKVqBVdAjWmVvEm&callback=showLocation')
+        // this.$http.get('http://api.map.baidu.com/geocoder/v2/?address=北京市海淀区上地十街10号&output=json&ak=6Zqo32LrGfGwV8ApAnKVqBVdAjWmVvEm&callback=showLocation')
         // this.$http.post('/shop',{userId:1007})
         this.showModal=true
       },
@@ -556,7 +565,7 @@
               LunchEndDate: this.value5[1].toString().substr(16, 5),
               //todo死数据
               Position: this.form.Position,
-              TuwenUrl: 'http://mdimg.yilianchuang.cn/uploadimage3.ashx',
+              TuwenUrl: this.TuwenUrl,
               EmployeesNumber: form.EmployeesNumber
             }
           }
@@ -649,8 +658,8 @@
         this.TuwenUrl=this.shopList[index].TuwenUrl
         //回显时间
 
-        let le=this.shopList[index].LunchEndDate.split(':')
-        let ls=this.shopList[index].LunchStartDate.split(':')
+        let le=this.shopList[index].LunchEndDate.split(':');
+        let ls=this.shopList[index].LunchStartDate.split(':');
         let os=this.shopList[index].ShopStartDate.split(':')
         let oe=this.shopList[index].ShopEndDate.split(':')
         this.value4=[new Date(2018, 9, 10, os[0],os[1]),new Date(2018, 9, 10, oe[0],oe[1])]
@@ -660,13 +669,21 @@
         console.log(arr);
         lat=arr[1]
         lon=arr[0]
-        this.$http.get(`/baidu/geocoder/v2/?callback=renderReverse&location=${lat},${lon}&output=json&pois=1&ak=6Zqo32LrGfGwV8ApAnKVqBVdAjWmVvEm`).then(json=>{
+        // this.$http.get(`http://api.map.baidu.com/geocoder/v2/?callback=renderReverse&location=${lat},${lon}&output=json&pois=1&ak=6Zqo32LrGfGwV8ApAnKVqBVdAjWmVvEm&callback=showLocation(test)`).then(json=>{
+        //   console.log(json);
+        //   let parseTime=json.data
+        //   var first =parseTime.indexOf('(');
+        //   var last =parseTime.lastIndexOf(')');
+        //   var time=parseTime.substring(first+1,last);
+        //   this.addr=JSON.parse(time).result.formatted_address
+        // })
+        jsonp(`http://api.map.baidu.com/geocoder/v2/?callback=renderReverse&location=${lat},${lon}&output=json&pois=1&ak=6Zqo32LrGfGwV8ApAnKVqBVdAjWmVvEm&callback=showLocation(test)`,null,(err,json)=>{
           console.log(json);
-          let parseTime=json.data
-          var first =parseTime.indexOf('(');
-          var last =parseTime.lastIndexOf(')');
-          var time=parseTime.substring(first+1,last);
-          this.addr=JSON.parse(time).result.formatted_address
+            // let parseTime=json.data
+            // var first =parseTime.indexOf('(');
+            // var last =parseTime.lastIndexOf(')');
+            // var time=parseTime.substring(first+1,last);
+            this.addr=json.result.formatted_address
         })
       },
       // 获取列表

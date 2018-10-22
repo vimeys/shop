@@ -228,6 +228,7 @@
       //服务查看未评价
       check(index,) {
         console.log(index);
+        this.Rate.showModal=true;
         this.goodsCurrentIndex=index
         this.checkPage(index)
       },
@@ -247,6 +248,7 @@
       },
       // 服务查看已审核
       checked(index){
+        this.Rate.showModal=true;
         this.goodsCurrentIndex=index;
         this.checkedPage(index)
       },
@@ -266,9 +268,11 @@
       },
       //人员查看已审核
       peopleChecked(index){
+        this.water.showModal=true
         this.peopleCheckedPage(index)
       },
       peopleCheckedPage(index,pageIndex=1,pageSize=10){
+        this.water.showModal=true
         let obj={};
         obj.servicePersonId=this.waterList[index].UserId;
         obj.pageIndex=pageIndex;
@@ -377,6 +381,9 @@
 
 <style lang='less' scoped>
   @import "~@/assets/style/mixin";
+  /deep/ .el-scrollbar__wrap{
+    overflow-x: hidden;
+  }
   .rate-box{
     width: 100%;
   }
@@ -443,7 +450,7 @@
     position: relative;
     top:30px;
     right: -1000px;
-    z-index: 10000;
+    z-index: 90;
   }
 
   //店员评价

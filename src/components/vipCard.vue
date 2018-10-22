@@ -29,7 +29,9 @@
         <div v-if="detail.MembershipType!=3">具体权益：{{detail.ServiceScope|replace}},享受{{10-detail.Discount}}折优惠</div>
       </div>
       <div class="money-date">
-        <div v-if="detail.MembershipType==3">消费次数：{{detail.Frequency}}次</div>
+        <div v-if="detail.MembershipType==3"><span v-if="detail.EffectiveTime!='-1'">消费次数：{{detail.Frequency}}次</span>
+        <span v-else>无限次</span>
+        </div>
         <div v-else>卡内额度：{{detail.BuyAmount}}</div>
         <div v-if="detail.EffectiveTime==-1">有效期：永久</div>
         <div v-else>有效期：{{detail.EffectiveTime/12}}年</div>

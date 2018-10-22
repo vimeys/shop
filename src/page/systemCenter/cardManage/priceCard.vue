@@ -425,9 +425,9 @@
 
 
       // 单个选择
-      choose(e) {
-        console.log(e);
-        this.couponList[e[0]].ischosed = e[1]
+      choose(index) {
+        console.log(index);
+        this.couponList[index].ischosed =!this.couponList[index].ischosed
       },
       // 全选
       chooseAll(e) {

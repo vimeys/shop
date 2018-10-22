@@ -33,12 +33,12 @@
       <!--<div class="project">管理员工服务项目</div>-->
     </div>
     <div class="tables" v-for="(item,index) in groupList" >
-        <div class="title">{{item.GroupName}}({{item.UsersList.Items.length}}人  提成比例：{{item.Charge}}%)
+        <div v-if="!searchVal||item.UsersList.Items.length" class="title">{{item.GroupName}}({{item.UsersList.Items.length}}人  提成比例：{{item.Charge}}%)
           <i class="el-icon-delete"
              @click="delGroup(index)"
              style="position: relative; right: -440px;cursor: pointer"></i>
         </div>
-        <el-row class="table-title">
+        <el-row class="table-title" v-if="!searchVal||item.UsersList.Items.length">
           <!--<el-col></el-col>-->
           <el-col :span="4">姓名</el-col>
           <el-col :span="3">手机号</el-col>
@@ -100,7 +100,7 @@
       <el-row v-else>
         <el-col class="table-none">暂无人员</el-col>
       </el-row>
-      <el-row class="table-btns" :gutter="20" >
+      <el-row v-if="!searchVal||item.UsersList.Items.length" class="table-btns" :gutter="20" >
         <el-col :span="3">
           <div class="base-btn-111"
                :class="{'disable':item.isEdit}"
@@ -280,7 +280,7 @@
         <el-row :gutter="20" class="add-form">
           <el-col :span="6">移动至：&nbsp; &nbsp;</el-col>
           <el-col :span="16">
-            <el-select v-model="value" placeholder="请选择" size="small">
+            <el-select v-model="valueGroup" placeholder="请选择" size="small">
               <el-option
                 v-for="item in groupList"
                 :key="item.GroupId"
@@ -415,6 +415,7 @@
             editName:'',//修改人员名字
             editJob:'',//修改人员工作
             currentUserId:'',//当前用户id
+            valueGroup:'',
             options:[
               {
                 value: '1',
@@ -639,13 +640,13 @@
         },
         // 确认移动
         moveGroup(){
-          let obj={userIds:this.moveGroupId,groupId:this.value};
+          let obj={userIds:this.moveGroupId,groupId:this.valueGroup};
 
           this.$http.post(this.$api.moveGroup,obj).then(json=>{
             let data=json.data;
             if(data.isSuc==true){
               this.getGroupList(this.currentShopId)
-                this.value='';
+                this.valueGroup='';
               this.moveGroupPerson=[];
               this.moveGroupId=[];
               this.move.showModal=false;

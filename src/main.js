@@ -19,6 +19,7 @@ import axios from 'axios'
 
 // axios.defaults.headers.common['token']='3K0r1L1P2L2t3i0o0b3V2a2v3G271l3x2s1E3d0Y3Z0Q3U3K1u152R3d1s221x0E1R1e0F2g0x3s0C3r2x1Y1F2a3A0T1010'
 Vue.prototype.$http = axios;
+
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import './assets/style/base.scss'

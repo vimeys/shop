@@ -2,7 +2,6 @@
 const head = '/shop/';//跨域
 // const head='http://192.168.0.135:8073/services/';//陈林本地
 
-
 const url = {
   // 登录
   // logincom:head+'user/loginbyphonenum',//登录企业
@@ -14,6 +13,8 @@ const url = {
   shopList: head + 'usershop/list4web',//1.1	实体店信息列表接口
   updataShop: head + 'usershop/updateUserShop',//修改店铺信息
   delShop: head + 'usershop/delete',//删除店铺信息
+
+
 
   //店铺成员管理
   addWaiter: head + 'user/reg2',//添加成员
@@ -85,6 +86,7 @@ const url = {
   getVipList: head + 'gameuser/version3/list4web',//获取会员列表
   getVipCardList: head + 'membershipCard/version3/webcurrentUserVip',//获取单个会员卡片
   getVipPriceList: head + 'gameusersmoneylog/version3/list ',//查询充值消费记录
+  getTotalPrice:head+'GameUsersMoneyLog/version3/sumMoney',//获取充值消费总金额
   payCode: head + 'MembershipCard/version3/payqrcode',//支付二维码
   payMoney: head + 'MembershipCard/version3/checkOut',//其他支付方式
 

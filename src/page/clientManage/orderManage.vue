@@ -459,6 +459,7 @@
     <ys-pay
       @close="closePay"
       :showModel="payShowModel"
+      @getCode="getCode"
       @payOk="payOk"
       :image="codeImage"
     >
@@ -553,7 +554,9 @@ import ysSelectShop from '@/components/selectShop'
         searchVal:'',//搜索数据
         payShowModel:false,
         codeImage:'',
-        currentFromId:''//当前订单的id
+        currentFromId:'',//当前订单的id
+        currentBuyerId:'',//当前订单的buyId
+        currentOrderId:'',
       }
     },
     methods: {
@@ -584,9 +587,8 @@ import ysSelectShop from '@/components/selectShop'
       handleEdit(index, row) {
         this.order.showModal=true;
         this.currentFromId=row.GoodsOrderFormId
+        this.currentBuyerId=row.BuyerId
         this.$util.post(this,this.$api.orderDetail,{goodsOrderFormId:row.GoodsOrderFormId},(data)=>{
-
-
           // debugger
           data.list.forEach(item=>{
             // arr.push(item.GroupEmployee.UserId)
@@ -609,7 +611,7 @@ import ysSelectShop from '@/components/selectShop'
 
 
       filterTag(value,row){
-        return row.State == value;
+        return row.State == value;clientList
       },
       // 查看图片详情
       openImage(){},
@@ -694,7 +696,8 @@ import ysSelectShop from '@/components/selectShop'
         obj.NickName=this.currentDetail.GameUserName;
         obj.Phone=this.currentDetail.Tel;
         obj.ShopId=this.currentShopId;
-        obj.GoodsorderformId=this.currentFromId
+        obj.GoodsorderformId=this.currentFromId;
+        obj.BuyerId=this.currentBuyerId;
         if(this.currentDetail.list[0].UserIds){//判断是否是之前没有单子
           obj.UserId=this.currentDetail.UserId;
         }else {
@@ -724,13 +727,27 @@ import ysSelectShop from '@/components/selectShop'
         })
         this.$util.post(this,this.$api.payForServer,{model:obj},(data)=>{
           console.log(data);
-          this.$util.post(this,this.$api.payCode,
-            data,
-            (data2)=>{
-              this.codeImage=data2
-              this.payShowModel=true
-            },true)
+          this.currentOrderId=data
+          this.payShowModel=true;
+          // this.$util.post(this,this.$api.payCode,
+          //   data,
+          //   (data2)=>{
+          //     this.codeImage=data2;
+          //     this.payShowModel=true
+          //   },true)
         })
+      },
+      getCode(){
+        this.$util.post(this,this.$api.payCode,
+          {goodsOrderFormId:this.currentOrderId,
+            type:1,
+            membershipCardId:0,
+            phoneNum:0
+          },
+          (data2)=>{
+            this.codeImage=data2;
+            this.payShowModel=true
+          },true)
       },
       //关闭支付页面
       closePay(){

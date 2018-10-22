@@ -238,7 +238,7 @@
            </el-row>
            <el-row>
              <el-col>
-               <div class="vip-btn">
+               <div class="vip-btn" @click="closeVipCard">
                  确定
                </div>
              </el-col>

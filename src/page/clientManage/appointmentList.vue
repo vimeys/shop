@@ -411,22 +411,22 @@
         // 上一页
         prev(e){
           console.log(e);
-          this.getOrderList(this.currentShopId,e,10)
+          this.getOrderList(this.currentShopId,e,10,this.searchVal)
         },
         // 下一页
         next(e){
           console.log(e);
-          this.getOrderList(this.currentShopId,e,10)
+          this.getOrderList(this.currentShopId,e,10,this.searchVal)
         },
         // 当前页点击
         current(e){
           console.log(e);
-          this.getOrderList(this.currentShopId,e,10)
+          this.getOrderList(this.currentShopId,e,10,this.searchVal)
         },
         //获取订单列表
-        getOrderList(shopId,pageIndex=1,pageSize=10){
+        getOrderList(shopId,pageIndex=1,pageSize=10,key=""){
             this.$util.post(this,this.$api.getAppOrderList,
-              {shopId:shopId,pageIndex,pageSize,state:-1,key:''},
+              {shopId:shopId,pageIndex,pageSize,state:-1,key:key},
               (data)=>{
               this.table=data.Items
               this.total=data.TotalItems;
@@ -473,6 +473,13 @@
   }
   .table /deep/ thead tr th:last-child{
     border-top-right-radius: 4px;
+  }
+  //设置按钮hover 颜色
+  .el-button:focus, .el-button:hover{
+    background: #FFD736!important;
+  }
+  .el-pager li:hover{
+    background: #282828!important;
   }
   .box{
     width: 1200px;

@@ -28,7 +28,12 @@
             <el-row class="fix-height" style="margin-top: 50px" v-if="payWayValue==1" >
               <el-col>
                 <el-row>
-                  <el-col><img :src="image" alt="" style="width: 200px;height: 200px;"></el-col>
+                  <el-col v-if="image">
+                    <img :src="image" alt="" style="width: 200px;height: 200px;">
+                  </el-col>
+                  <el-col v-else>
+                    <img src="../assets/images/testCode.png" alt="" style="width: 200px;height: 200px;">
+                  </el-col>
                 </el-row>
                 <el-row>
                   <el-col>扫描二维码进行付款</el-col>
@@ -43,7 +48,10 @@
             </el-row>
             <el-row>
               <el-col>
-                <div class="pay-btn" @click="payOk">支付完成</div>
+                <div v-if="image" class="pay-btn" @click="payOk">支付完成</div>
+                <div  v-else class="pay-btn" @click="getCode">
+                  获取二维码
+                </div>
               </el-col>
             </el-row>
           </div>
@@ -92,6 +100,9 @@
         close(){
           this.showModel=false
           this.$emit('close')
+        },
+        getCode(){
+          this.$emit('getCode',)
         },
         payOk(){
           if(this.payWayValue!==1){//是否选择二维码支付
