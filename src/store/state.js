@@ -4,7 +4,7 @@ const state = {
   shopRole:1,//店铺权限
   shop:[],
   test:'',
-  test1:'',
+  test2:'',
   userInfo:''
 };
 
